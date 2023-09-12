@@ -11,47 +11,46 @@
 ### Customer
 
 - Sign up
-- - Fill out name, email, password
-- - Verify account -- ask about
+- - Fill out usernname, password, first, last
 - Log in
 - - Place an order
-- - - Add item to cart (max 3)
-- - - - Choose cone
-- - - - Choose ice cream
-- - - - Choose toppings
-- - - - Add note (optional)
+- - - Add item to cart
+- - - - Choose cone (waffle, cake, cup)
+- - - - Choose ice cream (pick four later)
+- - - - Choose toppings (cherry, sprinkles, chocolate)
+- - - - Add note (optional) -- low priority
 - - - - Add another to cart or go to checkout?
 - - - Go to checkout
 - - - - Address for delivery
 - - - - Total cost
-- - - - Enter payment details (only card)
-- - - - Submit payment
+- - - - Submit payment button
 - - Track order
-- - - Reciept
-- - - Estimated delivery time
-- - - Progress bar w/ status (Map w/ drone?)
+- - - 10 minute timer
+- - - Reciept -- low priority
+- - - Estimated delivery time -- low priority
+- - - Progress bar w/ status (Map w/ drone?) -- low priority
 - Guest order (Place an order -> Track order page)
+- Contact page
 
 ### Manager
 
 - Log in
 - - Inventory
-- - - Inventory counts
+- - - Inventory counts (drones are inventory)
 - - - Update inventory
 - - Orders
 - - - Pending orders
 - - - Completed orders
-- - Inbox
-- - - Messages list
-- - - Delete this list item
+- - Finances
+- - - Revenue
+- - - Expenses
 
 ### Droney
 
-- Sign up
-- - Fill out name, email, password
-- - Verify account
+- Sign up (different from customer)
+- - Fill out username, password, first, last
 - Log In
 - - Add a drone
-- - - Fill out drone name, weight limit, distance, battery life, schedule
+- - - Fill out drone name, size, schedule -- low priority
 - - - Accept terms conditions (your drone may explode)
-- - Drone statuses
+- - Drone statuses (boolean fulfillingOrder)
