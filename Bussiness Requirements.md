@@ -12,7 +12,7 @@
 - quantity of ice cream cones left in stock
 - quantity of ice cream left in stock
 - quantity of Drones/Droneys (ready to excute orders) "status"
-- quantity of user accounts
+- quantity of user orders being delivered
 
 ## Quality
 
