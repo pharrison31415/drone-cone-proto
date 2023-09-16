@@ -12,3 +12,11 @@
 - As a manager, I want to be able to see pending orders, so I can see how my business is doing.
 - As a manager, I want to be able to see completed orders, so I can see what is the hot thing currently.
 - As a manager, I want to be able to see finainces, so I can see how much money I'm making or losing.
+
+# Droney
+
+As a droney, I want to be able to:
+
+- Allow DroneCones to use my drone to have a small and consistent revenue stream.
+- Deactivate my drone on DroneCones so that I can use my drone for personal reasons.
+- See a list of the drones I have registered with DroneCone and their details so I can know where my drones are and what they are doing.
