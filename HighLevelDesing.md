@@ -13,6 +13,17 @@ The design of the Django framework is ideal for the Drone Cones backend system f
 
 ### Svelte - Frontend Development
 
+The frontend and the visuals will be implemented on a Svelte framework. Svelte is a reactive UI framework. Svelte is a javascript based web development framework designed to help with HTML, CSS, JavaScript, and UI that would react to changes in the data. This framework provides no virtual DOM, providing reconcile changes and update the actual DOM. It updates the elements directly as the data changes, which results in faster updates and less memory overhead. Svelte also provides scopred styling to help prevent unintentional style conflicts. Svelte also provides HTML, CSS and JavaScript integrations, letting you write component templates in HTML, styles in CSS, and logic in JavaScript. Svelte also has animation support to easily create smooth transitions and animations within. Svelte makes it straightforward to handle form inputs, events, and user interactions, simpliflying common tasks like form validation and event handling.
+
+The design of the Svelte framework is ideal for the Drone Cones frontend system for the following reasons:
+* A highly optimized JavaScript during build time.
+* Small bundle sizes, Svelte generates smaller JavaScript bundles.
+* Simplicity, Svelte's syntax and approach is relatively simple and easy to learn.
+* Reactivity to data changes to the backend.
+* No runtime framework overhead, code is as close to native JavaScript as possible.
+* Small bundle sizes make it well-suited for building mobile-responsive websites that perform well on a variety if devices.
+
+
 ### Architecture
 
 The system will architechture will be a 2-tier Client/Server Architecture. This means that the information the application will need will be accessed through protocol. 
