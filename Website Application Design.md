@@ -18,7 +18,7 @@ These page would only be for login/siging up too accounts only
 - Login - Logins for Drone Operators/Manager/Customers, once logged in they can access the apprioate pages.  
 - Sign up - Sign up new user / Sign up for drone operators
 
-### Profile Page
+### Profile/Customer Page
 This page would be the page the customer can access if they sign in to their profile
 
 this page would include:
@@ -51,9 +51,10 @@ this page would include:
 This page would be for the only for the drone operator
 
 - drone inventory - the drone operator can access this page
--  
+- add drones - the drone operator would be able to add new drones
+  
 ### Contact Page
 
 This page would be the only way to contact between us and the customers other than the order pages
 
-- customer info
+- customer info - would ask for customers information to contact customer
