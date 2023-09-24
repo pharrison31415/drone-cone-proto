@@ -7,4 +7,4 @@
 ### [High Level Design Documentation](https://github.com/pharrison31415/drone-cone-proto/blob/main/HighLevelDesing.md)
 
 ## Milestone 2:
-### [Low Level Design Documentation]
+### [Low Level Design Documentation](https://github.com/pharrison31415/drone-cone-proto/blob/main/LowLevelDesign.md)
