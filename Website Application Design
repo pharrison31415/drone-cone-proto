@@ -1,13 +1,11 @@
-
-(Rough Draft)
 ## Website Application
-The reason why we when with a web application is based on the team's experience and skills for programming. The way we want this website to setup would include the following pages. 
+The main reason why we went with a web application is based on the team's experience and skills in programming. The way we want this website to be setup would include the following pages. 
 
 ### Front Page
 This page would be the first page that would be shown when visiting our website
 
 this website would include:
-- Login - Logins for Manager/Drone Operators/Customers, once logged in they can access the apprioate pages.  
+- Login - Logins for Drone Operators/Manager/Customers, once logged in they can access the apprioate pages.  
 - Sign up - Sign up new user / Sign up for drone operators
 - Order - goes to the order page for customer or guest to order food
 - Company goods - display companys news for the customer 
