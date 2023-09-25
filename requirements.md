@@ -117,8 +117,8 @@ The system will have a stable server, with decent security. The users should be 
 ## Business Requirements
 
 The application and software will fulfill certain business needs for the client.
-These needs include; reports showing valuable financial information, inventory management options, and tools for quality control. 
-(See [Use Case Diagram](#use-case-diagram)))
+These needs include; reports showing valuable financial information, inventory management options, and tools for quality control.
+(See [Use Case Diagram](#use-case-diagram))
 
 ### Finance
 
