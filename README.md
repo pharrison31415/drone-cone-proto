@@ -2,7 +2,7 @@
 
 ## Milestone 0
 
-### [Requirements Documentation](https://github.com/pharrison31415/drone-cone-proto/blob/main/Requirements.md)
+### [Requirements Documentation](https://github.com/pharrison31415/drone-cone-proto/blob/main/requirements.md)
 
 ## Milestone 1
 
