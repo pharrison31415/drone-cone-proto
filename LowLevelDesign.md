@@ -15,6 +15,8 @@ POST Requests
         * drone used
 * update inventory
 
+
+
 GET Requests
 * available drones
     * server receives size of order and checks database for available drones of correct size
@@ -31,4 +33,23 @@ GET Requests
     * server sends over past order data
     * server sends revenue data
     * server sends drone info
-Psuedo Code: To be completed
+
+### psuedo code
+def receive_requests(request)
+   if request.method == POST
+      data = {
+         'type': "post",
+         'data': request.POST
+      }
+   elif request.method == GET
+      data = {
+         'type: "get",
+         'data': request.GET
+      }
+   return JsonResponse(data)
+
+def handle_data(data)
+   if type == POST
+      give data to the database
+   elif type == GET
+      return the requested data from the database
