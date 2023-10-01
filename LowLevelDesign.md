@@ -35,6 +35,7 @@ GET Requests
     * server sends drone info
 
 ### psuedo code
+```
 def receive_requests(request)
    if request.method == POST
       data = {
@@ -53,3 +54,4 @@ def handle_data(data)
       give data to the database
    elif type == GET
       return the requested data from the database
+```
