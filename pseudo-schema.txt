@@ -1,0 +1,63 @@
+Customer {
+  username:     String  @id
+  orders:       Order[]
+  passwordHash: String
+}
+
+Order {
+  id:      Int      @id @autoIncrement
+  drone:   Drone    @notNullable
+  cones:   Cone[]   @notEmpty
+  status:  String   @default("delivering")
+  price:   Int
+  created: DateTime @default(now())
+}
+
+Drone extends DroneType {
+  id:           Int    @id @autoIncrement
+  currentOrder: Order
+  status:       String @default("idle")
+  owner:        Owner  @notNullable
+  revenue:      Int    @default(0)
+}
+
+DroneType {
+  size:     String @unique-notInherit
+  capacity: Int
+}
+
+Owner {
+  username:     String  @id
+  drones:       Drone[]
+  passwordHash: String
+}
+
+Cone {
+  id:       Int          @id @autoIncrement
+  cone:     ConeType     @notNullable
+  iceCream: IceCreamType @notNullable
+  topping:  ToppingType
+}
+
+ConeType extends InventoryItem {}
+IceCreamType extends InventoryItem {}
+ToppingType extends InventoryItem {}
+
+InventoryItem {
+  name:     String @id
+  quantity: Int    @default(0)
+  unitCost: Int
+  image:    Bytes
+}
+
+CustomerMessage {
+  content:   String
+  handled:   Bool     @default(false)
+  handeldBy: Manager
+  date:      DateTime @default(now())
+}
+
+Manager {
+  username:     String  @id
+  passwordHash: String
+}
