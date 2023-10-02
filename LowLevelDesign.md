@@ -158,7 +158,7 @@ inventory = //get data object inventory from database
 // This will also change the background red when a inventory item reach a low number
 inventoryDisplay(inventory)
 
-let contact = //get data from database for customers trying to contact
+contact = //get data from database for customers trying to contact
 
 // Display a scroll list of contacts with a checkmark next to contact if contact has been handled
 // Once contacted and handled the user will be able to post the contact to handled: True
