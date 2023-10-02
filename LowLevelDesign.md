@@ -1,41 +1,56 @@
 # Drone Cones Low Level Design
 
+## Introduction
+
+This document will outline the low level design of the Drone Cones App.
+Here, we talk about the types of functions needed in both the front end and the back end.
+We also outline what we want the basic structure of the app to look like using wire frame.
+
+## Table of Contents
+
+* [Django Server](#django-server)
+* [Front End Logic](#front-end-logic)
+
 ## Django Server
-POST Requests
+
+The Django server will use POST and GET requests as access points for the data base.
+
+POST Requests:
+
 * new user
-    * server receives new user information to add to database
+  * server receives new user information to add to database
 * new drone lender
-    * server receives new drone lender info to add to database
+  * server receives new drone lender info to add to database
 * order info
-    * server receives:
-        * amount of ice cream ordered (and flavor)
-        * amount of cones ordered (and type)
-        * amount of toppings ordered (and type)
-        * cost of the order
-        * drone used
+  * server receives:
+    * amount of ice cream ordered (and flavor)
+    * amount of cones ordered (and type)
+    * amount of toppings ordered (and type)
+    * cost of the order
+    * drone used
 * update inventory
 
+GET Requests:
 
-
-GET Requests
 * available drones
-    * server receives size of order and checks database for available drones of correct size
-    * server sends availabe drones with their size
+  * server receives size of order and checks database for available drones of correct size
+  * server sends available drones with their size
 * available inventory
-    * server sends:
-        * options of cones available
-        * options of ice cream available
-        * options of toppings available
+  * server sends:
+  * options of cones available
+  * options of ice cream available
+  * options of toppings available
 * correct password for login
-    * server checks the login info against database
-    * server sends on OK to continue or a NOT OK
+  * server checks the login info against database
+  * server sends on OK to continue or a NOT OK
 * manager reports
-    * server sends over past order data
-    * server sends revenue data
-    * server sends drone info
+  * server sends over past order data
+  * server sends revenue data
+  * server sends drone info
 
-### psuedo code
-```
+### pseudo code
+
+```python
 def receive_requests(request)
    if request.method == POST
       data = {
@@ -56,35 +71,38 @@ def handle_data(data)
       return the requested data from the database
 ```
 
-## Order Page Psudeo-Code Design
+## Front End Logic
+
+### Order Page Pseudo-Code Design
 
 The order page would contain:
-*	dropdown list of the icecream cone flavors
-*	dropdown list of the icecream flavors
-*	a list of icecream toppings
+
+* dropdown list of the ice cream cone flavors
+* dropdown list of the ice cream flavors
+* a list of ice cream toppings
 
 ```JavaScript
 order = // List of Cones Object to return to the server
 
 currCone = // new Cone object
 
-options = //list of icecream flavors/cones (may have too add to the database)
+options = //list of ice cream flavors/cones (may have too add to the database)
 
 toppings = //String list of toppings for the cone
 
 iceTops = //list of ice cream toppings
 
-// Select what ice cream flaver/cone you want as a select input <select> </select> from svelte
+// Select what ice cream flavor/cone you want as a select input <select> </select> from svelte
 dropDownMenu(options) 
 
-// Display list of toppings once the selected topping is choosen use group input from svelte to 
+// Display list of toppings once the selected topping is chosen use group input from svelte to 
 listOfToppings(iceTops)
 
 
 //Once the options have been chosen there are going to be four buttons 
 
 
-// a button stating the user is finished with the cone and this button will add the cone object to the orderlist, then update price in order
+// a button stating the user is finished with the cone and this button will add the cone object to the order list, then update price in order
 button("addToCart")
 
 // This button would lead to a sub-page, to view order and the checkout button would be there
@@ -98,11 +116,12 @@ button("contact")
 
 ```
 
-### Cart Page Psudeo-Code Design
+### Cart Page Pseudo-Code Design
 
 This page would include:
-*	a view list of the cone object in the order
-*	a checkout button to finish order
+
+* a view list of the cone object in the order
+* a checkout button to finish order
 
 ```JavaScript
 order = //Pass the order list from previous page
@@ -124,17 +143,18 @@ button("Order", order)
 
 ```
 
-### Manager Page Psudeo-Code Design
+### Manager Page Pseudo-Code Design
 
 This page would include:
-* graph/numerical of the quantity of inventory items 
+
+* graph/numerical of the quantity of inventory items
 * current revenue and expense
 * List of contact objects and displays list
 
-This will request data from database/library
+This will request data from database/library:
+
 * For the revenue and expense for the day
 * Import chart.js call for graphing data
-
 
 ```JavaScript
 /*
@@ -165,17 +185,17 @@ contact = //get data from database for customers trying to contact
 listOfContact(contacts)
 ```
 
-
-### Drone page Psudeo-Code Design
+### Drone page Pseudo-Code Design
 
 This page would include:
+
 * The list of the operator drones
 * add new drones with specs
 
 ```JavaScript
 drones = // get the data from the database for drones list
 
-// This will diplay a list of drones with Specs
+// This will display a list of drones with Specs
 // This will also display the drones status
 // Each drone list would contain a remove button to remove the drone from their list
 dronesList(drones)
