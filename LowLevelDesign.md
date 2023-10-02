@@ -9,6 +9,7 @@ We also outline what we want the basic structure of the app to look like using w
 ## Table of Contents
 
 * [Django Server](#django-server)
+* [Front End Views](#front-end-views)
 * [Front End Logic](#front-end-logic)
 
 ## Django Server
@@ -70,6 +71,17 @@ def handle_data(data)
    elif type == GET
       return the requested data from the database
 ```
+
+## Front End Views
+
+Here are mockups of what the application will look like.
+
+* [Log-in page](https://wireframe.cc/F08gdT)
+* [Order page](https://wireframe.cc/fHa6vd)
+* [Cart page](https://wireframe.cc/yUR5pU)
+* [Account page](https://wireframe.cc/aqI5bl)
+* [Oder tracking page](https://wireframe.cc/rMDQMf)
+* [Contact/Report Page](https://wireframe.cc/IdDwLg)
 
 ## Front End Logic
 
