@@ -75,6 +75,34 @@ def handle_data(data)
 
 ## Database
 
+Our database will have some default data that will need to be filled. Here, we outline what data is needed in the default migrations and what our database objects will look like and contain.
+
+### Migrations
+
+* Fill DroneType with three drone types:
+
+  1. Light with capacity 1
+  2. Medium with capacity 4
+  3. Heavy with capacity 8
+
+* Fill ConeType with two cone types (with their respective details):
+
+  1. Cake
+  2. Waffle
+
+* Fill IceCreamType with three ice cream types (with their respective details):
+
+  1. Vanilla
+  2. Chocolate
+  3. Strawberry
+
+* Fill ToppingType with three topping types (with their respective details):
+  1. Sprinkles
+  2. Cherry
+  3. Chocolate sauce
+
+### Pseudo-schema
+
 Here is a pseudo-schema for the data base.
 This includes the different objects that will be used to keep information organized.
 
