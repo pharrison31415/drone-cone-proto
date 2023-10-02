@@ -6,5 +6,5 @@ Here are mockups of what the application will look like:
 * [Order page](https://wireframe.cc/fHa6vd)
 * [Cart page](https://wireframe.cc/yUR5pU)
 * [Account page](https://wireframe.cc/aqI5bl)
-* [Oder tracking page](https://wireframe.cc/rMDQMf)
+* [Order tracking page](https://wireframe.cc/rMDQMf)
 * [Contact/Report Page](https://wireframe.cc/IdDwLg)
