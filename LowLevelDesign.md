@@ -75,7 +75,9 @@ def handle_data(data)
 
 ## Database
 
-Our database will have some default data that will need to be filled. Here, we outline what data is needed in the default migrations and what our database objects will look like and contain.
+Our database will use SQLite.
+We will have some default data that will need to be filled.
+Here, we outline what data is needed in the default migrations and what our database objects will look like and contain.
 
 ### Migrations
 
