@@ -9,6 +9,7 @@ We also outline what we want the basic structure of the app to look like using w
 ## Table of Contents
 
 * [Django Server](#django-server)
+* [Database](#database)
 * [Front End Views](#front-end-views)
 * [Front End Logic](#front-end-logic)
 
@@ -71,6 +72,13 @@ def handle_data(data)
    elif type == GET
       return the requested data from the database
 ```
+
+## Database
+
+Here is a pseudo-schema for the data base.
+This includes the different objects that will be used to keep information organized.
+
+[pseudo-schema.txt](./pseudo-schema.txt)
 
 ## Front End Views
 
