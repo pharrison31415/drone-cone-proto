@@ -259,3 +259,83 @@ droneCapacity = // this will be a numeric input for weight capacity of the drone
 // This button would post the new drone in the list for the drone operator
 button("addDrones")
 ```
+
+### Track Order page Pseudo-Code Design
+
+This page would include:
+* The details of an order such as:
+  * time placed
+  * cone ordered
+  * time left to devilery/ time delivered
+  * order number
+  * cost
+
+```JavaScript
+order = // get the data from the database from order list
+
+// This will display the order details
+orderDisplay(order)
+```
+
+### Contact Page Pseudo-Code Design
+
+This page would include:
+* a text entry for name, email, and message with a submit button
+
+```JavaScript
+// This will send a message to the managers
+sendMessage()
+```
+
+### Log in Page Pseudo-Code Design
+
+This page would let the user log in
+* it would need to be able to check if
+  * the username exists
+  * password exists
+
+```JavaScript
+// This will get the username and password that was entered and check to see if they match eachother and if they do let them log in going to the account page first
+login(username, password)
+```
+
+### Account Page Pseudo-Code Design
+
+This page would include:
+* The account name
+* recent orders
+  * order details
+* address
+
+```JavaScript
+recentOrders = // get the recent orders from the database
+account = // get account from database
+
+// this will display the order details
+// each will have an add to cart button and be able to click on it to see more details, go to order detail page for that order
+for each order in RecentOrders {
+  orderDisplay(order)
+}
+```
+
+### Sign-Up Page Pseudo-Code Design
+
+This page would have to post to the database:
+* username
+* password
+* role
+
+```JavaScript
+// This will add the user to the database with the correct role
+addUser(username, password, role)
+```
+
+### Front Page Pseudo-Code Design
+
+This page will ask to log in or sign up
+```JavaScript
+// This will lead the user to the log in page
+button('login', login)
+// This will lead the user to the sign up page
+button('sign up', signUp)
+```
