@@ -2,12 +2,12 @@
 
 ## Milestone 0
 
-### [Requirements Documentation](https://github.com/pharrison31415/drone-cone-proto/blob/main/requirements.md)
+### [Requirements Documentation](https://github.com/pharrison31415/drone-cone-proto/blob/main/doc/requirements.md)
 
 ## Milestone 1
 
-### [High Level Design Documentation](https://github.com/pharrison31415/drone-cone-proto/blob/main/HighLevelDesign.md)
+### [High Level Design Documentation](https://github.com/pharrison31415/drone-cone-proto/blob/main/doc/HighLevelDesign.md)
 
-### [Low Level Design Documentation](https://github.com/pharrison31415/drone-cone-proto/blob/main/LowLevelDesign.md)
+### [Low Level Design Documentation](https://github.com/pharrison31415/drone-cone-proto/blob/main/doc/LowLevelDesign.md)
 
-### [Wireframe Prototypes Links](https://github.com/pharrison31415/drone-cone-proto/blob/main/WireframeMockup.md)
+### [Wireframe Prototypes Links](https://github.com/pharrison31415/drone-cone-proto/blob/main/doc/WireframeMockup.md)
