@@ -7,15 +7,17 @@ export const nodes = [
 	() => import('./nodes/3'),
 	() => import('./nodes/4'),
 	() => import('./nodes/5'),
-	() => import('./nodes/6')
+	() => import('./nodes/6'),
+	() => import('./nodes/7')
 ];
 
 export const server_loads = [];
 
 export const dictionary = {
 		"/": [4],
-		"/contact": [5,[2]],
-		"/track_order": [6,[3]]
+		"/account": [5],
+		"/contact": [6,[2]],
+		"/track_order": [7,[3]]
 	};
 
 export const hooks = {
