@@ -1,11 +1,2 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
-<!--sign in / sign up buttons -->
-<button type="Sign In">  </button>
-<button type="Sign Up">  </button>
-<!--side bar-->
-
-<!-- contact button-->
-<button type="Contact Us">  </button>
-
+<h1>Drone Sign Up Page</h1>
 
