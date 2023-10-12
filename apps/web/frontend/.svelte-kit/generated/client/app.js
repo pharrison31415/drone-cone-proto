@@ -15,19 +15,21 @@ export const nodes = [
 	() => import('./nodes/11'),
 	() => import('./nodes/12'),
 	() => import('./nodes/13'),
-	() => import('./nodes/14')
+	() => import('./nodes/14'),
+	() => import('./nodes/15')
 ];
 
 export const server_loads = [];
 
 export const dictionary = {
 		"/": [8],
-		"/Manager_Page": [9,[2]],
-		"/Sign_In_Page": [10,[3]],
-		"/Sign_Up_Page_Customer": [11,[4]],
-		"/Sign_Up_Page_Drone": [12,[5]],
-		"/contact": [13,[6]],
-		"/track_order": [14,[7]]
+		"/Manager_Page": [11,[3]],
+		"/Sign_In_Page": [12,[4]],
+		"/Sign_Up_Page_Customer": [13,[5]],
+		"/Sign_Up_Page_Drone": [14,[6]],
+		"/account": [9],
+		"/contact": [10,[2]],
+		"/track_order": [15,[7]]
 	};
 
 export const hooks = {
