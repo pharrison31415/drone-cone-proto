@@ -1,6 +1,6 @@
 # API Documentation
 
-## GET `/api/get-drone-statuses/`
+## GET `/api/drone-statuses/`
 
 Returns array of drone status objects which consist of a text value.
 
