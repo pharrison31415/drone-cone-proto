@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, render
 from django.http import JsonResponse
 
-from api.models import DroneStatus
+from api.models import DroneStatus, Customer
 
 
 def hello_world(request):
@@ -18,3 +18,8 @@ def get_drone_statuses(request):
         })
 
     return JsonResponse({"droneStatuses": statuses_arr})
+
+def new_customer(request):
+    username = request.POST['username']
+    #take the password sent over, hash it, save the hash to the database
+    return JsonResponse({'success': True})
