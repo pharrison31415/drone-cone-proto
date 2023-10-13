@@ -29,25 +29,6 @@ TODO: api calls to GET data from data base for manager information
 
     testSting = ""
 
-    onMount(async () => {
-<<<<<<< Updated upstream
-        fetch('')
-        .then(response => response.json())
-        .then(data => {
-		testSting = data
-=======
-        fetch('https://jsonplaceholder.typicode.com/todos/1')
-        .then(response => response.json())
-        .then(json => {
-		console.log(json)
->>>>>>> Stashed changes
-        })
-        .catch(error => {
-        console.log(error);
-        return [];
-        });
-    });
-
     /*  
         contacts = None
     	
