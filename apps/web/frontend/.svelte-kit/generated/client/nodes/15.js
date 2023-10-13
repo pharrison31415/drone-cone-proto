@@ -1,1 +1,0 @@
-export { default as component } from "../../../../src/routes/track_order/+page.svelte";
