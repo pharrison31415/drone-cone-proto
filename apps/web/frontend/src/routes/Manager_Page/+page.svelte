@@ -2,7 +2,7 @@
 
 <!--Inventory data-->
 <div id="inventory" class="center" >
-    
+  
 
 </div>
 
@@ -21,7 +21,33 @@
 TODO: api calls to GET data from data base for manager information
 **** RELOCATED WHEN to Script File WHEN DONE ****
 -->
+
+
 <script>
+	import { onMount } from "svelte";
+
+
+    testSting = ""
+
+    onMount(async () => {
+<<<<<<< Updated upstream
+        fetch('')
+        .then(response => response.json())
+        .then(data => {
+		testSting = data
+=======
+        fetch('https://jsonplaceholder.typicode.com/todos/1')
+        .then(response => response.json())
+        .then(json => {
+		console.log(json)
+>>>>>>> Stashed changes
+        })
+        .catch(error => {
+        console.log(error);
+        return [];
+        });
+    });
+
     /*  
         contacts = None
     	
@@ -44,6 +70,8 @@ TODO: api calls to GET data from data base for manager information
 		inventory = await response.json();
         }   
     */
+
+
 </script>
 
 <!--Temp Style **** RELOCATE to CSS FILE WHEN DONE ****-->
@@ -51,15 +79,16 @@ TODO: api calls to GET data from data base for manager information
     .center {
         margin: auto;
         width: 50%;
-        border: 3px solid green;
+        border: 3px solid rgb(0, 0, 0);
         padding: 10px;
             }
     #inventory {
-        background:rgb(223, 83, 83);
+        background:rgb(255, 255, 255);
         width:75%;
         height:250px;
-        border-style: double;
+        border-style: solid;
         margin-bottom: 20px;
+        border-radius: 20px;
             }
     #revenue {
         float:center; 
@@ -77,5 +106,6 @@ TODO: api calls to GET data from data base for manager information
         border-style: double;
         margin-bottom: 20px;
             }
+    
 </style>
 
