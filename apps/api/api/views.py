@@ -3,7 +3,7 @@ from django.contrib.auth.hashers import make_password, check_password
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from api.models import DroneStatus, Customer
+from api.models import DroneStatus, DroneType, Customer
 
 
 def hello_world(request):
@@ -12,8 +12,12 @@ def hello_world(request):
 
 def get_drone_statuses(request):
     statuses = DroneStatus.objects.all()
-
     return JsonResponse({"droneStatuses": [status.toJSON() for status in statuses]})
+
+
+def get_drone_types(request):
+    drone_types = DroneType.objects.all()
+    return JsonResponse({"droneTypes": [drone_type.toJSON() for drone_type in drone_types]})
 
 
 @csrf_exempt
