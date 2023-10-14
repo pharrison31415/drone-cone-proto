@@ -33,7 +33,7 @@ def new_customer(request):
 
     Customer(
         username=request.POST['username'],
-        passwordHash=make_password(request.POST['password']),
+        password_hash=make_password(request.POST['password']),
         first_name=request.POST['firstName'],
         last_name=request.POST['lastName'],
     ).save()

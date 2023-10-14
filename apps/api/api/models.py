@@ -4,7 +4,7 @@ from datetime import datetime
 
 class Customer(md.Model):
     username = md.CharField(primary_key=True, max_length=64)
-    passwordHash = md.CharField(max_length=128)
+    password_hash = md.CharField(max_length=128)
     first_name = md.CharField(max_length=64)
     last_name = md.CharField(max_length=64)
     created = md.DateTimeField(auto_now=True)
@@ -12,7 +12,7 @@ class Customer(md.Model):
 
 class Owner(md.Model):
     username = md.CharField(primary_key=True, max_length=64)
-    passwordHash = md.CharField(max_length=128)
+    password_hash = md.CharField(max_length=128)
     first_name = md.CharField(max_length=64)
     last_name = md.CharField(max_length=64)
     created = md.DateTimeField(auto_now=True)
