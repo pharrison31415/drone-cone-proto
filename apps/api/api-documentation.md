@@ -2,9 +2,7 @@
 
 ## GET `/api/drone-statuses/`
 
-Returns array of drone status objects which consist of a text value.
-
-example json:
+**Response Data** consists of a `droneStatuses` array of drone status objects which consist of a `text` string. Example below.
 
 ```
 {"droneStatuses":
