@@ -13,3 +13,14 @@
   ]
 }
 ```
+
+## POST `/api/new-customer/`
+
+**Request Body** consists of the following strings:
+
+- `username`
+- `password`
+- `firstName`
+- `lastName`
+
+**Response Data** consists of a `success` boolean and, if false, a `message` string.
