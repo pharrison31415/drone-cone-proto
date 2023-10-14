@@ -27,7 +27,7 @@ class Owner(md.Model):
 
 
 class DroneType(md.Model):
-    text = md.CharField(max_length=32)
+    text = md.CharField(primary_key=True, max_length=32)
     capacity = md.PositiveIntegerField()
 
     def toJSON(self):
@@ -46,11 +46,12 @@ class DroneStatus(md.Model):
         }
 
 
-class Drone(DroneType):
+class Drone(md.Model):
     def last_use_default():
         return datetime(1970, 1, 1, 0, 0, 0, 0)
 
     status = md.ForeignKey(DroneStatus, on_delete=md.PROTECT)
+    drone_type = md.ForeignKey(DroneType, on_delete=md.PROTECT)
     owner = md.ForeignKey(Owner, on_delete=md.PROTECT)
     last_use = md.DateTimeField(null=True, default=last_use_default)
     created = md.DateTimeField(auto_now=True)
