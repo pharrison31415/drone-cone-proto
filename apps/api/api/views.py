@@ -13,13 +13,7 @@ def hello_world(request):
 def get_drone_statuses(request):
     statuses = DroneStatus.objects.all()
 
-    statuses_arr = []
-    for status in statuses:
-        statuses_arr.append({
-            "text": status.text
-        })
-
-    return JsonResponse({"droneStatuses": statuses_arr})
+    return JsonResponse({"droneStatuses": [status.toJSON() for status in statuses]})
 
 
 @csrf_exempt
