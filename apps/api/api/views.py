@@ -47,8 +47,8 @@ def new_customer(request):
     if request.method != "POST":
         return JsonResponse({'success': False, 'message': 'POST method required. Do not use these credentials.'})
 
-    _, success = safe_querey(Customer, pk=request.POST['username'])
-    if success:
+    _, username_taken = safe_querey(Customer, pk=request.POST['username'])
+    if username_taken:
         return JsonResponse({'success': False, 'message': 'username taken'})
 
     Customer(
