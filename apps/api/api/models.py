@@ -13,7 +13,7 @@ class Customer(md.Model):
 class CustomerToken(md.Model):
     token = md.CharField(primary_key=True, max_length=128)
     customer = md.ForeignKey(Customer, on_delete=md.PROTECT)
-    created = md.DateField(auto_now=True)
+    created = md.DateTimeField(auto_now=True)
 
 
 class Owner(md.Model):
