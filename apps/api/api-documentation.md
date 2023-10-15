@@ -40,3 +40,14 @@
 - `lastName`
 
 **Response Data** consists of a `success` boolean and, if false, a `message` string.
+
+## POST `/api/customer-login/`
+
+**Request Body** consits of the following strings:
+
+- `username`
+- `password`
+
+**Response Data** consists of a `success` boolean and, if false, a `message` string.
+
+**Response Headers** has a `customer-token` string 128 characters in length if `success` on the response data is true.

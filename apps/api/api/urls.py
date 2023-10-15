@@ -8,4 +8,6 @@ urlpatterns = [
     path('drone-statuses/', views.get_drone_statuses),
     path('drone-types/', views.get_drone_types),
     path('new-customer/', views.new_customer),
+    path('customer-login/', views.customer_login),
+    path('private-customer-data/', views.private_customer_data),
 ]
