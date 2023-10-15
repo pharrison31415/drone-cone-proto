@@ -10,6 +10,12 @@ class Customer(md.Model):
     created = md.DateTimeField(auto_now=True)
 
 
+class CustomerToken(md.Model):
+    token = md.CharField(primary_key=True, max_length=128)
+    customer = md.ForeignKey(Customer, on_delete=md.PROTECT)
+    created = md.DateField(auto_now=True)
+
+
 class Owner(md.Model):
     username = md.CharField(primary_key=True, max_length=64)
     password_hash = md.CharField(max_length=128)
