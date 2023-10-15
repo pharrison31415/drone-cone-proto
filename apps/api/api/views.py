@@ -45,11 +45,17 @@ def get_drone_types(request):
 @csrf_exempt
 def new_customer(request):
     if request.method != "POST":
-        return JsonResponse({'success': False, 'message': 'POST method required. Do not use these credentials.'})
+        return JsonResponse({
+            'success': False,
+            'message': 'POST method required. Do not use these credentials.'
+        })
 
     _, username_taken = safe_querey(Customer, pk=request.POST['username'])
     if username_taken:
-        return JsonResponse({'success': False, 'message': 'username taken'})
+        return JsonResponse({
+            'success': False,
+            'message': 'username taken'
+        })
 
     Customer(
         username=request.POST['username'],
@@ -64,13 +70,19 @@ def new_customer(request):
 @csrf_exempt
 def customer_login(request):
     if request.method != "POST":
-        return JsonResponse({'success': False, 'message': 'POST method required.'})
+        return JsonResponse({
+            'success': False,
+            'message': 'POST method required.',
+        })
 
     customer, customer_found = safe_querey(
         Customer, pk=request.POST['username'])
     # susceptible to timing attack
     if not customer_found or not check_password(request.POST['password'], customer.password_hash):
-        return JsonResponse({'success': False, 'message': 'bad login'})
+        return JsonResponse({
+            'success': False,
+            'message': 'bad login',
+        })
 
     response = JsonResponse({'success': True})
     token = get_random_string(length=128)
