@@ -2,8 +2,9 @@ from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.hashers import make_password, check_password
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.utils.crypto import get_random_string
 
-from api.models import DroneStatus, DroneType, Customer
+from api.models import DroneStatus, DroneType, Customer, CustomerToken
 
 
 def hello_world(request):
@@ -37,3 +38,25 @@ def new_customer(request):
     ).save()
 
     return JsonResponse({'success': True})
+
+
+@csrf_exempt
+def customer_login(request):
+    if request.method != "POST":
+        return JsonResponse({'success': False, 'message': 'POST method required.'})
+
+    customers = Customer.objects.filter(pk=request.POST['username'])
+    # if querey set is not empty and passwords match
+    # susceptible to timing attack
+    if not customers or not check_password(request.POST['password'], customers[0].password_hash):
+        return JsonResponse({'success': False, 'message': 'bad login'})
+
+    response = JsonResponse({'success': True})
+    token = get_random_string(length=128)
+    CustomerToken(
+        token=token,
+        customer=customers[0]
+    ).save()
+    response.headers["Set-Cookie"] = f"customer-token={token}"
+
+    return response
