@@ -7,6 +7,18 @@ from django.utils.crypto import get_random_string
 from api.models import DroneStatus, DroneType, Customer, CustomerToken
 
 
+def verify_customer_token(view):
+    def wrapper_verify(*args, **kwargs):
+        customer_token = args[0].COOKIES.get("customer-token", False)
+        tokens = CustomerToken.objects.filter(token=customer_token)
+        if not tokens:
+            return JsonResponse({'success': False, 'message': 'bad customer token'})
+
+        return view(*args, customer=tokens[0].customer, **kwargs)
+
+    return wrapper_verify
+
+
 def hello_world(request):
     return JsonResponse({"helloWorld": False})
 
@@ -60,3 +72,8 @@ def customer_login(request):
     response.headers["Set-Cookie"] = f"customer-token={token}"
 
     return response
+
+
+@verify_customer_token
+def private_customer_data(request, customer):
+    return JsonResponse({"firstName": customer.first_name})
