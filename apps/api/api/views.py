@@ -7,14 +7,23 @@ from django.utils.crypto import get_random_string
 from api.models import DroneStatus, DroneType, Customer, CustomerToken
 
 
+def safe_querey(table, **kwargs):
+    querey_set = table.objects.filter(**kwargs)
+    if not querey_set:
+        return None, False
+
+    return querey_set[0], True
+
+
 def verify_customer_token(view):
     def wrapper_verify(*args, **kwargs):
         customer_token = args[0].COOKIES.get("customer-token", False)
-        tokens = CustomerToken.objects.filter(token=customer_token)
-        if not tokens:
+        retrieved_token, found = safe_querey(
+            CustomerToken, token=customer_token)
+        if not found:
             return JsonResponse({'success': False, 'message': 'bad customer token'})
 
-        return view(*args, customer=tokens[0].customer, **kwargs)
+        return view(*args, customer=retrieved_token.customer, **kwargs)
 
     return wrapper_verify
 
@@ -38,8 +47,8 @@ def new_customer(request):
     if request.method != "POST":
         return JsonResponse({'success': False, 'message': 'POST method required. Do not use these credentials.'})
 
-    # if username taken
-    if Customer.objects.filter(pk=request.POST['username']):
+    _, success = safe_querey(Customer, pk=request.POST['username'])
+    if success:
         return JsonResponse({'success': False, 'message': 'username taken'})
 
     Customer(
@@ -57,17 +66,17 @@ def customer_login(request):
     if request.method != "POST":
         return JsonResponse({'success': False, 'message': 'POST method required.'})
 
-    customers = Customer.objects.filter(pk=request.POST['username'])
-    # if querey set is not empty and passwords match
+    customer, customer_found = safe_querey(
+        Customer, pk=request.POST['username'])
     # susceptible to timing attack
-    if not customers or not check_password(request.POST['password'], customers[0].password_hash):
+    if not customer_found or not check_password(request.POST['password'], customer.password_hash):
         return JsonResponse({'success': False, 'message': 'bad login'})
 
     response = JsonResponse({'success': True})
     token = get_random_string(length=128)
     CustomerToken(
         token=token,
-        customer=customers[0]
+        customer=customer
     ).save()
     response.headers["Set-Cookie"] = f"customer-token={token}"
 
