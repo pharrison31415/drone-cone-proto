@@ -11,4 +11,3 @@ vite.config.ts.timestamp-*
 
 __pycache__
 db.sqlite3
-.svelte-kit
