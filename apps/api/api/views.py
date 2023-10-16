@@ -1,7 +1,31 @@
 from django.shortcuts import get_object_or_404, render
+from django.contrib.auth.hashers import make_password, check_password
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.crypto import get_random_string
 
-from api.models import DroneStatus, Customer
+from api.models import DroneStatus, DroneType, Customer, CustomerToken
+
+
+def safe_querey(table, **kwargs):
+    querey_set = table.objects.filter(**kwargs)
+    if not querey_set:
+        return None, False
+
+    return querey_set[0], True
+
+
+def verify_customer_token(view):
+    def wrapper_verify(*args, **kwargs):
+        customer_token = args[0].COOKIES.get("customer-token", False)
+        retrieved_token, found = safe_querey(
+            CustomerToken, token=customer_token)
+        if not found:
+            return JsonResponse({'success': False, 'message': 'bad customer token'})
+
+        return view(*args, customer=retrieved_token.customer, **kwargs)
+
+    return wrapper_verify
 
 
 def hello_world(request):
@@ -10,16 +34,67 @@ def hello_world(request):
 
 def get_drone_statuses(request):
     statuses = DroneStatus.objects.all()
+    return JsonResponse({"droneStatuses": [status.toJSON() for status in statuses]})
 
-    statuses_arr = []
-    for status in statuses:
-        statuses_arr.append({
-            "text": status.text
+
+def get_drone_types(request):
+    drone_types = DroneType.objects.all()
+    return JsonResponse({"droneTypes": [drone_type.toJSON() for drone_type in drone_types]})
+
+
+@csrf_exempt
+def new_customer(request):
+    if request.method != "POST":
+        return JsonResponse({
+            'success': False,
+            'message': 'POST method required. Do not use these credentials.'
         })
 
-    return JsonResponse({"droneStatuses": statuses_arr})
+    _, username_taken = safe_querey(Customer, pk=request.POST['username'])
+    if username_taken:
+        return JsonResponse({
+            'success': False,
+            'message': 'username taken'
+        })
 
-def new_customer(request):
-    username = request.POST['username']
-    #take the password sent over, hash it, save the hash to the database
+    Customer(
+        username=request.POST['username'],
+        password_hash=make_password(request.POST['password']),
+        first_name=request.POST['firstName'],
+        last_name=request.POST['lastName'],
+    ).save()
+
     return JsonResponse({'success': True})
+
+
+@csrf_exempt
+def customer_login(request):
+    if request.method != "POST":
+        return JsonResponse({
+            'success': False,
+            'message': 'POST method required.',
+        })
+
+    customer, customer_found = safe_querey(
+        Customer, pk=request.POST['username'])
+    # susceptible to timing attack
+    if not customer_found or not check_password(request.POST['password'], customer.password_hash):
+        return JsonResponse({
+            'success': False,
+            'message': 'bad login',
+        })
+
+    response = JsonResponse({'success': True})
+    token = get_random_string(length=128)
+    CustomerToken(
+        token=token,
+        customer=customer
+    ).save()
+    response.headers["Set-Cookie"] = f"customer-token={token}"
+
+    return response
+
+
+@verify_customer_token
+def private_customer_data(request, customer):
+    return JsonResponse({"firstName": customer.first_name})
