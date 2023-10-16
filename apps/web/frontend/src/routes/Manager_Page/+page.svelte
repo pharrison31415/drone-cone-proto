@@ -1,16 +1,20 @@
 <h1>Manager Page</h1>
 
 <!--Inventory data-->
+
+<h2 class="centerText"> Inventory </h2>
 <div id="inventory" class="center" >
-  
+
 
 </div>
 
 <!--Revenue data-->
+<h2 class="centerText"> Revenue </h2>
 <div id="revenue" class="center">
 
 </div>
 <!--Contact data-->
+<h2 class="centerText"> Customer's Contact </h2>
 <div id="customer_contact"  class="center">
 
 </div>
@@ -24,45 +28,74 @@ TODO: api calls to GET data from data base for manager information
 
 
 <script>
-	import { onMount } from "svelte";
+    import { onMount } from "svelte";
+// "localhost:8000/api/[data]" url for api call for data
+
+/*  
+**** Inventory Status ****
+onMount(async () => {
+  fetch("")
+  .then(response => response.json())
+  .then(data => {
+		inventory = data;  
+    }).catch(error => {
+    console.log(error);
+  });
+});
+
+**** Revenue Status ****
+onMount(async () => {
+  fetch('')
+  .then(response => response.json())
+  .then(revenueData => {
+		revenue = revenueData
+    }).catch(error => {
+    console.log(error);
+  });
+});
 
 
-    testSting = ""
-
-    /*  
-        contacts = None
-    	
-        async function  {
-		const response = await fetch('api request for list of contact');
-		contacts = await response.json();
-        }
-
-        revenue = None
-    	
-        async function  {
-		const response = await fetch('api request for revenue ');
-		revenue = await response.json();
-        }
+**** Contatct Status ****
+onMount(async () => {
+  fetch('')
+  .then(response => response.json())
+  .then(contactData => {
+		contact = contactData;  
+    }).catch(error => {
+    console.log(error);
+  });
+});
 
 
-        inventory = None
-    	async function  {
-		const response = await fetch('api request for list of contact');
-		inventory = await response.json();
-        }   
-    */
+
+*/
+
 
 
 </script>
 
 <!--Temp Style **** RELOCATE to CSS FILE WHEN DONE ****-->
 <style>
+    h2 {
+        font-family: 'Trebuchet MS', sans-serif;
+    }
+
     .center {
         margin: auto;
         width: 50%;
         border: 3px solid rgb(0, 0, 0);
         padding: 10px;
-            }
+        font-family: 'Trebuchet MS', sans-serif;
+        }
+    
+
+    .centerText {
+        margin: auto;
+        width: 50%;
+        padding: 10px;
+        text-align: center;
+            }       
+
     #inventory {
         background:rgb(255, 255, 255);
         width:75%;
@@ -73,19 +106,21 @@ TODO: api calls to GET data from data base for manager information
             }
     #revenue {
         float:center; 
-        background:hsl(189, 89%, 60%);
+        background:hsl(0, 0%, 100%);
         width:75%;
         height:250px;
-        border-style: double;
+        border-style: solid;
         margin-bottom: 20px;
+        border-radius: 20px;
         }
     #customer_contact{
         float:center; 
-        background:rgb(61, 247, 133);
+        background:rgb(249, 249, 249);
         width:75%;
         height:250px;
-        border-style: double;
+        border-style: solid;
         margin-bottom: 20px;
+        border-radius: 20px;
             }
     
 </style>
