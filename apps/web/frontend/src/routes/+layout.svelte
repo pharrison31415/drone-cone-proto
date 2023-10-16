@@ -1,22 +1,22 @@
 <div id = "topBar">
-    
-    {#if showSlide }
-    <div id="sideBar" transition:slide ={{delay: 250, duration: 300, axis: 'x'}} >
-        <ul>  
-            <li> <button on:click={slideNav} class="button-19"> back </button> </li>
-            <li> <a href="/" on:click={slideNav}>home</a> </li>
-            <li> <a href="/contact" on:click={slideNav}>contact</a> </li>
-            <li> <a href="/track_order" on:click={slideNav}>track Order</a> </li>
-            <li> <a href="/account" on:click={slideNav}>account</a> </li>
-            <li> <a href="/Manager_Page" on:click={slideNav}>Manager Page</a> </li>
-            <li> <a href="Sign_Up_Page_Drone" on:click={slideNav}>Drone Sign Up</a>  </li>
-        </ul>
-    </div>
+  <img src="/CompanyLogo.png" alt="company logo" id="companyLogo">
+  {#if showSlide }
+  <div id="sideBar" transition:slide ={{delay: 0, duration: 400, axis: 'x'}} >
+      <ul>  
+          <li> <button on:click={slideNav} class="button-19"> back </button> </li>
+          <li> <a href="/" on:click={slideNav}>home</a> </li>
+          <li> <a href="/contact" on:click={slideNav}>contact</a> </li>
+          <li> <a href="/track_order" on:click={slideNav}>track Order</a> </li>
+          <li> <a href="/account" on:click={slideNav}>account</a> </li>
+          <li> <a href="/Manager_Page" on:click={slideNav}>Manager Page</a> </li>
+          <li> <a href="Sign_Up_Page_Drone" on:click={slideNav}>Drone Sign Up</a>  </li>
+       </ul>
+  </div>
 
-    {:else}
-    <button on:click={slideNav} class="button-19"> test  </button>
+  {:else}
+  <button on:click={slideNav} id="sideBarIcon" transition:slide = {{delay:0, duration: 10, axis: 'x'}}> </button>
     
-    {/if}
+  {/if}
 
 </div>
 
@@ -29,22 +29,33 @@
    function slideNav(){
     showSlide = !showSlide 
   }
- 
-
 </script>
   
 <style>
+  #sideBarIcon{
+    background: url("/sideBarIcon.png");
+    width: 48px;
+    height: 48px;
+    margin: 10px;
+    border: none;
+  }
+  #companyLogo{
+    width: 681px;
+    height: 121px;
+    flex-shrink: 0;
+    position: absolute;
+    left: 25%;
+  }
 
   #topBar{
-    background-color: pink;
+    background-color: #FFA9DD;
     width: 100%;
-    height: 150px;
-
+    height: 121px;
   }
   
   #sideBar{
     background-color: rgb(255, 0, 43);
-    width: 25%;
+    width: 15%;
     padding: 0%;
     margin: 0;
     height: 1000px;

@@ -1,1 +1,1 @@
-<h1> Home Page</h1>
+<body style="background: #BAF3FF; margin: 0%"> </body>
