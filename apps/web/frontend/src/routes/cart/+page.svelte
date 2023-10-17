@@ -1,0 +1,122 @@
+<script>
+	import Layout from "../+layout.svelte";
+    let numbers = new Array(100);
+    for (let i = 0; i < numbers.length; i++) {
+        numbers[i] = i + 1;
+    }
+</script>
+
+<h1>Cart</h1>
+<div id="cart">
+    <p>Total Cost: $$$$</p>
+    <!-- for each cone in cart -->
+    <div class="cone">
+        <div class="cone_details">
+            <h3>Cone #??:</h3>
+            <p>Cost: $$$</p>
+            <ul>
+                <li>Cone:</li>
+                <li>Scoops:
+                    <ul>
+                        <li>option</li>
+                        <li>option</li>
+                        <li>option</li>
+                    </ul>
+                </li>
+
+                <li>Toppings:
+                    <ul>
+                        <li>option</li>
+                        <li>option</li>
+                        <li>option</li>
+                    </ul>
+                </li>
+
+            </ul>
+        </div>
+
+        <div id="buttons">
+            <form>
+                <label for="quantity">Qty.</label>
+                <select name="quantity" id="quantity">
+                    {#each numbers as number, i} 
+                        <option value="{i + 1}">{i + 1}</option>
+                    {/each}
+                </select>
+            </form>
+            <button id="remove">
+                <span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+                        <path d="M27 6H21V5C21 3.346 19.654 2 18 2H14C12.346 2 11 3.346 11 5V6H5C3.897 6 3 6.897 3 8V9C3 9.552 3.448 10 4 10H28C28.552 10 29 9.552 29 9V8C29 6.897 28.103 6 27 6ZM13 5C13 4.449 13.449 4 14 4H18C18.551 4 19 4.449 19 5V6H13V5Z" fill="black"/>
+                        <path d="M6 12V27C6 28.654 7.346 30 9 30H23C24.654 30 26 28.654 26 27V12H6ZM19.707 22.293C20.098 22.684 20.098 23.316 19.707 23.707C19.316 24.098 18.684 24.098 18.293 23.707L16 21.414L13.707 23.707C13.316 24.098 12.684 24.098 12.293 23.707C11.902 23.316 11.902 22.684 12.293 22.293L14.586 20L12.293 17.707C11.902 17.316 11.902 16.684 12.293 16.293C12.684 15.902 13.316 15.902 13.707 16.293L16 18.586L18.293 16.293C18.684 15.902 19.316 15.902 19.707 16.293C20.098 16.684 20.098 17.316 19.707 17.707L17.414 20L19.707 22.293Z" fill="black"/>
+                    </svg>
+                </span>
+                <p>Remove</p>
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    h1 {
+        text-align: center;
+    }
+    p {
+        text-align: left;
+        margin-left: 15px;
+    }
+
+    .cone {
+        padding-left: 25px;
+        border: solid black;
+        display: flex;
+        flex-shrink: 0;
+    }
+
+    .cone_details {
+        width: -webkit-fill-available;
+    }
+
+    .cone_details > p {
+        margin: 0px;
+        padding-left: 0px;
+    }
+
+    .cone_details > ul {
+        padding-left: 10px;
+        list-style: none;
+    }
+    
+    li {
+        padding-bottom: 5px;
+    }
+
+    #buttons {
+        text-align: center;
+        padding: 10px;
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+    }
+
+    #buttons > form {
+        padding: 10px;
+    }
+
+    span {
+        align-self: center;
+    }
+    
+
+    button {
+
+        align-self: flex-end;
+        width: fit-content;
+    }
+
+    button > p {
+        margin: 0px;
+    }
+
+</style>
