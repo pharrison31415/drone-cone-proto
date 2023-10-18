@@ -11,3 +11,9 @@
 ### [Low Level Design Documentation](https://github.com/pharrison31415/drone-cone-proto/blob/main/doc/LowLevelDesign.md)
 
 ### [Wireframe Prototypes Links](https://github.com/pharrison31415/drone-cone-proto/blob/main/doc/WireframeMockup.md)
+
+# Running
+
+To start the api, run `$ python apps/api/manage.py runserver`
+
+To start the frontend server, under `apps/web/frontend/`, run `$ npm run dev`

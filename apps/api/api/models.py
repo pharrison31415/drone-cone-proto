@@ -9,6 +9,14 @@ class Customer(md.Model):
     last_name = md.CharField(max_length=64)
     created = md.DateTimeField(auto_now=True)
 
+    def toJSON(self):
+        return {
+            "username": self.username,
+            "firstName": self.first_name,
+            "lastName": self.last_name,
+            "created": self.created,
+        }
+
 
 class CustomerToken(md.Model):
     token = md.CharField(primary_key=True, max_length=128)
