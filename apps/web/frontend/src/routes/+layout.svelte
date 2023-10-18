@@ -5,9 +5,10 @@
       <ul>  
           <li> <button on:click={slideNav} class="button-19"> back </button> </li>
           <li> <a href="/" on:click={slideNav}>home</a> </li>
-          <li> <a href="/contact" on:click={slideNav}>contact</a> </li>
-          <li> <a href="/track_order" on:click={slideNav}>track Order</a> </li>
-          <li> <a href="/account" on:click={slideNav}>account</a> </li>
+          <li> <a href="/customer/contact" on:click={slideNav}>contact</a> </li>
+          <li> <a href="/customer/track_order" on:click={slideNav}>track Order</a> </li>
+          <li> <a href="/customer/cart" on:click={slideNav}>cart</a>  </li>
+          <li> <a href="/customer/account" on:click={slideNav}>account</a> </li>
           <li> <a href="/Manager_Page" on:click={slideNav}>Manager Page</a> </li>
           <li> <a href="Sign_Up_Page_Drone" on:click={slideNav}>Drone Sign Up</a>  </li>
        </ul>
