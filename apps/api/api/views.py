@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.crypto import get_random_string
 
-from api.models import DroneStatus, DroneType, Customer, CustomerToken
+from api.models import DroneStatus, DroneType, Customer, CustomerToken, Owner
 
 
 def safe_querey(table, **kwargs):
@@ -95,7 +95,6 @@ def customer_login(request):
     return response
 
 
-
 @csrf_exempt
 def manager_login(request):
 	if request.method != "POST":
@@ -105,6 +104,25 @@ def manager_login(request):
 		})
 	#import the manager database to complete
 	return
+
+
+@csrf_exempt
+def drone_owner_login(request):
+    if request.method != "POST":
+        return JsonResponse({
+            'success': False,
+            'message': 'POST method required.'
+            })
+    owner, owner_found = safe_querey(
+            Owner, pk=request.POST(['username']))
+    if not owner_found or not check_password(request.POST['password'], owner.password_hash):
+        return JsonResponse({
+            'success': False,
+            'message': 'bad login',
+        })
+    response = JsonResponse('Success': True)
+    #is there going to be something similar to the customer token for the drone owners and managers?
+    return response
 
 
 
