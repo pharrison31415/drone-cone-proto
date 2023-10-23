@@ -94,6 +94,20 @@ def customer_login(request):
 
     return response
 
+
+
+@csrf_exempt
+def manager_login(request):
+	if request.method != "POST":
+		return JsonResponse({
+			'success': False,
+			'message': 'POST method required.',
+		})
+	#import the manager database to complete
+	return
+
+
+
 #TODO post request for a new order, update inventory - from customer
 #TODO get request for things available to order (including prices) - for customer
 #TODO get request for what's in the inventory (including prices) - for manager
