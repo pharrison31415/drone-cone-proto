@@ -126,19 +126,51 @@ def drone_owner_login(request):
 
 
 
-#TODO post request for a new order, update inventory - from customer
-#TODO get request for things available to order (including prices) - for customer
-#TODO get request for what's in the inventory (including prices) - for manager
+@csrf_exempt
+def new_order(request):
+    if request.method != "POST":
+        return JsonResponse({
+            'success': False,
+            'message': 'POST method required.'
+            })
+    #TODO post request for a new order, update inventory - from customer
+    response = JsonResponse('Success': True)
+    return response
+
+
+def available_inventory(request):
+    response = JsonResponse('Status': 'unable to access database')
+    #TODO get request for things available to order (including prices) - for customer
+    return response
+
+
+def full_inventory(request):
+    response = JsonResponse('status': 'unable to access database')
+    #TODO get request for what's in the inventory (including prices) - for manager
+    return response
 """
     how much of each type of ice cream is left
     how much of each type of cone is left
     how much of each type of topping is left
     what the unit price of each item is
-
-TODO get request for the money spent and made - does revenue have it's own model or is it with inventory?
-
 """
-#TODO post request for update inventory - from manager
+
+
+def finances(request):
+    response = JsonResponse('status': 'unable to access database')
+    #TODO get request for the money spent and made - does revenue have it's own model or is it with inventory?
+    return response
+
+@csrf_exempt
+def update_inventory(request):
+    if request.method != "POST":
+        return JsonResponse({
+            'success': False,
+            'message': 'POST method required'
+        })
+    #TODO post request for update inventory - from manager
+    response = JsonResponse('success': True)
+    return response
 """
     price per unit
     added inventory
