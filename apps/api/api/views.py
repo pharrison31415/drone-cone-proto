@@ -120,7 +120,7 @@ def drone_owner_login(request):
             'success': False,
             'message': 'bad login',
         })
-    response = JsonResponse('Success': True)
+    response = JsonResponse({'Success': True})
     #is there going to be something similar to the customer token for the drone owners and managers?
     return response
 
@@ -134,18 +134,18 @@ def new_order(request):
             'message': 'POST method required.'
             })
     #TODO post request for a new order, update inventory - from customer
-    response = JsonResponse('Success': True)
+    response = JsonResponse({'Success': True})
     return response
 
 
 def available_inventory(request):
-    response = JsonResponse('Status': 'unable to access database')
+    response = JsonResponse({'Status': 'unable to access database'})
     #TODO get request for things available to order (including prices) - for customer
     return response
 
 
 def full_inventory(request):
-    response = JsonResponse('status': 'unable to access database')
+    response = JsonResponse({'Status': 'unable to access database'})
     #TODO get request for what's in the inventory (including prices) - for manager
     return response
 """
@@ -157,7 +157,7 @@ def full_inventory(request):
 
 
 def finances(request):
-    response = JsonResponse('status': 'unable to access database')
+    response = JsonResponse({'status': 'unable to access database'})
     #TODO get request for the money spent and made - does revenue have it's own model or is it with inventory?
     return response
 
@@ -169,7 +169,7 @@ def update_inventory(request):
             'message': 'POST method required'
         })
     #TODO post request for update inventory - from manager
-    response = JsonResponse('success': True)
+    response = JsonResponse({'success': True})
     return response
 """
     price per unit
@@ -178,7 +178,16 @@ def update_inventory(request):
     changed types of ice cream
     changed types of toppings
 """
-#TODO post request for new drone (with what's available) **
+
+@csrf_exempt
+def new_drone(request):
+    if request.method != "POST":
+        return JsonResponse({
+            'success': False,
+            'message': 'POST method required'
+        })
+    #TODO post request for new drone (with what's available) **
+    response = JsonResponse({'success': True})
 
 #TODO add all the information a customer will see **
 """
