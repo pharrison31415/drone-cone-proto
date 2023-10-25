@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.crypto import get_random_string
 
-from api.models import DroneStatus, DroneType, Customer, CustomerToken
+from api.models import DroneStatus, DroneType, Customer, CustomerToken, Owner
 
 
 def safe_querey(table, **kwargs):
@@ -95,6 +95,108 @@ def customer_login(request):
     return response
 
 
+@csrf_exempt
+def manager_login(request):
+	if request.method != "POST":
+		return JsonResponse({
+			'success': False,
+			'message': 'POST method required.',
+		})
+	#import the manager database to complete
+	return
+
+
+@csrf_exempt
+def drone_owner_login(request):
+    if request.method != "POST":
+        return JsonResponse({
+            'success': False,
+            'message': 'POST method required.'
+            })
+    owner, owner_found = safe_querey(
+            Owner, pk=request.POST(['username']))
+    if not owner_found or not check_password(request.POST['password'], owner.password_hash):
+        return JsonResponse({
+            'success': False,
+            'message': 'bad login',
+        })
+    response = JsonResponse({'Success': True})
+    #is there going to be something similar to the customer token for the drone owners and managers?
+    return response
+
+
+
+@csrf_exempt
+def new_order(request):
+    if request.method != "POST":
+        return JsonResponse({
+            'success': False,
+            'message': 'POST method required.'
+            })
+    #TODO post request for a new order, update inventory - from customer
+    response = JsonResponse({'Success': True})
+    return response
+
+
+def available_inventory(request):
+    response = JsonResponse({'Status': 'unable to access database'})
+    #TODO get request for things available to order (including prices) - for customer
+    return response
+
+
+def full_inventory(request):
+    response = JsonResponse({'Status': 'unable to access database'})
+    #TODO get request for what's in the inventory (including prices) - for manager
+    return response
+"""
+    how much of each type of ice cream is left
+    how much of each type of cone is left
+    how much of each type of topping is left
+    what the unit price of each item is
+"""
+
+
+def finances(request):
+    response = JsonResponse({'status': 'unable to access database'})
+    #TODO get request for the money spent and made - does revenue have it's own model or is it with inventory?
+    return response
+
+@csrf_exempt
+def update_inventory(request):
+    if request.method != "POST":
+        return JsonResponse({
+            'success': False,
+            'message': 'POST method required'
+        })
+    #TODO post request for update inventory - from manager
+    response = JsonResponse({'success': True})
+    return response
+"""
+    price per unit
+    added inventory
+    changed types of cones
+    changed types of ice cream
+    changed types of toppings
+"""
+
+@csrf_exempt
+def new_drone(request):
+    if request.method != "POST":
+        return JsonResponse({
+            'success': False,
+            'message': 'POST method required'
+        })
+    #TODO post request for new drone (with what's available) **
+    response = JsonResponse({'success': True})
+
+#TODO add all the information a customer will see **
+"""
+    first and last name
+    username
+    past orders
+    password?
+"""
 @verify_customer_token
 def private_customer_data(request, customer):
     return JsonResponse({"firstName": customer.first_name})
+
