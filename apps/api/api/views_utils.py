@@ -1,5 +1,7 @@
 from functools import partial
 from django.http import JsonResponse
+from django.contrib.auth.hashers import make_password, check_password
+from django.utils.crypto import get_random_string
 from api.models import DroneStatus, DroneType, Customer, Manager, Owner, CustomerToken, ManagerToken, OwnerToken
 
 
@@ -72,3 +74,27 @@ def user_login(request, user_type):
     response.headers["Set-Cookie"] = f"{user_type['token_key']}={token}"
 
     return response
+
+
+def new_user(request, user_type):
+    if request.method != "POST":
+        return JsonResponse({
+            'success': False,
+            'message': 'POST method required. Do not use these credentials.'
+        })
+
+    _, username_taken = safe_querey(user_type["user_model"], pk=request.POST['username'])
+    if username_taken:
+        return JsonResponse({
+            'success': False,
+            'message': 'username taken'
+        })
+    
+    user_type["user_model"](
+        username=request.POST['username'],
+        password_hash=make_password(request.POST['password']),
+        first_name=request.POST['firstName'],
+        last_name=request.POST['lastName'],
+    ).save()
+
+    return JsonResponse({'success': True})

@@ -1,10 +1,8 @@
 from functools import partial
 from django.shortcuts import get_object_or_404, render
-from django.contrib.auth.hashers import make_password, check_password
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.utils.crypto import get_random_string
-from .views_utils import safe_querey, verify_token, CUSTOMER_USER, MANAGER_USER, OWNER_USER, verify_customer_token, verify_manager_token, verify_owner_token, user_login
+from .views_utils import safe_querey, verify_token, CUSTOMER_USER, MANAGER_USER, OWNER_USER, verify_customer_token, verify_manager_token, verify_owner_token, user_login, new_user
 
 from api.models import DroneStatus, DroneType, Customer, Manager, Owner, CustomerToken, ManagerToken, OwnerToken
 
@@ -21,30 +19,6 @@ def get_drone_statuses(request):
 def get_drone_types(request):
     drone_types = DroneType.objects.all()
     return JsonResponse({"droneTypes": [drone_type.toJSON() for drone_type in drone_types]})
-
-
-def new_user(request, user_type):
-    if request.method != "POST":
-        return JsonResponse({
-            'success': False,
-            'message': 'POST method required. Do not use these credentials.'
-        })
-
-    _, username_taken = safe_querey(user_type["user_model"], pk=request.POST['username'])
-    if username_taken:
-        return JsonResponse({
-            'success': False,
-            'message': 'username taken'
-        })
-    
-    user_type["user_model"](
-        username=request.POST['username'],
-        password_hash=make_password(request.POST['password']),
-        first_name=request.POST['firstName'],
-        last_name=request.POST['lastName'],
-    ).save()
-
-    return JsonResponse({'success': True})
 
 @csrf_exempt
 def new_customer(request):
@@ -145,5 +119,13 @@ def new_drone(request):
 
 @verify_customer_token
 def private_customer_data(request, user):
+    return JsonResponse({"firstName": user.first_name})
+
+@verify_manager_token
+def private_manager_data(request, user):
+    return JsonResponse({"firstName": user.first_name})
+
+@verify_owner_token
+def private_owner_data(request, user):
     return JsonResponse({"firstName": user.first_name})
 
