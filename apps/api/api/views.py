@@ -1,10 +1,11 @@
+from functools import partial
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.hashers import make_password, check_password
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.crypto import get_random_string
 
-from api.models import DroneStatus, DroneType, Customer, CustomerToken, Owner
+from api.models import DroneStatus, DroneType, Customer, Manager, Owner, CustomerToken, ManagerToken, OwnerToken
 
 
 def safe_querey(table, **kwargs):
@@ -15,17 +16,37 @@ def safe_querey(table, **kwargs):
     return querey_set[0], True
 
 
-def verify_customer_token(view):
+def verify_token(view, user_type):
     def wrapper_verify(*args, **kwargs):
-        customer_token = args[0].COOKIES.get("customer-token", False)
+        user_token = args[0].COOKIES.get(user_type["token_key"], False)
         retrieved_token, found = safe_querey(
-            CustomerToken, token=customer_token)
-        if not found:
-            return JsonResponse({'success': False, 'message': 'bad customer token'})
+            user_type["token_model"], token=user_token)
+        if not found: 
+            return JsonResponse({'success': False, 'message': 'bad token'})
 
-        return view(*args, customer=retrieved_token.customer, **kwargs)
-
+        return view(*args, user=retrieved_token.user, **kwargs)
+    
     return wrapper_verify
+
+CUSTOMER_USER = {
+    "user_model": Customer, 
+    "token_model": CustomerToken,
+    "token_key": "customer-token",
+}
+MANAGER_USER = {
+    "user_model": Manager, 
+    "token_model": ManagerToken,
+    "token_key": "manager-token",
+}
+OWNER_USER = {
+    "user_model": Owner, 
+    "token_model": OwnerToken,
+    "token_key": "owner-token",
+}
+
+verify_customer_token = partial(verify_token, user_type=CUSTOMER_USER)
+verify_manager_token = partial(verify_token, user_type=MANAGER_USER)
+verify_owner_token = partial(verify_token, user_type=OWNER_USER)
 
 
 def hello_world(request):
@@ -42,22 +63,21 @@ def get_drone_types(request):
     return JsonResponse({"droneTypes": [drone_type.toJSON() for drone_type in drone_types]})
 
 
-@csrf_exempt
-def new_customer(request):
+def new_user(request, user_type):
     if request.method != "POST":
         return JsonResponse({
             'success': False,
             'message': 'POST method required. Do not use these credentials.'
         })
 
-    _, username_taken = safe_querey(Customer, pk=request.POST['username'])
+    _, username_taken = safe_querey(user_type["user_model"], pk=request.POST['username'])
     if username_taken:
         return JsonResponse({
             'success': False,
             'message': 'username taken'
         })
-
-    Customer(
+    
+    user_type["user_model"](
         username=request.POST['username'],
         password_hash=make_password(request.POST['password']),
         first_name=request.POST['firstName'],
@@ -66,19 +86,30 @@ def new_customer(request):
 
     return JsonResponse({'success': True})
 
+@csrf_exempt
+def new_customer(request):
+    return partial(new_user, user_type=CUSTOMER_USER)(request)
 
 @csrf_exempt
-def customer_login(request):
+def new_manager(request):
+    return partial(new_user, user_type=MANAGER_USER)(request)
+
+@csrf_exempt
+def new_owner(request):
+    return partial(new_user, user_type=OWNER_USER)(request)
+
+
+def user_login(request, user_type):
     if request.method != "POST":
         return JsonResponse({
             'success': False,
             'message': 'POST method required.',
         })
 
-    customer, customer_found = safe_querey(
-        Customer, pk=request.POST['username'])
+    user, user_found = safe_querey(
+        user_type["user_model"], pk=request.POST['username'])
     # susceptible to timing attack
-    if not customer_found or not check_password(request.POST['password'], customer.password_hash):
+    if not user_found or not check_password(request.POST['password'], user.password_hash):
         return JsonResponse({
             'success': False,
             'message': 'bad login',
@@ -86,13 +117,25 @@ def customer_login(request):
 
     response = JsonResponse({'success': True})
     token = get_random_string(length=128)
-    CustomerToken(
+    user_type["token_model"](
         token=token,
-        customer=customer
+        user=user
     ).save()
-    response.headers["Set-Cookie"] = f"customer-token={token}"
+    response.headers["Set-Cookie"] = f"{user_type['token_key']}={token}"
 
     return response
+
+@csrf_exempt
+def customer_login(request):
+    return partial(user_login, user_type=CUSTOMER_USER)(request)
+
+@csrf_exempt
+def manager_login(request):
+    return partial(user_login, user_type=MANAGER_USER)(request)
+
+@csrf_exempt
+def owner_login(request):
+    return partial(user_login, user_type=OWNER_USER)(request)
 
 
 @csrf_exempt
@@ -197,7 +240,8 @@ def new_drone(request):
     past orders
     password?
 """
+
 @verify_customer_token
-def private_customer_data(request, customer):
-    return JsonResponse({"firstName": customer.first_name})
+def private_customer_data(request, user):
+    return JsonResponse({"firstName": user.first_name})
 

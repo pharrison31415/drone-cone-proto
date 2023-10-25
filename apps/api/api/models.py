@@ -32,13 +32,13 @@ class Token(md.Model):
         abstract = True
 
 class CustomerToken(Token):
-    customer = md.ForeignKey(Customer, on_delete=md.PROTECT)
+    user = md.ForeignKey(Customer, on_delete=md.PROTECT)
 
 class ManagerToken(Token):
-    manager = md.ForeignKey(Manager, on_delete=md.PROTECT)
+    user = md.ForeignKey(Manager, on_delete=md.PROTECT)
 
 class OwnerToken(Token):
-    owner = md.ForeignKey(Owner, on_delete=md.PROTECT)
+    user = md.ForeignKey(Owner, on_delete=md.PROTECT)
 
 
 class DroneType(md.Model):
