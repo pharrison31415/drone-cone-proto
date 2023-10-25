@@ -62,6 +62,10 @@ class ConeType(InventoryItem): pass
 class IceCreamType(InventoryItem): pass
 class ToppingType(InventoryItem): pass
 
+class Cone(md.Model):
+    cone_type = md.ForeignKey(ConeType, on_delete=md.PROTECT)
+    ice_cream_type = md.ForeignKey(IceCreamType, on_delete=md.PROTECT)
+    topping_type = md.ForeignKey(ToppingType, on_delete=md.PROTECT)
 
 class DroneType(md.Model):
     text = md.CharField(primary_key=True, max_length=32)
@@ -105,6 +109,7 @@ class OrderStatus(md.Model):
 
 class Order(md.Model):
     customer = md.ForeignKey(Customer, on_delete=md.PROTECT)
+    cone = md.ForeignKey(Cone, on_delete=md.PROTECT)
     drone = md.ForeignKey(Drone, on_delete=md.PROTECT)
     price = md.PositiveIntegerField()
     status = md.ForeignKey(OrderStatus, on_delete=md.PROTECT)
