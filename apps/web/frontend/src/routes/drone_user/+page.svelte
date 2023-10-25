@@ -27,7 +27,7 @@
         capacity: 4,
     }, {
         size: 'large',
-        Capacity: 8,
+        capacity: 8,
     }];
 
     const closeClick = () => {
@@ -61,7 +61,9 @@
 </script>
 <p>Error message: {info}</p>
 <h1>Drone User</h1>
+<p>Drones: ????</p>
 <p>Total Revenue: $$$$$</p>
+<p>Total Deliveries: ????</p>
 <dialog id="add_drone-dialog">
     <h3>Add Drone</h3>
     <form>
@@ -79,7 +81,7 @@
     <button on:click={closeClick}>Cancel</button>
     <button on:click={confirmClick}>Add Drone</button>
 </dialog>
-<button on:click={() => showDialogClick(true)}>
+<button on:click={() => showDialogClick(true)} id="add_drone-button">
     <span>
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
             <g clip-path="url(#clip0_5_2)">
@@ -97,17 +99,53 @@
     Add new Drone
 </button>
 <div id="drones">
-    <ul>
-        <li>Drones: ????</li>
-        <li>Total Deliveries: ????</li>
-    </ul>
     <!-- for each drone that the user has -->
     <div class="drone">
         <h2>Drone #??</h2>
         <ul>
-            <li>Status: ????</li>
             <li>Size/type: ????</li>
             <li>Deliveries: ????</li>
+            <li>Status: ????
+                <form>
+                    <input type="range" id="isActive" name="isActive" min="0" max="1" />
+                    <!-- {#if drone.status != "owner"} -->
+                        <label for="isActive">Deactivate</label>
+                    <!-- {:else} -->
+                        <!-- <label for="isActive">Activate</label> -->
+                    <!-- {/if} -->
+                </form>
+            </li>
         </ul>
     </div>
 </div>
+
+<style>
+    h1 {
+        text-align: center;
+    }
+
+    p {
+        padding-left: 15px;
+    }
+
+    #add_drone-button {
+        display: flex;
+        align-items: center;
+        padding: 5px 15px;
+    }
+
+    #add_drone-button > span {
+        margin-right: 5px;
+    }
+
+    #drones {
+        padding: 20px;
+    }
+
+    .drone {
+        border: solid black;
+        padding-left: 20px;
+    }
+
+
+</style>
