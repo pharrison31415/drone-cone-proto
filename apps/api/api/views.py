@@ -97,13 +97,14 @@ def customer_login(request):
 
 @csrf_exempt
 def manager_login(request):
-	if request.method != "POST":
-		return JsonResponse({
-			'success': False,
-			'message': 'POST method required.',
-		})
-	#import the manager database to complete
-	return
+    if request.method != "POST":
+        return JsonResponse({
+            'success': False,
+            'message': 'POST method required.',
+        })
+    #import the manager database to complete
+    response = JsonResponse({'Success': True})
+    return response
 
 
 @csrf_exempt
