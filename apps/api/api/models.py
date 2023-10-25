@@ -41,6 +41,28 @@ class OwnerToken(Token):
     user = md.ForeignKey(Owner, on_delete=md.PROTECT)
 
 
+class InventoryItem(md.Model):
+    name = md.CharField(primary_key=True, max_length=128)
+    quantity = md.PositiveIntegerField(default=0)
+    unit_cost = md.PositiveIntegerField()
+    image_url = md.URLField()
+
+    class Meta:
+        abstract = True
+
+    def toJSON(self):
+        return {
+            "name": self.name,
+            "quantity": self.quantity,
+            "unitCost": self.unit_cost,
+            "imageUrl": self.image_url,
+        }
+
+class ConeType(InventoryItem): pass
+class IceCreamType(InventoryItem): pass
+class ToppingType(InventoryItem): pass
+
+
 class DroneType(md.Model):
     text = md.CharField(primary_key=True, max_length=32)
     capacity = md.PositiveIntegerField()
