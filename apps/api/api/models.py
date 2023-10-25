@@ -2,12 +2,15 @@ from django.db import models as md
 from datetime import datetime
 
 
-class Customer(md.Model):
+class User(md.Model):
     username = md.CharField(primary_key=True, max_length=64)
     password_hash = md.CharField(max_length=128)
     first_name = md.CharField(max_length=64)
     last_name = md.CharField(max_length=64)
     created = md.DateTimeField(auto_now=True)
+    
+    class Meta:
+        abstract = True
 
     def toJSON(self):
         return {
@@ -17,27 +20,25 @@ class Customer(md.Model):
             "created": self.created,
         }
 
+class Customer(User): pass
+class Manager(User): pass
+class Owner(User): pass
 
-class CustomerToken(md.Model):
+class Token(md.Model):
     token = md.CharField(primary_key=True, max_length=128)
+    created = md.DateTimeField(auto_now=True)
+    
+    class Meta:
+        abstract = True
+
+class CustomerToken(Token):
     customer = md.ForeignKey(Customer, on_delete=md.PROTECT)
-    created = md.DateTimeField(auto_now=True)
 
+class ManagerToken(Token):
+    manager = md.ForeignKey(Manager, on_delete=md.PROTECT)
 
-class Owner(md.Model):
-    username = md.CharField(primary_key=True, max_length=64)
-    password_hash = md.CharField(max_length=128)
-    first_name = md.CharField(max_length=64)
-    last_name = md.CharField(max_length=64)
-    created = md.DateTimeField(auto_now=True)
-
-    def toJSON(self):
-        return {
-            "username": self.username,
-            "firstName": self.first_name,
-            "lastName": self.last_name,
-            "created": self.created,
-        }
+class OwnerToken(Token):
+    owner = md.ForeignKey(Owner, on_delete=md.PROTECT)
 
 
 class DroneType(md.Model):
