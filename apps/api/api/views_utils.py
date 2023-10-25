@@ -12,29 +12,22 @@ def safe_querey(table, **kwargs):
 
     return querey_set[0], True
 
+class UserType:
+    def __init__(self, user_model, token_model, token_key):
+        self.user_model = user_model
+        self.token_model = token_model
+        self.token_key = token_key
 
-CUSTOMER_USER = {
-    "user_model": Customer, 
-    "token_model": CustomerToken,
-    "token_key": "customer-token",
-}
-MANAGER_USER = {
-    "user_model": Manager, 
-    "token_model": ManagerToken,
-    "token_key": "manager-token",
-}
-OWNER_USER = {
-    "user_model": Owner, 
-    "token_model": OwnerToken,
-    "token_key": "owner-token",
-}
+CUSTOMER_USER = UserType(Customer, CustomerToken, "customer-token")
+MANAGER_USER = UserType(Manager, ManagerToken, "manager-token")
+OWNER_USER = UserType(Owner, OwnerToken,"owner-token")
 
 
 def verify_token(view, user_type):
     def wrapper_verify(*args, **kwargs):
-        user_token = args[0].COOKIES.get(user_type["token_key"], False)
+        user_token = args[0].COOKIES.get(user_type.token_key, False)
         retrieved_token, found = safe_querey(
-            user_type["token_model"], token=user_token)
+            user_type.token_model, token=user_token)
         if not found: 
             return JsonResponse({'success': False, 'message': 'bad token'})
 
@@ -57,7 +50,7 @@ def user_login(request, user_type):
         })
 
     user, user_found = safe_querey(
-        user_type["user_model"], pk=request.POST['username'])
+        user_type.user_model, pk=request.POST['username'])
     # susceptible to timing attack
     if not user_found or not check_password(request.POST['password'], user.password_hash):
         return JsonResponse({
@@ -67,11 +60,11 @@ def user_login(request, user_type):
 
     response = JsonResponse({'success': True})
     token = get_random_string(length=128)
-    user_type["token_model"](
+    user_type.token_model(
         token=token,
         user=user
     ).save()
-    response.headers["Set-Cookie"] = f"{user_type['token_key']}={token}"
+    response.headers["Set-Cookie"] = f"{user_type.token_key}={token}"
 
     return response
 
@@ -83,14 +76,14 @@ def new_user(request, user_type):
             'message': 'POST method required. Do not use these credentials.'
         })
 
-    _, username_taken = safe_querey(user_type["user_model"], pk=request.POST['username'])
+    _, username_taken = safe_querey(user_type.user_model, pk=request.POST['username'])
     if username_taken:
         return JsonResponse({
             'success': False,
             'message': 'username taken'
         })
     
-    user_type["user_model"](
+    user_type.user_model(
         username=request.POST['username'],
         password_hash=make_password(request.POST['password']),
         first_name=request.POST['firstName'],
