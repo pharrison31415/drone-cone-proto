@@ -53,8 +53,6 @@ class InventoryItem(md.Model):
     def toJSON(self):
         return {
             "name": self.name,
-            "quantity": self.quantity,
-            "unitCost": self.unit_cost,
             "imageUrl": self.image_url,
         }
 
@@ -67,6 +65,14 @@ class Cone(md.Model):
     ice_cream_type = md.ForeignKey(IceCreamType, on_delete=md.PROTECT)
     topping_type = md.ForeignKey(ToppingType, on_delete=md.PROTECT)
     created = md.DateTimeField(auto_now=True)
+
+    def toJSON(self):
+        return {
+            "coneType": self.cone_type.toJSON(),
+            "iceCreamType": self.ice_cream_type.toJSON(),
+            "toppingType": self.topping_type.toJSON(),
+            "created": self.created,
+        }
 
 
 class DroneType(md.Model):
@@ -98,6 +104,15 @@ class Drone(md.Model):
     owner = md.ForeignKey(Owner, on_delete=md.PROTECT)
     last_use = md.DateTimeField(null=True, default=last_use_default)
     created = md.DateTimeField(auto_now=True)
+    
+    def toJSON(self):
+        return {
+            "status": self.status.toJSON(),
+            "droneType": self.drone_type.toJSON(),
+            "owner": self.owner.toJSON(),
+            "lastUse": self.last_use,
+            "created": self.created,
+        }
 
 
 class OrderStatus(md.Model):
@@ -117,9 +132,25 @@ class Order(md.Model):
     status = md.ForeignKey(OrderStatus, on_delete=md.PROTECT)
     created = md.DateTimeField(auto_now=True)
 
+    def toJSON(self):
+        return {
+            "customer": self.customer.toJSON(),
+            "cone": self.cone.toJSON(),
+            "drone": self.drone.toJSON(),
+            "price": self.price,
+            "status": self.status.toJSON(),
+            "created": self.crated,
+        }
 
 class Message(md.Model):
     content = md.CharField(max_length=1024)
     handled = md.BooleanField(default=False)
     handled_by = md.ForeignKey(Manager, null=False, on_delete=md.PROTECT)
     created = md.DateTimeField(auto_now=True)
+
+    def toJSON(self):
+        return {
+            "content": self.content,
+            "handled": self.handled,
+            "created": self.created,
+        }
