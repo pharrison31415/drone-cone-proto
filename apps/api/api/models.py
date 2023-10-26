@@ -66,6 +66,8 @@ class Cone(md.Model):
     cone_type = md.ForeignKey(ConeType, on_delete=md.PROTECT)
     ice_cream_type = md.ForeignKey(IceCreamType, on_delete=md.PROTECT)
     topping_type = md.ForeignKey(ToppingType, on_delete=md.PROTECT)
+    created = md.DateTimeField(auto_now=True)
+
 
 class DroneType(md.Model):
     text = md.CharField(primary_key=True, max_length=32)
@@ -113,4 +115,11 @@ class Order(md.Model):
     drone = md.ForeignKey(Drone, on_delete=md.PROTECT)
     price = md.PositiveIntegerField()
     status = md.ForeignKey(OrderStatus, on_delete=md.PROTECT)
+    created = md.DateTimeField(auto_now=True)
+
+
+class Message(md.Model):
+    content = md.CharField(max_length=1024)
+    handled = md.BooleanField(default=False)
+    handled_by = md.ForeignKey(Manager, null=False)
     created = md.DateTimeField(auto_now=True)
