@@ -40,6 +40,11 @@ class ManagerToken(Token):
 class OwnerToken(Token):
     user = md.ForeignKey(Owner, on_delete=md.PROTECT)
 
+class Address(md.Model):
+    line_one = md.CharField(max_length=64)
+    line_two = md.CharField(max_length=64, default="")
+    zip_code = md.CharField(max_length=16)
+    customer = md.ForeignKey(Customer, on_delete=md.PROTECT)
 
 class InventoryItem(md.Model):
     name = md.CharField(primary_key=True, max_length=128)
