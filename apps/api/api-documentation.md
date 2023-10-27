@@ -30,7 +30,7 @@
 }
 ```
 
-## POST `/api/new-customer/`
+## POST `/api/new-customer/`, `/api/new-owner`
 
 **Request Body** consists of the following strings:
 
@@ -41,7 +41,7 @@
 
 **Response Data** consists of a `success` boolean and, if false, a `message` string.
 
-## POST `/api/customer-login/`
+## POST `/api/customer-login/`, `/api/manager-login`, `/api/owner-login`
 
 **Request Body** consits of the following strings:
 
@@ -50,7 +50,7 @@
 
 **Response Data** consists of a `success` boolean and, if false, a `message` string.
 
-**Response Headers** has a `customer-token` string 128 characters in length if `success` on the response data is true.
+**Response Headers** has a `customer-token`, `manager-token`, or `owner-token` string 128 characters in length if `success` on the response data is true.
 
 ## POST `/api/add-address/`
 
