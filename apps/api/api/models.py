@@ -86,6 +86,7 @@ class Cone(md.Model):
 
     def toJSON(self):
         return {
+            "id": self.id,
             "coneType": self.cone_type.toJSON(),
             "iceCreamType": self.ice_cream_type.toJSON(),
             "toppingType": self.topping_type.toJSON(),
@@ -125,6 +126,7 @@ class Drone(md.Model):
     
     def toJSON(self):
         return {
+            "id": self.id,
             "status": self.status.toJSON(),
             "droneType": self.drone_type.toJSON(),
             "owner": self.owner.toJSON(),
@@ -153,6 +155,7 @@ class Order(md.Model):
 
     def toJSON(self):
         return {
+            "id": self.id,
             "customer": self.customer.toJSON(),
             "address": self.address.toJSON(),
             "cone": self.cone.toJSON(),
@@ -170,6 +173,7 @@ class Message(md.Model):
 
     def toJSON(self):
         return {
+            "id": self.id,
             "content": self.content,
             "handled": self.handled,
             "created": self.created,
