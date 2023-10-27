@@ -58,15 +58,16 @@ def get_my_addresses(request, user):
 @csrf_exempt
 @verify_customer_token
 def post_address(request, user):
-    Address(
+    new_addr = Address(
         line_one=request.POST['lineOne'],
         line_two=request.POST['lineTwo'],
         city=request.POST['city'],
         state=request.POST['state'],
         zip_code=request.POST['zipCode'],
         customer=user
-    ).save()
-    return JsonResponse({'success': True})
+    )
+    new_addr.save()
+    return JsonResponse({'success': True, 'id': new_addr.id})
 
 
 @csrf_exempt
