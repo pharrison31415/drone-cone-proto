@@ -74,22 +74,23 @@
 
 ```
 {
-	"success": true,
-	"addresses": [
-		{
-			"id": 1,
-			"lineOne": "1234 Champ Dr.",
-			"lineTwo": "",
-			"city": "Logan",
-			"state": "UT",
-			"zipCode": "84321",
-			"customer": {
-				"username": "paul",
-				"firstName": "Paul",
-				"lastName": "Harrison",
-				"created": "2023-10-27T18:20:20.190Z"
-			}
-		}
-	]
+  "success": true,
+  "addresses": [
+    {
+      "id": 1,
+      "lineOne": "1234 Champ Dr.",
+      "lineTwo": "",
+      "city": "Logan",
+      "state": "UT",
+      "zipCode": "84321",
+      "customer": {
+        "username": "paul",
+        "firstName": "Paul",
+        "lastName": "Harrison",
+        "created": "2023-10-27T18:20:20.190Z"
+      }
+    },
+    ...
+  ]
 }
 ```
