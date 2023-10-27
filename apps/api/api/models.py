@@ -46,6 +46,14 @@ class Address(md.Model):
     zip_code = md.CharField(max_length=16)
     customer = md.ForeignKey(Customer, on_delete=md.PROTECT)
 
+    def toJSON(self):
+        return {
+            "lineOne": self.line_one,
+            "lineTwo": self.line_two,
+            "zipCode": self.zip_code,
+            "customer": self.customer.toJSON(),
+        }
+
 class InventoryItem(md.Model):
     name = md.CharField(primary_key=True, max_length=128)
     quantity = md.PositiveIntegerField(default=0)
@@ -131,6 +139,7 @@ class OrderStatus(md.Model):
 
 class Order(md.Model):
     customer = md.ForeignKey(Customer, on_delete=md.PROTECT)
+    address = md.ForeignKey(Address, on_delete=md.PROTECT)
     cone = md.ForeignKey(Cone, on_delete=md.PROTECT)
     drone = md.ForeignKey(Drone, on_delete=md.PROTECT)
     price = md.PositiveIntegerField()
@@ -140,6 +149,7 @@ class Order(md.Model):
     def toJSON(self):
         return {
             "customer": self.customer.toJSON(),
+            "address": self.address.toJSON(),
             "cone": self.cone.toJSON(),
             "drone": self.drone.toJSON(),
             "price": self.price,
