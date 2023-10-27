@@ -61,6 +61,8 @@ def post_address(request, user):
     Address(
         line_one=request.POST['lineOne'],
         line_two=request.POST['lineTwo'],
+        city=request.POST['city'],
+        state=request.POST['state'],
         zip_code=request.POST['zipCode'],
         customer=user
     ).save()
