@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .views_utils import safe_querey, verify_token, CUSTOMER_USER, MANAGER_USER, OWNER_USER, verify_customer_token, verify_manager_token, verify_owner_token, user_login, new_user
 
-from api.models import DroneStatus, DroneType, Customer, Manager, Owner, CustomerToken, ManagerToken, OwnerToken
+from api.models import DroneStatus, DroneType, Customer, Manager, Owner, CustomerToken, ManagerToken, OwnerToken, Address
 
 
 def hello_world(request):
@@ -44,6 +44,30 @@ def manager_login(request):
 @csrf_exempt
 def owner_login(request):
     return partial(user_login, user_type=OWNER_USER)(request)
+
+@verify_customer_token
+def get_my_addresses(request, user):
+    addresses = Address.objects.filter(customer=user)
+    return JsonResponse({
+        "success": True,
+        "addresses": [
+            a.toJSON() for a in addresses
+        ]
+    })
+
+@csrf_exempt
+@verify_customer_token
+def post_address(request, user):
+    new_addr = Address(
+        line_one=request.POST['lineOne'],
+        line_two=request.POST['lineTwo'],
+        city=request.POST['city'],
+        state=request.POST['state'],
+        zip_code=request.POST['zipCode'],
+        customer=user
+    )
+    new_addr.save()
+    return JsonResponse({'success': True, 'id': new_addr.id})
 
 
 @csrf_exempt

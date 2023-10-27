@@ -42,14 +42,19 @@ class OwnerToken(Token):
 
 class Address(md.Model):
     line_one = md.CharField(max_length=64)
-    line_two = md.CharField(max_length=64, default="")
+    line_two = md.CharField(max_length=64)
+    city = md.CharField(max_length=64)
+    state = md.CharField(max_length=64)
     zip_code = md.CharField(max_length=16)
     customer = md.ForeignKey(Customer, on_delete=md.PROTECT)
 
     def toJSON(self):
         return {
+            "id": self.id,
             "lineOne": self.line_one,
             "lineTwo": self.line_two,
+            "city": self.city,
+            "state": self.state,
             "zipCode": self.zip_code,
             "customer": self.customer.toJSON(),
         }
