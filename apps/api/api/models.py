@@ -74,6 +74,14 @@ class InventoryItem(md.Model):
             "imageUrl": self.image_url,
         }
 
+    def toJSON_manager(self):
+        return {
+            "name": self.name,
+            "quantity": self.quantity,
+            "unitCost": self.unit_cost,
+            "imageUrl": self.image_url,
+        }
+
 class ConeType(InventoryItem): pass
 class IceCreamType(InventoryItem): pass
 class ToppingType(InventoryItem): pass

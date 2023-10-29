@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .views_utils import safe_querey, verify_token, CUSTOMER_USER, MANAGER_USER, OWNER_USER, verify_customer_token, verify_manager_token, verify_owner_token, user_login, new_user
 
-from api.models import DroneStatus, DroneType, Customer, Manager, Owner, CustomerToken, ManagerToken, OwnerToken, Address
+from api.models import DroneStatus, DroneType, Customer, Manager, Owner, CustomerToken, ManagerToken, OwnerToken, Address, ConeType, IceCreamType, ToppingType
 
 
 def hello_world(request):
@@ -87,17 +87,21 @@ def available_inventory(request):
     #TODO get request for things available to order (including prices) - for customer
     return response
 
+@verify_manager_token
+def get_inventory(request, user):
+    """
+        how much of each type of ice cream is left
+        how much of each type of cone is left
+        how much of each type of topping is left
+        what the unit price of each item is
+    """
+    models = [ConeType, IceCreamType, ToppingType]
+    keys = ["coneTypes", "iceCreamTypes", "toppingTypes"]
+    inventory = {}
+    for model, key in zip(models, keys):
+        inventory[key] = [ i.toJSON_manager() for i in model.objects.all() ]
 
-def full_inventory(request):
-    response = JsonResponse({'Status': 'unable to access database'})
-    #TODO get request for what's in the inventory (including prices) - for manager
-    return response
-"""
-    how much of each type of ice cream is left
-    how much of each type of cone is left
-    how much of each type of topping is left
-    what the unit price of each item is
-"""
+    return JsonResponse({"success": True, "inventory": inventory})
 
 
 def finances(request):
