@@ -94,3 +94,27 @@
   ]
 }
 ```
+
+## GET `/api/inventory/`
+
+**Cookie Required**: `manager-token`
+
+**Response Data** consists of a `success` boolean and an `inventory` array consisting of `coneTypes`, `iceCreamTypes`, and `toppingTypes`. Example below.
+
+```
+{
+  "success": true,
+  "inventory": {
+    "coneTypes": [
+      {
+        "name": "Waffle",
+        "quantity": 500,
+        "unitCost": 48,
+        "imageUrl": "#"
+      },
+      ...
+    ],
+    ...
+  }
+}
+```

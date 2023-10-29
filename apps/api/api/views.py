@@ -70,18 +70,6 @@ def post_address(request, user):
     return JsonResponse({'success': True, 'id': new_addr.id})
 
 
-@csrf_exempt
-def new_order(request):
-    if request.method != "POST":
-        return JsonResponse({
-            'success': False,
-            'message': 'POST method required.'
-            })
-    #TODO post request for a new order, update inventory - from customer
-    response = JsonResponse({'Success': True})
-    return response
-
-
 def get_cone_types(request):
     return JsonResponse({'success': True, 'coneTypes': [
         i.toJSON() for i in ConeType.objects.all()
@@ -154,6 +142,17 @@ def new_drone(request):
     past orders
     password?
 """
+
+@csrf_exempt
+def new_order(request):
+    if request.method != "POST":
+        return JsonResponse({
+            'success': False,
+            'message': 'POST method required.'
+            })
+    #TODO post request for a new order, update inventory - from customer
+    response = JsonResponse({'Success': True})
+    return response
 
 @verify_customer_token
 def private_customer_data(request, user):
