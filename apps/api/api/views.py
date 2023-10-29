@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .views_utils import safe_querey, verify_token, CUSTOMER_USER, MANAGER_USER, OWNER_USER, verify_customer_token, verify_manager_token, verify_owner_token, user_login, new_user
 
-from api.models import DroneStatus, DroneType, Customer, Manager, Owner, CustomerToken, ManagerToken, OwnerToken, Address
+from api.models import DroneStatus, DroneType, Customer, Manager, Owner, CustomerToken, ManagerToken, OwnerToken, Address, ConeType, IceCreamType, ToppingType
 
 
 def hello_world(request):
@@ -70,34 +70,36 @@ def post_address(request, user):
     return JsonResponse({'success': True, 'id': new_addr.id})
 
 
-@csrf_exempt
-def new_order(request):
-    if request.method != "POST":
-        return JsonResponse({
-            'success': False,
-            'message': 'POST method required.'
-            })
-    #TODO post request for a new order, update inventory - from customer
-    response = JsonResponse({'Success': True})
-    return response
+def get_cone_types(request):
+    return JsonResponse({'success': True, 'coneTypes': [
+        i.toJSON() for i in ConeType.objects.all()
+    ]})
 
+def get_ice_cream_types(request):
+    return JsonResponse({'success': True, 'iceCreamTypes': [
+        i.toJSON() for i in IceCreamType.objects.all()
+    ]})
 
-def available_inventory(request):
-    response = JsonResponse({'Status': 'unable to access database'})
-    #TODO get request for things available to order (including prices) - for customer
-    return response
+def get_topping_types(request):
+    return JsonResponse({'success': True, 'toppingTypes': [
+        i.toJSON() for i in ToppingType.objects.all()
+    ]})
 
+@verify_manager_token
+def get_inventory(request, user):
+    """
+        how much of each type of ice cream is left
+        how much of each type of cone is left
+        how much of each type of topping is left
+        what the unit price of each item is
+    """
+    models = [ConeType, IceCreamType, ToppingType]
+    keys = ["coneTypes", "iceCreamTypes", "toppingTypes"]
+    inventory = {}
+    for model, key in zip(models, keys):
+        inventory[key] = [ i.toJSON_manager() for i in model.objects.all() ]
 
-def full_inventory(request):
-    response = JsonResponse({'Status': 'unable to access database'})
-    #TODO get request for what's in the inventory (including prices) - for manager
-    return response
-"""
-    how much of each type of ice cream is left
-    how much of each type of cone is left
-    how much of each type of topping is left
-    what the unit price of each item is
-"""
+    return JsonResponse({"success": True, "inventory": inventory})
 
 
 def finances(request):
@@ -140,6 +142,17 @@ def new_drone(request):
     past orders
     password?
 """
+
+@csrf_exempt
+def new_order(request):
+    if request.method != "POST":
+        return JsonResponse({
+            'success': False,
+            'message': 'POST method required.'
+            })
+    #TODO post request for a new order, update inventory - from customer
+    response = JsonResponse({'Success': True})
+    return response
 
 @verify_customer_token
 def private_customer_data(request, user):

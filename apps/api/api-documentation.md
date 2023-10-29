@@ -1,5 +1,22 @@
 # API Documentation
 
+## GET `/api/cone-types/`,`/api/ice-cream-types`,`/api/topping-types`
+
+**Response Data** consists of a `success` boolean and a `coneTypes`, `iceCreamTypes`, or `toppingTypes` array of those inventory objects with public data (no unit costs or stock count). Example below.
+
+```
+{
+  "success": true,
+  "coneTypes": [
+    {
+      "name": "Waffle",
+      "imageUrl": "#"
+    },
+    ...
+  ],
+}
+```
+
 ## GET `/api/drone-statuses/`
 
 **Response Data** consists of a `droneStatuses` array of drone status objects which consist of a `text` string. Example below.
@@ -92,5 +109,29 @@
     },
     ...
   ]
+}
+```
+
+## GET `/api/inventory/`
+
+**Cookie Required**: `manager-token`
+
+**Response Data** consists of a `success` boolean and an `inventory` object consisting of `coneTypes`, `iceCreamTypes`, and `toppingTypes`. Example below.
+
+```
+{
+  "success": true,
+  "inventory": {
+    "coneTypes": [
+      {
+        "name": "Waffle",
+        "quantity": 500,
+        "unitCost": 48,
+        "imageUrl": "#"
+      },
+      ...
+    ],
+    ...
+  }
 }
 ```
