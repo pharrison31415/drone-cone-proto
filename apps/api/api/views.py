@@ -82,10 +82,20 @@ def new_order(request):
     return response
 
 
-def available_inventory(request):
-    response = JsonResponse({'Status': 'unable to access database'})
-    #TODO get request for things available to order (including prices) - for customer
-    return response
+def get_cone_types(request):
+    return JsonResponse({'success': True, 'coneTypes': [
+        i.toJSON() for i in ConeType.objects.all()
+    ]})
+
+def get_ice_cream_types(request):
+    return JsonResponse({'success': True, 'iceCreamTypes': [
+        i.toJSON() for i in IceCreamType.objects.all()
+    ]})
+
+def get_topping_types(request):
+    return JsonResponse({'success': True, 'toppingTypes': [
+        i.toJSON() for i in ToppingType.objects.all()
+    ]})
 
 @verify_manager_token
 def get_inventory(request, user):

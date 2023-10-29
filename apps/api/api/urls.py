@@ -6,6 +6,10 @@ app_name = 'api'
 urlpatterns = [
     path('hello/', views.hello_world),
 
+    path('cone-types/', views.get_cone_types),
+    path('ice-cream-types/', views.get_ice_cream_types),
+    path('topping-types/', views.get_topping_types),
+
     path('drone-statuses/', views.get_drone_statuses),
     path('drone-types/', views.get_drone_types),
 
