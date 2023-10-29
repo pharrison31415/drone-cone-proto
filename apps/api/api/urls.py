@@ -24,5 +24,5 @@ urlpatterns = [
     path('add-address/', views.post_address),
     path('my-addresses/', views.get_my_addresses),
 
-    path('inventory/', views.get_inventory)
+    path('inventory/', views.get_inventory),
 ]
