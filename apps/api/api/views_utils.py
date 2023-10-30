@@ -1,8 +1,13 @@
 from functools import partial
-from django.http import JsonResponse
+from django.http import JsonResponse as DjJsonResponse
 from django.contrib.auth.hashers import make_password, check_password
 from django.utils.crypto import get_random_string
 from api.models import DroneStatus, DroneType, Customer, Manager, Owner, CustomerToken, ManagerToken, OwnerToken
+
+class JsonResponse(DjJsonResponse):
+    def __init__(self, *args, **kwargs):
+        super(JsonResponse, self).__init__(*args, **kwargs)
+        self.headers["Access-Control-Allow-Origin"] = "*"
 
 
 def safe_querey(table, **kwargs):

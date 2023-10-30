@@ -1,8 +1,7 @@
 from functools import partial
 from django.shortcuts import get_object_or_404, render
-from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from .views_utils import safe_querey, verify_token, CUSTOMER_USER, MANAGER_USER, OWNER_USER, verify_customer_token, verify_manager_token, verify_owner_token, user_login, new_user
+from .views_utils import JsonResponse, safe_querey, verify_token, CUSTOMER_USER, MANAGER_USER, OWNER_USER, verify_customer_token, verify_manager_token, verify_owner_token, user_login, new_user
 
 from api.models import DroneStatus, DroneType, Customer, Manager, Owner, CustomerToken, ManagerToken, OwnerToken, Address, ConeType, IceCreamType, ToppingType
 
