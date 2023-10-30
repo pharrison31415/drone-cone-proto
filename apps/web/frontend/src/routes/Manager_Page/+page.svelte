@@ -1,3 +1,4 @@
+<body style="background: #BAF3FF; margin: 0%">
 <h1>Manager Page</h1>
 
 <!--Inventory data-->
@@ -19,16 +20,14 @@
 
 </div>
 
+</body>
 
-
-<!--
-TODO: api calls to GET data from data base for manager information
-**** RELOCATED WHEN to Script File WHEN DONE ****
--->
+<!--TODO: api calls to GET data from data base for manager information-->
 
 
 <script>
-    import { onMount } from "svelte";
+import { onMount } from "svelte";
+
 // "localhost:8000/api/[data]" url for api call for data
 
 /*  
