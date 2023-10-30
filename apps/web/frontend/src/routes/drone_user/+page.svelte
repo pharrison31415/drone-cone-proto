@@ -1,13 +1,23 @@
 <script>
     import { onMount } from 'svelte'
 
+    const url = 'http://localhost:8000/api';
+
     let timeout;
-    let info = '';
+    let types = [];
 
     let dialog; // Reference to the dialog tag
 	onMount(() => {
+        get_droneTypes();
 		dialog = document.getElementById('add_drone-dialog');
-	})
+	});
+
+    // get the different drone types from the database
+    async function get_droneTypes() {
+        fetch(url + '/drone-types/').then((response) => response.json()).then((json) => {
+            types = json['droneTypes'];
+        });
+    }
 	
 	// Show the dialog when clicking "Delete everything"
 	const showDialogClick = (asModal = true) => {
@@ -18,17 +28,6 @@
             setInfo(e.message)
 		}  
 	};
-
-    const options = [{
-        size: 'small',
-        capacity: 1,
-    }, {
-        size: 'medium',
-        capacity: 4,
-    }, {
-        size: 'large',
-        capacity: 8,
-    }];
 
     const closeClick = () => {
 		dialog.close();
@@ -50,16 +49,13 @@
 		if (timeout) {
 			clearTimeout(timeout);
 		}
-		info = text;
 		if (text !== '') {
 			timeout= setTimeout(() => {
-				info = ''
 			}, 2500)
 		}
 	}
 
 </script>
-<p>Error message: {info}</p>
 <h1>Drone User</h1>
 <p>Drones: ????</p>
 <p>Total Revenue: $$$$$</p>
@@ -70,10 +66,10 @@
         <fieldset>
             <legend>Size of Drone:</legend>
         
-            {#each options as {size, capacity}}
+            {#each types as item}
                 <div>
-                    <input type="radio" id={size} value={size} name="add_drone" />
-                    <lable for={size}>{size}: Capacity of {capacity}</lable>
+                    <input type="radio" id={item.text} value={item.text} name="add_drone" />
+                    <lable for={item.text}>{item.text}: Capacity of {item.capacity}</lable>
                 </div>
             {/each}
         </fieldset>
