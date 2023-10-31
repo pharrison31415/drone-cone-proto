@@ -8,6 +8,8 @@ class JsonResponse(DjJsonResponse):
     def __init__(self, *args, **kwargs):
         super(JsonResponse, self).__init__(*args, **kwargs)
         self.headers["Access-Control-Allow-Origin"] = "*"
+        self.headers["Access-Control-Allow-Methods"] = "*"
+        self.headers["Access-Control-Request-Headers"] = "*"
 
 
 def safe_querey(table, **kwargs):
