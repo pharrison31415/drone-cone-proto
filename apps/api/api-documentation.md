@@ -126,7 +126,7 @@
 
 ## GET `/api/my-drones/`
 
-**Cookie Required**: `customer-token`
+**Cookie Required**: `owner-token`
 
 **Response Data** consists of a `success` boolean and a `drones` array. Example below.
 
