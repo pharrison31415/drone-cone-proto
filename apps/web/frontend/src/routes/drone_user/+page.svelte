@@ -54,7 +54,6 @@
         fetch(url + '/add-drone/', {method: 'POST', body: JSON.stringify({name: drone_name, status: drone_status, droneType: drone_type})})
             .then((response) => response.json())
             .then((json) => {
-                console.log(json);
                 if (json['success'] == true) {
                     console.log('post was successful');
                     get_myDrones();
@@ -99,7 +98,6 @@
     }
     
     const checkInput = () => {
-        let form = document.querySelector("form");
         if (droneName == '') {
             return false;
         }
