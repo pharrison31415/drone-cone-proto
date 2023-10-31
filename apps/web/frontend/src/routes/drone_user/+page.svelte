@@ -5,55 +5,113 @@
 
     let timeout;
     let types = [];
+    let drones = [];
+    let statuses = [];
+    let myDrones_error = '';
+    let showDialogClickError = '';
+
+    let droneName = '';
 
     let dialog; // Reference to the dialog tag
 	onMount(() => {
         get_droneTypes();
+        get_droneStatuses();
+        get_myDrones();
 		dialog = document.getElementById('add_drone-dialog');
 	});
 
     // get the different drone types from the database
     async function get_droneTypes() {
-        fetch(url + '/drone-types/').then((response) => response.json()).then((json) => {
-            types = json['droneTypes'];
+        fetch(url + '/drone-types/', {method: 'GET',})
+            .then((response) => response.json())
+            .then((json) => {
+                types = json['droneTypes'];            
+            });
+    }
+
+    async function get_droneStatuses() {
+        fetch(url + '/drone-statuses/', {method: 'GET',})
+            .then((response) => response.json())
+            .then((json) => {
+                statuses = json['droneStatuses'];
+            });
+    }
+
+    async function get_myDrones() {
+        fetch(url + '/my-drones/', {method: 'GET'})
+        .then((response) => response.json())
+        .then((json) => {
+            if (json['success'] == true) {
+                drones = json['drones'];
+            }
+            else {
+                myDrones_error = json['message'];
+            }
         });
+    }
+
+    async function post_newDrone(drone_name, drone_status, drone_type) {
+        fetch(url + '/add-drone/', {method: 'POST', body: JSON.stringify({name: drone_name, status: drone_status, droneType: drone_type})})
+            .then((response) => response.json())
+            .then((json) => {
+                console.log(json);
+                if (json['success'] == true) {
+                    console.log('post was successful');
+                    get_myDrones();
+                    let droneName_text = document.getElementById('drone_name');
+                    droneName_text.value = "";
+                    let radios = document.getElementsByName('drone_type');
+                    for (let i = 0; i < radios.length; i++) {
+                        radios[i].checked = false;
+                    }
+                }
+                else {
+                    console.log('there was an error');
+                    showDialogClickError = "There was an error when adding the drone: " + json['message'];
+                }
+            });
     }
 	
 	// Show the dialog when clicking "Delete everything"
 	const showDialogClick = (asModal = true) => {
 		try {
-			setInfo('');
 			dialog[asModal ? 'showModal' : 'show']();
 		} catch(e) {
-            setInfo(e.message)
+            showDialogClickError = e;
 		}  
 	};
 
     const closeClick = () => {
-		dialog.close();
-        setInfo("closed");
+        dialog.close();
 	};
 
     const confirmClick = () => {
-        dialog.close();
         let form = document.querySelector("form");
-        const data = new FormData(form);
-        let output = "";
-        for (const entry of data) {
-        output = `${output}${entry[0]}=${entry[1]}\r`;
+        if (checkInput()) {
+            dialog.close();
+            const data = new FormData(form);
+            let output = "";
+            for (const entry of data) {
+                output = `${output}${entry[0]}=${entry[1]}\r`;
+            }
+            post_newDrone(data.get('drone_name'), statuses[0].text, data.get('drone_type'));
         }
-        setInfo(output);
     }
-
-    const setInfo = (text) => {
-		if (timeout) {
-			clearTimeout(timeout);
-		}
-		if (text !== '') {
-			timeout= setTimeout(() => {
-			}, 2500)
-		}
-	}
+    
+    const checkInput = () => {
+        let form = document.querySelector("form");
+        if (droneName == '') {
+            return false;
+        }
+        let isButtonChecked = false;
+        let radios = document.getElementsByName('drone_type');
+        for (let i = 0; i < radios.length; i++) {
+            if (radios[i].type == 'radio' && radios[i].checked) {
+                isButtonChecked = true;
+            }
+        }
+        return isButtonChecked;
+    }
 
 </script>
 <h1>Drone User</h1>
@@ -63,20 +121,26 @@
 <dialog id="add_drone-dialog">
     <h3>Add Drone</h3>
     <form>
+        <label for="drone_name">Drone Name:</label>
+        <input bind:value={droneName} type="text" id="drone_name" name="drone_name" placeholder="Drone Name" required>
+
         <fieldset>
             <legend>Size of Drone:</legend>
-        
+            <!-- for each type in types -->
             {#each types as item}
                 <div>
-                    <input type="radio" id={item.text} value={item.text} name="add_drone" />
+                    <input type="radio" id={item.text} value={item.text} name="drone_type" required/>
                     <lable for={item.text}>{item.text}: Capacity of {item.capacity}</lable>
                 </div>
             {/each}
         </fieldset>
+
+        <button on:click={closeClick} type="reset">Cancel</button>
+        <button on:click={confirmClick}>Add Drone</button>
     </form>
-    <button on:click={closeClick}>Cancel</button>
-    <button on:click={confirmClick}>Add Drone</button>
+
 </dialog>
+<p>{showDialogClickError}</p>
 <button on:click={() => showDialogClick(true)} id="add_drone-button">
     <span>
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
@@ -96,23 +160,34 @@
 </button>
 <div id="drones">
     <!-- for each drone that the user has -->
-    <div class="drone">
-        <h2>Drone #??</h2>
-        <ul>
-            <li>Size/type: ????</li>
-            <li>Deliveries: ????</li>
-            <li>Status: ????
-                <form>
-                    <input type="range" id="isActive" name="isActive" min="0" max="1" />
-                    <!-- {#if drone.status != "owner"} -->
-                        <label for="isActive">Deactivate</label>
-                    <!-- {:else} -->
-                        <!-- <label for="isActive">Activate</label> -->
-                    <!-- {/if} -->
-                </form>
-            </li>
-        </ul>
-    </div>
+    {#if drones.length == 0}
+        <div class='drone'>
+            <h3>No Drones</h3>
+            <p>To add a drone click the 'Add Drone' button</p>
+            <p>{myDrones_error}</p>
+        </div>
+    {:else}
+        {#each drones as drone}
+            <div class="drone">
+                <h2>Drone: {drone.name}</h2>
+                <ul>
+                    <li>Type, capacity: {drone.droneTypes.text}, {drone.droneTypes.capacity}</li>
+                    <li>Deliveries: ????</li>
+                    <li>Status: {drone.statuses.text}
+                        <form>
+                            <input type="range" id="isActive" name="isActive" min="0" max="1" />
+                            {#if drone.status != "owner"}
+                                <label for="isActive">Deactivate</label>
+                            {:else}
+                                <label for="isActive">Activate</label>
+                            {/if}
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        {/each}
+    {/if}
+    
 </div>
 
 <style>
