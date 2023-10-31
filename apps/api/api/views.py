@@ -2,6 +2,7 @@ from functools import partial
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.csrf import csrf_exempt
 from .views_utils import JsonResponse, safe_querey, verify_token, CUSTOMER_USER, MANAGER_USER, OWNER_USER, verify_customer_token, verify_manager_token, verify_owner_token, user_login, new_user
+import json
 
 from api.models import DroneStatus, DroneType, Customer, Manager, Owner, CustomerToken, ManagerToken, OwnerToken, Address, ConeType, IceCreamType, ToppingType
 
@@ -57,12 +58,13 @@ def get_my_addresses(request, user):
 @csrf_exempt
 @verify_customer_token
 def post_address(request, user):
+    body = json.loads(request.body)
     new_addr = Address(
-        line_one=request.POST['lineOne'],
-        line_two=request.POST['lineTwo'],
-        city=request.POST['city'],
-        state=request.POST['state'],
-        zip_code=request.POST['zipCode'],
+        line_one=body['lineOne'],
+        line_two=body['lineTwo'],
+        city=body['city'],
+        state=body['state'],
+        zip_code=body['zipCode'],
         customer=user
     )
     new_addr.save()

@@ -3,13 +3,14 @@ from django.http import JsonResponse as DjJsonResponse
 from django.contrib.auth.hashers import make_password, check_password
 from django.utils.crypto import get_random_string
 from api.models import DroneStatus, DroneType, Customer, Manager, Owner, CustomerToken, ManagerToken, OwnerToken
+import json
 
 class JsonResponse(DjJsonResponse):
     def __init__(self, *args, **kwargs):
         super(JsonResponse, self).__init__(*args, **kwargs)
         self.headers["Access-Control-Allow-Origin"] = "*"
         self.headers["Access-Control-Allow-Methods"] = "*"
-        self.headers["Access-Control-Request-Headers"] = "*"
+        self.headers["Access-Control-Allow-Headers"] = "*"
 
 
 def safe_querey(table, **kwargs):
@@ -55,11 +56,13 @@ def user_login(request, user_type):
             'success': False,
             'message': 'POST method required.',
         })
+    
+    body = json.loads(request.body)
 
     user, user_found = safe_querey(
-        user_type.user_model, pk=request.POST['username'])
+        user_type.user_model, pk=body['username'])
     # susceptible to timing attack
-    if not user_found or not check_password(request.POST['password'], user.password_hash):
+    if not user_found or not check_password(body['password'], user.password_hash):
         return JsonResponse({
             'success': False,
             'message': 'bad login',
@@ -83,7 +86,9 @@ def new_user(request, user_type):
             'message': 'POST method required. Do not use these credentials.'
         })
 
-    _, username_taken = safe_querey(user_type.user_model, pk=request.POST['username'])
+    body = json.loads(request.body)
+
+    _, username_taken = safe_querey(user_type.user_model, pk=body['username'])
     if username_taken:
         return JsonResponse({
             'success': False,
@@ -91,10 +96,10 @@ def new_user(request, user_type):
         })
     
     user_type.user_model(
-        username=request.POST['username'],
-        password_hash=make_password(request.POST['password']),
-        first_name=request.POST['firstName'],
-        last_name=request.POST['lastName'],
+        username=body['username'],
+        password_hash=make_password(body['password']),
+        first_name=body['firstName'],
+        last_name=body['lastName'],
     ).save()
 
     return JsonResponse({'success': True})
