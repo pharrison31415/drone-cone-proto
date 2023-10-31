@@ -29,7 +29,8 @@
                 })
                 .finally( () => {
                     if (status == undefined){
-                        status = 'Account created! Please sign in.'
+                        status = 'Login Successful'
+                        window.location.href = '/customer/account'
                     }
                 })
         }
