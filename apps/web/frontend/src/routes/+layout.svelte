@@ -34,13 +34,14 @@
   let showSlide = false;
 
   let signedIn = false;
+
   
   function slideNav(){
     showSlide = !showSlide 
   }
 
   function home(){
-    window.location.href = '/'
+    window.location.href = '/Sign_Up_Page_Customer'
   }
 
   function manager(){

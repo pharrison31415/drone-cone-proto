@@ -11,7 +11,6 @@
         var divContent = document.createElement('p');
 
         if (confirmPassword == password){
-            print("test")
             fetch(apiUrl, {method: 'POST', mode: "cors", headers: {"Content-Type": "application/json"} , body: JSON.stringify({firstName: firstName, lastName: lastName, username: username, password: password})})
                 .then(resp => resp.json())
                 .then(json => {
