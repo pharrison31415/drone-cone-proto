@@ -1,16 +1,21 @@
 <script>
+    import '../+layout.svelte'
+
     let apiUrl = "http://127.0.0.1:8000/api/new-customer/";
     let firstName = '';
     let lastName = '';
     let username = '';
     let password = '';
     let confirmPassword = ''; 
+    let status = '';
+    let success = false
 
     function createAccount(){
         var newDiv = document.createElement('div');
         var divContent = document.createElement('p');
 
-        if (confirmPassword == password){
+        if (checkInput()){
+            status = '';
             fetch(apiUrl, {method: 'POST', mode: "cors", headers: {"Content-Type": "application/json"} , body: JSON.stringify({firstName: firstName, lastName: lastName, username: username, password: password})})
                 .then(resp => resp.json())
                 .then(json => {
@@ -18,24 +23,60 @@
                         throw json.error;
                     }
                     else {
-                        divContent.textContent = json.value
+                        status = json.message
+                        success = json.success
                     }
                 })
                 .catch( err => {
-                    divContent.textContent = err;
+                    status = err;
                 })
                 .finally( () => {
-                    newDiv.appendChild(divContent)
-                    document.getElementById(id = "button").append(newDiv)
+                    if (status == undefined){
+                        status = 'Account created! Please sign in.'
+                    }
                 })
         }
+    }
+
+    function checkInput(){
+        if (firstName == '') {
+            status = 'Please provide your First Name'
+            return false
+        }
+        if (lastName == '') {
+            status = "Please provide your Last Name"
+            return false
+        }
+        if (username == '') {
+            status = "Please provide a Username"
+            return false
+        }
+        if (password == ''){
+            status = "Please provide a Password"
+            return false
+        }
+        if (password.length < 8){
+            status = "Password must be 8 characters or greater"
+            return false
+        }
+        if (confirmPassword == ''){
+            status = "Please confirm your password"
+            return false
+        }
+        if (password != confirmPassword){
+            status = "Passwords do not match, please try again"
+            return false
+        }
+        return true
+
+
     }
 
 
 </script>
 
 <h1>Sign Up Page Customer</h1>
-
+{#if !success}
     <div>
         <label for="firstName">
             First Name:
@@ -87,9 +128,19 @@
             placeholder="Confirm Password"
         >
     </div>
-    <div id = "button">
     <button on:click={createAccount}>Create Account</button>
 
-    </div> 
+    <div>
+        <p>
+            {status}
+        </p>
+    </div>
+{:else}
+    <div>
+        <p>
+            {status}
+        </p>
+    </div>
+{/if}
 
 
