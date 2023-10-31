@@ -112,6 +112,52 @@
 }
 ```
 
+## POST `/api/add-drone/`
+
+**Cookie Required**: `owner-token`
+
+**Request Body** consists of the following strings:
+
+- `name`
+- `status` (`"idle"`, `"delivering"`, `"owner"`)
+- `droneType` (`"light"`, `"medium"`, `"heavy"`)
+
+**Response Data** consists of a `success` boolean and an `id` integer of the new drone. If the request body is bad, there will be an error because I don't want to fix that yet.
+
+## GET `/api/my-drones/`
+
+**Cookie Required**: `owner-token`
+
+**Response Data** consists of a `success` boolean and a `drones` array. Example below.
+
+```
+{
+  "success": true,
+  "drones": [
+    {
+      "id": 1,
+      "name": "Obama's favorite toy",
+      "status": {
+        "text": "idle"
+      },
+      "droneType": {
+        "text": "heavy",
+        "capacity": 8
+      },
+      "owner": {
+        "username": "paul",
+        "firstName": "Paul",
+        "lastName": "Harrison",
+        "created": "2023-10-31T02:55:37.309Z"
+      },
+      "lastUse": "1970-01-01T00:00:00Z",
+      "created": "2023-10-31T02:55:54.393Z"
+    },
+    ...
+  ]
+}
+```
+
 ## GET `/api/inventory/`
 
 **Cookie Required**: `manager-token`

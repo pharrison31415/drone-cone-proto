@@ -20,8 +20,8 @@
 
   {#if !signedIn}
   <div class = "signButtons">
-  <button id = "signUpButton"> Sign Up </button>
-  <button> Sign In </button>
+  <button on:click = {home} id = "signUpButton"> Sign Up </button>
+  <button on:click = {signIn}> Sign In </button>
   </div>
   {/if}
 
@@ -34,13 +34,14 @@
   let showSlide = false;
 
   let signedIn = false;
+
   
   function slideNav(){
     showSlide = !showSlide 
   }
 
   function home(){
-    window.location.href = '/'
+    window.location.href = '/Sign_Up_Page_Customer'
   }
 
   function manager(){
@@ -53,6 +54,10 @@
 
   function drone(){
     window.location.href = '/drone_user'
+  }
+
+  function signIn(){
+    window.location.href = '/Sign_In_Page'
   }
 </script>
   
