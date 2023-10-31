@@ -28,5 +28,8 @@ urlpatterns = [
     path('add-address/', views.post_address),
     path('my-addresses/', views.get_my_addresses),
 
+    path('add-drone/', views.add_drone),
+    path('my-drones/', views.get_my_drones),
+
     path('inventory/', views.get_inventory),
 ]
