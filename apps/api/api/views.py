@@ -149,6 +149,17 @@ def add_drone(request, user):
 
     return JsonResponse({'success': True, 'id': new_drone.id})
 
+
+@verify_owner_token
+def get_my_drones(request, user):
+    drones = Drone.objects.filter(owner=user)
+    return JsonResponse({
+        "success": True,
+        "drones": [
+            d.toJSON() for d in drones
+        ]
+    })
+
 #TODO add all the information a customer will see **
 """
     first and last name

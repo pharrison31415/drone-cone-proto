@@ -136,6 +136,7 @@ class Drone(md.Model):
     def toJSON(self):
         return {
             "id": self.id,
+            "name": self.name,
             "status": self.status.toJSON(),
             "droneType": self.drone_type.toJSON(),
             "owner": self.owner.toJSON(),
