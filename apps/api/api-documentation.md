@@ -128,7 +128,34 @@
 
 **Cookie Required**: `customer-token`
 
-**Response Data** consists of a `success` boolean and a `drones` array.
+**Response Data** consists of a `success` boolean and a `drones` array. Example below.
+
+```
+{
+  "success": true,
+  "drones": [
+    {
+      "id": 1,
+      "name": "Obama's favorite toy",
+      "status": {
+        "text": "idle"
+      },
+      "droneType": {
+        "text": "heavy",
+        "capacity": 8
+      },
+      "owner": {
+        "username": "paul",
+        "firstName": "Paul",
+        "lastName": "Harrison",
+        "created": "2023-10-31T02:55:37.309Z"
+      },
+      "lastUse": "1970-01-01T00:00:00Z",
+      "created": "2023-10-31T02:55:54.393Z"
+    }
+  ]
+}
+```
 
 ## GET `/api/inventory/`
 
