@@ -8,9 +8,7 @@ from api.models import DroneStatus, Drone, DroneType, Customer, Manager, Owner, 
 
 
 def hello_world(request):
-    response = JsonResponse({"helloWorld": False})
-    response.headers['Access-Control-Allow-Origin'] = "*"
-    return response
+    return JsonResponse({"helloWorld": False})
 
 
 def get_drone_statuses(request):
@@ -20,9 +18,7 @@ def get_drone_statuses(request):
 
 def get_drone_types(request):
     drone_types = DroneType.objects.all()
-    response = JsonResponse({"droneTypes": [drone_type.toJSON() for drone_type in drone_types]})
-    response.headers['Access-Control-Allow-Origin'] = 'http://localhost:5173'
-    return response
+    return JsonResponse({"droneTypes": [drone_type.toJSON() for drone_type in drone_types]})
 
 @csrf_exempt
 def new_customer(request):
