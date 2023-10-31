@@ -124,6 +124,12 @@
 
 **Response Data** consists of a `success` boolean and an `id` integer of the new drone. If the request body is bad, there will be an error because I don't want to fix that yet.
 
+## GET `/api/my-drones/`
+
+**Cookie Required**: `customer-token`
+
+**Response Data** consists of a `success` boolean and a `drones` array.
+
 ## GET `/api/inventory/`
 
 **Cookie Required**: `manager-token`
