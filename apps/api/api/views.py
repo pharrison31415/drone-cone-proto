@@ -140,6 +140,7 @@ def add_drone(request, user):
     drone_type = get_object_or_404(DroneType, text=body['droneType'])
 
     new_drone = Drone(
+        name=body['name'],
         status=status,
         drone_type=drone_type,
         owner=user
