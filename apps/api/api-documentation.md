@@ -56,7 +56,7 @@
 - `firstName`
 - `lastName`
 
-**Response Data** consists of a `success` boolean and, if false, a `message` string.
+**Response Data** consists of a `success` boolean and, if false, a `message` string. If the request body is bad, there will be an error because I don't want to fix that yet.
 
 ## POST `/api/customer-login/`, `/api/manager-login`, `/api/owner-login`
 
@@ -67,7 +67,7 @@
 
 **Response Data** consists of a `success` boolean and, if false, a `message` string.
 
-**Response Headers** has a `customer-token`, `manager-token`, or `owner-token` string 128 characters in length if `success` on the response data is true.
+**Response Headers** has a `customer-token`, `manager-token`, or `owner-token` string 128 characters in length if `success` on the response data is true. If the request body is bad, there will be an error because I don't want to fix that yet.
 
 ## POST `/api/add-address/`
 
@@ -157,6 +157,20 @@
   ]
 }
 ```
+
+## PATCH `/api/update-drone`
+
+**Cookie Required**: `owner-token`
+
+**Request Body** must contain the integer `id` of the drone to update. The following properties are optional to include for updating. If they are not included.
+
+- `name`
+- `status` (`"idle"`, `"delivering"`, `"owner"`)
+- `droneType` (`"light"`, `"medium"`, `"heavy"`)
+
+Note that if a drone's status is set to `"delivering"`, the status is unable to be changed. This is reflected in the response datea.
+
+**Response Data** consists of a `success` boolean and a drone `id`. If the request body is bad, there will be an error because I don't want to fix that yet.
 
 ## GET `/api/inventory/`
 
