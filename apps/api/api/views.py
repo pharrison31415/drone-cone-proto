@@ -4,7 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from .views_utils import JsonResponse, safe_querey, verify_token, CUSTOMER_USER, MANAGER_USER, OWNER_USER, verify_customer_token, verify_manager_token, verify_owner_token, user_login, new_user
 import json
 
-from api.models import DroneStatus, DroneType, Customer, Manager, Owner, CustomerToken, ManagerToken, OwnerToken, Address, ConeType, IceCreamType, ToppingType
+from api.models import DroneStatus, Drone, DroneType, Customer, Manager, Owner, CustomerToken, ManagerToken, OwnerToken, Address, ConeType, IceCreamType, ToppingType
 
 
 def hello_world(request):
@@ -127,14 +127,38 @@ def update_inventory(request):
 """
 
 @csrf_exempt
-def new_drone(request):
+@verify_owner_token
+def add_drone(request, user):
     if request.method != "POST":
         return JsonResponse({
             'success': False,
             'message': 'POST method required'
         })
-    #TODO post request for new drone (with what's available) **
-    response = JsonResponse({'success': True})
+
+    body = json.loads(request.body)
+    status = get_object_or_404(DroneStatus, text=body['status'])
+    drone_type = get_object_or_404(DroneType, text=body['droneType'])
+
+    new_drone = Drone(
+        name=body['name'],
+        status=status,
+        drone_type=drone_type,
+        owner=user
+    )
+    new_drone.save()
+
+    return JsonResponse({'success': True, 'id': new_drone.id})
+
+
+@verify_owner_token
+def get_my_drones(request, user):
+    drones = Drone.objects.filter(owner=user)
+    return JsonResponse({
+        "success": True,
+        "drones": [
+            d.toJSON() for d in drones
+        ]
+    })
 
 #TODO add all the information a customer will see **
 """

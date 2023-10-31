@@ -126,6 +126,7 @@ class Drone(md.Model):
     def last_use_default():
         return datetime(1970, 1, 1, 0, 0, 0, 0)
 
+    name = md.CharField(max_length=128)
     status = md.ForeignKey(DroneStatus, on_delete=md.PROTECT)
     drone_type = md.ForeignKey(DroneType, on_delete=md.PROTECT)
     owner = md.ForeignKey(Owner, on_delete=md.PROTECT)
@@ -135,6 +136,7 @@ class Drone(md.Model):
     def toJSON(self):
         return {
             "id": self.id,
+            "name": self.name,
             "status": self.status.toJSON(),
             "droneType": self.drone_type.toJSON(),
             "owner": self.owner.toJSON(),
