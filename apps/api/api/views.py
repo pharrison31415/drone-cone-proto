@@ -205,7 +205,16 @@ def new_order(request):
 
 @verify_customer_token
 def private_customer_data(request, user):
-    return JsonResponse({"firstName": user.first_name})
+    response = user.toJSON()
+    data = response.content
+    addresses = []
+    for address in Address:
+        if address.customer == user.pk:
+            address_data = address.toJSON.content
+            addresses.append(address_data)
+    data.update({"addresses" : addresses})
+    response.content = data
+    return response
 
 @verify_manager_token
 def private_manager_data(request, user):
@@ -214,4 +223,5 @@ def private_manager_data(request, user):
 @verify_owner_token
 def private_owner_data(request, user):
     return JsonResponse({"firstName": user.first_name})
+
 
