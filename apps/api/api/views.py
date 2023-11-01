@@ -218,10 +218,10 @@ def private_customer_data(request, user):
 
 @verify_manager_token
 def private_manager_data(request, user):
-    return JsonResponse({"firstName": user.first_name})
+    return user.toJSON()
 
 @verify_owner_token
 def private_owner_data(request, user):
-    return JsonResponse({"firstName": user.first_name})
+    return user.toJSON()
 
 
