@@ -8,7 +8,7 @@
             
         <div>
         <button id = "signInButton" on:click={signIn}> Sign In</button>
-        <p> Returning Customer</p>
+        <p> For Returning Customer</p>
         </div>    
     </div>
 </body>
@@ -32,6 +32,7 @@
 
     div{
         text-align: center;
+        margin: 50px;
     }
     p{
         font-family: verdana, sans-serif;
