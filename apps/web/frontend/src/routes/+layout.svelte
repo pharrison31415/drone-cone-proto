@@ -17,16 +17,7 @@
   <button on:click={slideNav} id="sideBarIcon" transition:slide = {{delay:200, duration: 10, axis: 'x'}}> </button>
     
   {/if}
-
-  {#if !signedIn}
-  <div class = "signButtons">
-  <button on:click = {home} id = "signUpButton"> Sign Up </button>
-  <button on:click = {signIn}> Sign In </button>
-  </div>
-  {/if}
-
 </div>
-
 
 <script>
   import { slide } from 'svelte/transition';
@@ -41,7 +32,7 @@
   }
 
   function home(){
-    window.location.href = '/Sign_Up_Page_Customer'
+    window.location.href = '/'
   }
 
   function manager(){
@@ -62,13 +53,6 @@
 </script>
   
 <style>
-
-  .signButtons{
-    margin-left: 80%;
-    margin-top: 2%;
-    position: absolute;
-  }
-
   .links{
     background-color: aqua;
     border: none;
@@ -81,11 +65,6 @@
   .links:hover{
     background-color: aquamarine;
     box-shadow: 0 12px 16px 0 rgba(255, 178, 178, 0.24), 0 17px 50px 0 rgba(255, 255, 255, 0.19);
-  }
-
-  #signUpButton{
-    margin: 20px;
-    background-color: blueviolet;
   }
 
   #sideBarIcon{
@@ -111,7 +90,7 @@
   }
   
   #sideBar{
-    background-color: rgb(255, 255, 255);
+    background-color: rgb(235, 107, 255);
     width: 15%;
     padding: 0%;
     margin: 0;

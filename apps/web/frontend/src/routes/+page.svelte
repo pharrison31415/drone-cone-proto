@@ -1,1 +1,69 @@
-<body style="background: #BAF3FF; margin: 0%"> </body>
+<body> 
+    <div>
+        <div>
+        <p> New to Drones Cones Sign Up</p>
+        <button id = "signUpButton" on:click={signUp}> Sign Up</button>
+        </div>
+        <div>
+            
+        <div>
+        <button id = "signInButton" on:click={signIn}> Sign In</button>
+        <p> Returning Customer</p>
+        </div>    
+    </div>
+</body>
+
+<script>
+    function signIn (){
+        window.location.href = '/Sign_In_Page'
+    }
+
+    function signUp (){
+        window.location.href = '/Sign_Up_Page'
+    }
+
+</script>
+
+<style>
+    body{
+        background-color: rgb(180, 255, 255);
+        margin: 0%;
+    }
+
+    div{
+        text-align: center;
+    }
+    p{
+        font-family: verdana, sans-serif;
+    }
+    #signInButton{
+        background-color: aquamarine;
+        height: 75px;
+        width: 200px;
+        border-radius: 10px;
+        text-align: center;
+        font-size: x-large;
+        font-family: Verdana, sans-serif;
+        font-weight: bold;
+        
+    }
+    
+    #signInButton:hover{
+        background-color: rgb(230, 255, 130);
+    }
+
+    #signUpButton{
+        background-color: rgb(90, 164, 255);
+        height: 75px;
+        width: 200px;
+        border-radius: 10px;
+        text-align: center;
+        font-size: x-large;
+        font-family: Verdana, sans-serif;
+        font-weight: bold;
+    }
+
+    #signUpButton:hover{
+        background-color: rgb(230, 255, 130);
+    }
+</style>
