@@ -1,18 +1,17 @@
 <body style="background: #BAF3FF; margin: 0%">
-<h1>Manager Page</h1>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <!--Inventory data-->
 
 <h2 class="centerText"> Inventory </h2>
 <div id="inventory" class="center" >
 
-
 </div>
 
 <!--Revenue data-->
 <h2 class="centerText"> Revenue </h2>
 <div id="revenue" class="center">
-
+  <canvas id="myChart"></canvas>
 </div>
 <!--Contact data-->
 <h2 class="centerText"> Customer's Contact </h2>
@@ -27,6 +26,29 @@
 
 <script>
 import { onMount } from "svelte";
+
+function createChart() {
+  const chart = document.getElementById('myChart');
+
+  new Chart(chart, {
+    type: 'line',
+    data: {
+      labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange', 'Black', 'White','Violet'],
+      datasets: [{
+        label: '# of Votes',
+        data: [12, 19, 3, 5, 2, 3, 10, -25,40],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+}
 
 // "localhost:8000/api/[data]" url for api call for data
 
@@ -69,7 +91,7 @@ onMount(async () => {
 
 */
 
-
+onMount(createChart)
 
 </script>
 
