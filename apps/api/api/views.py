@@ -160,30 +160,6 @@ def get_my_drones(request, user):
         ]
     })
 
-@csrf_exempt
-@verify_owner_token
-def update_drone(request, user):
-    if request.method != "PATCH":
-        return JsonResponse({
-            'success': False,
-            'message': 'PATCH method required'
-        })
-
-    body = json.loads(request.body)
-    drone = Drone.objects.filter(id=body["id"])
-
-    if "name" in body:
-        drone.name = body["name"]
-    if "status" in body:
-        if drone.status.text == "delivering":
-            return JsonResponse({"success": False, "message": "Drone is delivering. Status cannot be updated."})
-        drone.status = get_object_or_404(DroneStatus, text=body["status"])
-    if "droneType" in body:
-        drone.drone_type = get_object_or_404(DroneType, text=body["droneType"])
-    
-    drone.save()
-    return JsonResponse({"success": True, "id": drone.id})
-
 #TODO add all the information a customer will see **
 """
     first and last name
