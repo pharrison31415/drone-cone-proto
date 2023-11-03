@@ -11,13 +11,17 @@
     let showDialogClickError = '';
 
     let droneName = '';
+    let drone_selected;
 
-    let dialog; // Reference to the dialog tag
+    let dialog_addDrone; // Reference to the dialog tag
+    let dialog_editDrone; // Reference to the dialog for edit drones
+
 	onMount(() => {
         get_droneTypes();
         get_droneStatuses();
         get_myDrones();
-		dialog = document.getElementById('add_drone-dialog');
+		dialog_addDrone = document.getElementById('add_drone-dialog');
+        dialog_editDrone = document.getElementById('edit_drone-dialog');
 	});
 
     // get the different drone types from the database
@@ -45,7 +49,7 @@
                 drones = json['drones'];
             }
             else {
-                myDrones_error = json['message'];
+                myDrones_error = "There was an error getting your drones: " + json['message'];
             }
         });
     }
@@ -55,7 +59,7 @@
             .then((response) => response.json())
             .then((json) => {
                 if (json['success'] == true) {
-                    console.log('post was successful');
+                    console.log('post new drone was successful');
                     get_myDrones();
                     let droneName_text = document.getElementById('drone_name');
                     droneName_text.value = "";
@@ -70,30 +74,116 @@
                 }
             });
     }
+
+    async function edit_drone(drone_id, drone_info) {
+        fetch(url + '/update-drone/', {method: 'Patch', body: JSON.stringify({id: drone_id, name: drone_info.get('name'), droneType: drone_info.get('drone-type')})})
+            .then((response) => response.json())
+            .then((json) => {
+                if (json['success'] == true) {
+                    console.log('patch drone was successful');
+                    get_myDrones();
+                    let droneName_editDrone = document.getElementById('drone_name_edit');
+                    droneName_editDrone.value = "";
+                    let radios = document.getElementsByName('drone_type');
+                    for (let i = 0; i < radios.length; i++) {
+                        radios[i].checked = false;
+                    }
+                }
+                else {
+                    console.log('there was an error');
+                    showDialogClickError = "There was an error when editting the drone: " + json['message'];
+                }
+            });
+    }
+
+    async function changeDroneStatus (drone) {
+        let droneStatus_range = document.getElementById('isActive');
+
+        let newStatus;
+        if (droneStatus_range.value == droneStatus_range.min) {
+            newStatus = "owner";
+        }
+        else if (droneStatus_range.value == droneStatus_range.max) {
+            newStatus = "idle";
+        }
+        fetch(url + '/update-drone/', {method: 'PATCH', body: JSON.stringify({id: drone.id, status: newStatus})})
+            .then((response) => response.json())
+            .then((json) => {
+                if (json['success'] == true) {
+                    console.log('patch drone was successful');
+                    get_myDrones();
+                    let droneName_editDrone = document.getElementById('drone_name_edit');
+                    droneName_editDrone.value = "";
+                    let radios = document.getElementsByName('drone_type');
+                    for (let i = 0; i < radios.length; i++) {
+                        radios[i].checked = false;
+                    }
+                }
+                else {
+                    console.log('there was an error');
+                    showDialogClickError = "There was an error when editting the drone: " + json['message'];
+                }
+            });
+    }
 	
 	// Show the dialog when clicking "Delete everything"
-	const showDialogClick = (asModal = true) => {
+	const showDialogClick_addDone = (asModal = true) => {
 		try {
-			dialog[asModal ? 'showModal' : 'show']();
+            dialog_addDrone[asModal ? 'showModal' : 'show']();
 		} catch(e) {
             showDialogClickError = e;
 		}  
 	};
 
-    const closeClick = () => {
-        dialog.close();
+    const showDialogClick_editDone = (asModal = true, drone) => {
+		try {
+            drone_selected = drone;
+            let radios = document.getElementsByName('drone_type');
+            for (let i = 0; i < radios.length; i++) {
+                if (radios[i].type == 'radio' && radios[i].value == drone.status) {
+                    radios[i].checked = true;
+                }
+            }
+            dialog_editDrone[asModal ? 'showModal' : 'show']();
+		} catch(e) {
+            showDialogClickError = e;
+		}  
 	};
 
-    const confirmClick = () => {
+    const closeClick = (dialogId) => {
+        if (dialogId == 'add_drone') {
+            dialog_addDrone.close();
+        }
+        else if (dialogId == 'edit_drone') {
+            dialog_editDrone.close();
+        }
+	};
+
+    const confirmClick_addDrone = () => {
+        let form = document.querySelector("form");
+        if (dialogId == 'add_drone') {
+            if (checkInput()) {
+                dialog_addDrone.close();
+                const data = new FormData(form);
+                let output = "";
+                for (const entry of data) {
+                    output = `${output}${entry[0]}=${entry[1]}\r`;
+                }
+                post_newDrone(data.get('drone_name'), statuses[0].text, data.get('drone_type'));
+            }
+        }      
+    }
+
+    const confirmClick_editDrone = () => {
         let form = document.querySelector("form");
         if (checkInput()) {
-            dialog.close();
+            dialog_editDrone.close();
             const data = new FormData(form);
             let output = "";
             for (const entry of data) {
                 output = `${output}${entry[0]}=${entry[1]}\r`;
             }
-            post_newDrone(data.get('drone_name'), statuses[0].text, data.get('drone_type'));
+            edit_drone(drone_selected.id, data);
         }
     }
     
@@ -113,7 +203,7 @@
 
 </script>
 <h1>Drone User</h1>
-<p>Drones: ????</p>
+<p>Drones: {drones.length}</p>
 <p>Total Revenue: $$$$$</p>
 <p>Total Deliveries: ????</p>
 <dialog id="add_drone-dialog">
@@ -133,13 +223,36 @@
             {/each}
         </fieldset>
 
-        <button on:click={closeClick} type="reset">Cancel</button>
-        <button on:click={confirmClick}>Add Drone</button>
+        <button on:click={() => closeClick('add_drone')} type="reset">Cancel</button>
+        <button on:click={confirmClick_addDrone}>Add Drone</button>
     </form>
 
 </dialog>
+
+<dialog id="edit_drone-dialog">
+    <h3>Edit Drone</h3>
+    <form>
+        <label for="drone_name">Drone Name:</label>
+        <input type="text" value={drone_selected.name} id="drone_name_edit" name="drone_name" placeholder="Drone Name">
+
+        <fieldset>
+            <legend>Size of Drone:</legend>
+            <!-- for each type in types -->
+            {#each types as item}
+                <div>
+                    <input type="radio" id={item.text} value={item.text} name="drone_type" required/>
+                    <lable for={item.text}>{item.text}: Capacity of {item.capacity}</lable>
+                </div>
+            {/each}
+        </fieldset>
+
+        <button on:click={() => closeClick('edit_drone')} type="reset">Cancel</button>
+        <button on:click={() => confirmClick_editDrone()}>Add Drone</button>
+    </form>
+</dialog>
+
 <p>{showDialogClickError}</p>
-<button on:click={() => showDialogClick(true)} id="add_drone-button">
+<button on:click={() => showDialogClick_addDone(true)} id="add_drone-button">
     <span>
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
             <g clip-path="url(#clip0_5_2)">
@@ -159,7 +272,7 @@
 <div id="drones">
     <!-- for each drone that the user has -->
     {#if drones.length == 0}
-        <div class='drone'>
+        <div class='drone_error'>
             <h3>No Drones</h3>
             <p>To add a drone click the 'Add Drone' button</p>
             <p>{myDrones_error}</p>
@@ -167,21 +280,45 @@
     {:else}
         {#each drones as drone}
             <div class="drone">
-                <h2>Drone: {drone.name}</h2>
-                <ul>
-                    <li>Type, capacity: {drone.droneTypes.text}, {drone.droneTypes.capacity}</li>
-                    <li>Deliveries: ????</li>
-                    <li>Status: {drone.statuses.text}
-                        <form>
-                            <input type="range" id="isActive" name="isActive" min="0" max="1" />
-                            {#if drone.status != "owner"}
-                                <label for="isActive">Deactivate</label>
-                            {:else}
-                                <label for="isActive">Activate</label>
-                            {/if}
-                        </form>
-                    </li>
-                </ul>
+                <div class="drone_details">
+                    <h2>Drone: {drone.name}</h2>
+                    <ul>
+                        <li>Type, capacity: {drone.droneType.text}, {drone.droneType.capacity}</li>
+                        <li>Deliveries: ????</li>
+                        <li>Revenue: $?</li>
+                        <li>Status: {drone.status.text}
+                            <form>
+                                {#if drone.status.text == 'delivering'}
+                                    <input type="range" id="isActive" name="isActive" min="0" max="1" on:change={() => changeDroneStatus(drone)} disabled/>
+                                {:else}
+                                    <input type="range" id="isActive" name="isActive" min="0" max="1" on:change={() => changeDroneStatus(drone)}/>
+                                {/if}
+
+                                {#if drone.status.text != "owner"}
+                                    <label for="isActive">Deactivate</label>
+                                {:else}
+                                    <label for="isActive">Activate</label>
+                                {/if}
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="edit_drone">
+                    <button on:click={() => showDialogClick_editDone(true, drone)} id="edit_drone-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                            <g clip-path="url(#clip0_7_2)">
+                              <path fill-rule="evenodd" clip-rule="evenodd" d="M0 14.2V18H3.8L14.8 6.9L11 3.1L0 14.2ZM17.7 4C18.1 3.6 18.1 3 17.7 2.6L15.4 0.3C15 -0.1 14.4 -0.1 14 0.3L12.2 2.1L16 5.9L17.7 4Z" fill="black"/>
+                            </g>
+                            <defs>
+                              <clipPath id="clip0_7_2">
+                                <rect width="18" height="18" fill="white"/>
+                              </clipPath>
+                            </defs>
+                          </svg>
+                          <p>Edit Drone</p>
+                    </button>
+                </div>
             </div>
         {/each}
     {/if}
@@ -212,8 +349,35 @@
     }
 
     .drone {
+        display: flex;
         border: solid black;
         padding-left: 20px;
+    }
+
+    .drone_error {
+        border: solid black;
+        padding-left: 20px;
+    }
+
+    .drone_details {
+        width: -webkit-fill-available;
+    }
+
+    .edit_drone {
+        display: flex;
+        flex-direction: column;
+        padding: 5px;
+        margin: 5px;
+    }
+
+    .edit_drone > button > p{
+        padding: 0px;
+        margin: 5px;
+        width: max-content;
+    }
+
+    .edit_drone > button > svg {
+        padding-top: 5px;
     }
 
 
