@@ -151,7 +151,6 @@ class Order(md.Model):
             "id": self.id,
             "customer": self.customer.toJSON(),
             "address": self.address.toJSON(),
-            "cone": self.cone.toJSON(),
             "drone": self.drone.toJSON(),
             "price": self.price,
             "status": self.status.toJSON(),
@@ -168,6 +167,7 @@ class Cone(md.Model):
     def toJSON(self):
         return {
             "id": self.id,
+            "order": self.order.toJSON(),
             "coneType": self.cone_type.toJSON(),
             "iceCreamType": self.ice_cream_type.toJSON(),
             "toppingType": self.topping_type.toJSON(),
