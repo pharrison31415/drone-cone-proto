@@ -186,6 +186,7 @@ class Message(md.Model):
         return {
             "id": self.id,
             "content": self.content,
+            "email": self.email,
             "handled": self.handled,
             "created": self.created,
         }
