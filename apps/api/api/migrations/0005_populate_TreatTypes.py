@@ -45,6 +45,11 @@ ICE_CREAM_TYPES = [
 
 TOPPING_TYPES = [
     {
+        "name": "No topping",
+        "unit_cost": 0,
+        "image_url": "#",
+    },
+    {
         "name": "Chocolate Sprinkles",
         "unit_cost": 7, # https://www.amazon.com/Chocolate-Sprinkles-Flavored-Resealable-Container/dp/B072KL63T3/
         "image_url": "#",

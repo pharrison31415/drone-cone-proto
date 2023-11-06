@@ -141,8 +141,8 @@ class OrderStatus(md.Model):
 class Order(md.Model):
     customer = md.ForeignKey(Customer, null=True, on_delete=md.PROTECT)
     address = md.ForeignKey(Address, on_delete=md.PROTECT)
-    drone = md.ForeignKey(Drone, on_delete=md.PROTECT)
     price = md.PositiveIntegerField()
+    cost = md.PositiveIntegerField()
     status = md.ForeignKey(OrderStatus, on_delete=md.PROTECT)
     created = md.DateTimeField(auto_now=True)
 
@@ -151,23 +151,25 @@ class Order(md.Model):
             "id": self.id,
             "customer": self.customer.toJSON(),
             "address": self.address.toJSON(),
-            "drone": self.drone.toJSON(),
             "price": self.price,
             "status": self.status.toJSON(),
             "created": self.crated,
         }
 
+class DroneOrder(md.Model):
+    drone = md.ForeignKey(Drone, on_delete=md.PROTECT)
+    order = md.ForeignKey(Order, on_delete=md.PROTECT)
+
 class Cone(md.Model):
     cone_type = md.ForeignKey(ConeType, on_delete=md.PROTECT)
     ice_cream_type = md.ForeignKey(IceCreamType, on_delete=md.PROTECT)
     topping_type = md.ForeignKey(ToppingType, on_delete=md.PROTECT)
-    order = md.ForeignKey(Order, on_delete=md.PROTECT)
+    drone_order = md.ForeignKey(DroneOrder, on_delete=md.PROTECT)
     created = md.DateTimeField(auto_now=True)
 
     def toJSON(self):
         return {
             "id": self.id,
-            "order": self.order.toJSON(),
             "coneType": self.cone_type.toJSON(),
             "iceCreamType": self.ice_cream_type.toJSON(),
             "toppingType": self.topping_type.toJSON(),

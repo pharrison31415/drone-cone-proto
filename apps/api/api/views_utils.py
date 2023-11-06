@@ -43,8 +43,8 @@ def verify_token(view, user_type):
     
     return wrapper_verify
 
-def optional_verify_token(view, user_type):
-    def wrapper_verify(*args, **kwargs):
+def optional_token(view, user_type):
+    def wrapper_optional(*args, **kwargs):
         user_token = args[0].COOKIES.get(user_type.token_key, False)
         retrieved_token, found = safe_querey(
             user_type.token_model, token=user_token)
@@ -53,12 +53,13 @@ def optional_verify_token(view, user_type):
 
         return view(*args, user_found=True, user=retrieved_token.user, **kwargs)
 
+    return wrapper_optional
 
 verify_customer_token = partial(verify_token, user_type=CUSTOMER_USER)
 verify_manager_token = partial(verify_token, user_type=MANAGER_USER)
 verify_owner_token = partial(verify_token, user_type=OWNER_USER)
 
-optional_verify_customer_token = partial(optional_verify_token, user_type=CUSTOMER_USER)
+optional_customer_token = partial(optional_token, user_type=CUSTOMER_USER)
 
 def user_login(request, user_type):
     if request.method != "POST":
