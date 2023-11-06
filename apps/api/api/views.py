@@ -225,3 +225,6 @@ def private_owner_data(request, user):
     return user.toJSON()
 
 
+@csrf_exempt
+def new_message(request):
+    return JsonResponse({"success": True})

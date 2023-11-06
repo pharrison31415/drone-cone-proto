@@ -177,6 +177,7 @@ class Order(md.Model):
 
 class Message(md.Model):
     content = md.CharField(max_length=1024)
+    email = md.CharField(max_length=128)
     handled = md.BooleanField(default=False)
     handled_by = md.ForeignKey(Manager, null=True, on_delete=md.PROTECT)
     created = md.DateTimeField(auto_now=True)
