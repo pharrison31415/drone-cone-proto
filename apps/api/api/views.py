@@ -290,10 +290,19 @@ def new_order(request, user_found, user):
             ).save()
         cone_index += drone.drone_type.capacity
 
-    return JsonResponse({
+    response = JsonResponse({
         "success": True,
-        "orderId": new_order.id
+        "orderId": new_order.id,
+        "created": new_order.created
     })
+    token = get_random_string(length=128)
+    OrderToken(
+        token=token,
+        order=new_order
+    ).save()
+    response.headers["Set-Cookie"] = f"order-token={token}" 
+
+    return response
 
 @csrf_exempt
 @verify_order_token
