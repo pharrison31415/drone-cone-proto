@@ -156,6 +156,11 @@ class Order(md.Model):
             "created": self.crated,
         }
 
+class OrderToken(md.Model):
+    token = md.CharField(primary_key=True, max_length=128)
+    order = md.ForeignKey(Order, on_delete=md.PROTECT)
+    created = md.DateTimeField(auto_now=True)
+
 class DroneOrder(md.Model):
     drone = md.ForeignKey(Drone, on_delete=md.PROTECT)
     order = md.ForeignKey(Order, on_delete=md.PROTECT)

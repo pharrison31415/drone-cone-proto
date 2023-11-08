@@ -61,6 +61,18 @@ verify_owner_token = partial(verify_token, user_type=OWNER_USER)
 
 optional_customer_token = partial(optional_token, user_type=CUSTOMER_USER)
 
+def verify_order_token(view):
+    def wrapper_verify(*args, **kwargs):
+        order_token = view.COOKIES.get("owner-token", False)
+        retrieved_token, found = safe_querey(
+            OwnerToken, token=order_token)
+        if not found:
+            return JsonResponse({'success': False, 'message': 'bad token'})
+        
+        return view(*args, order=retrieved_token.order, **kwargs)
+
+    return wrapper_verify
+
 def user_login(request, user_type):
     if request.method != "POST":
         return JsonResponse({
