@@ -293,18 +293,16 @@ def new_order(request, user_found, user):
         "orderId": new_order.id
     })
 
-# @csrf_exempt
-# @verify_order_token
-# def order_delivered(request, order):
-#     if request.method != "POST":
-#         return JsonResponse({
-#             'success': False,
-#             'message': 'POST method required'
-#         })
+@csrf_exempt
+@verify_order_token
+def order_delivered(request, order):
+    if request.method != "POST":
+        return JsonResponse({
+            'success': False,
+            'message': 'POST method required'
+        })
 
-#     body = json.loads(request.body)
-
-
+    body = json.loads(request.body)
 
 
 @verify_customer_token
