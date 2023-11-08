@@ -32,6 +32,8 @@ urlpatterns = [
     path('my-drones/', views.get_my_drones),
     path('update-drone/', views.update_drone),
 
+    path('new-order/', views.new_order),
+
     path('inventory/', views.get_inventory),
     
     path('new-message/', views.new_message),

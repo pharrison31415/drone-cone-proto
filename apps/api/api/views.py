@@ -1,10 +1,10 @@
 from functools import partial
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.csrf import csrf_exempt
-from .views_utils import JsonResponse, safe_querey, verify_token, CUSTOMER_USER, MANAGER_USER, OWNER_USER, verify_customer_token, verify_manager_token, verify_owner_token, user_login, new_user
+from .views_utils import JsonResponse, safe_querey, verify_token, CUSTOMER_USER, MANAGER_USER, OWNER_USER, verify_customer_token, verify_manager_token, verify_owner_token, optional_customer_token, user_login, new_user
 import json
 
-from api.models import DroneStatus, Drone, DroneType, Customer, Manager, Owner, CustomerToken, ManagerToken, OwnerToken, Address, ConeType, IceCreamType, ToppingType, Message
+from api.models import DroneStatus, Drone, DroneType, Customer, Manager, Owner, OrderStatus, CustomerToken, ManagerToken, OwnerToken, Address, Cone, ConeType, IceCreamType, ToppingType, Order, DroneOrder, Message
 
 
 def hello_world(request):
@@ -193,15 +193,107 @@ def update_drone(request, user):
 """
 
 @csrf_exempt
-def new_order(request):
+@optional_customer_token
+def new_order(request, user_found, user):
     if request.method != "POST":
         return JsonResponse({
             'success': False,
-            'message': 'POST method required.'
+            'message': 'POST method required'
+        })
+    
+    body = json.loads(request.body)
+
+    # Get the drones to use, throw error if not enough
+    idle_status = DroneStatus.objects.get(text="idle")
+    drones_available = list(Drone.objects.order_by("last_use").filter(status=idle_status))
+    drones_using = []
+    cones_remaining = len(body["cones"])
+    if cones_remaining < 1:
+        return JsonResponse({
+                "success": False,
+                "message": "order at least one cone"
             })
-    #TODO post request for a new order, update inventory - from customer
-    response = JsonResponse({'Success': True})
-    return response
+
+    while cones_remaining > 0:
+        if not drones_available:
+            return JsonResponse({
+                "success": False,
+                "message": "not enough available drones"
+            })
+        next_drone = drones_available.pop(0)
+        drones_using.append(next_drone)
+        cones_remaining -= next_drone.drone_type.capacity
+
+    # handle addressing: customer user or guest
+    address = None
+    if user_found:
+        address, address_found = safe_querey(Address, id=body["addressId"], customer=user)
+        if not address_found:
+            return JsonResponse({
+            'success': False,
+            'message': 'no address found'
+        })
+    else:
+        address = Address(
+            line_one=body["guestAddress"]["lineOne"],
+            line_two=body["guestAddress"]["lineTwo"],
+            city=body["guestAddress"]["city"],
+            state=body["guestAddress"]["state"],
+            zip_code=body["guestAddress"]["zipCode"],
+            customer=None
+        )
+        address.save()
+
+    # find cost
+    cost = 0
+    for cone in body["cones"]:
+        cost += sum([
+            get_object_or_404(ConeType, name=cone["coneType"]).unit_cost,
+            get_object_or_404(IceCreamType, name=cone["iceCreamType"]).unit_cost,
+            get_object_or_404(ToppingType, name=cone["toppingType"]).unit_cost,
+        ])
+
+    # markup cost for price
+    price = int(cost * 1.10)
+
+    new_order = Order(
+        customer=(user if user_found else None),
+        address=address,
+        price=price,
+        cost=cost,
+        status=OrderStatus.objects.get(text="delivering")
+    )
+    new_order.save()
+    
+
+    # create droneorders, cones
+    cone_index = 0
+    delivering_status = DroneStatus.objects.get(text="delivering")
+    for drone in drones_using:
+        drone.status = delivering_status
+        drone.save()
+        new_drone_order = DroneOrder(
+            drone=drone,
+            order=new_order,
+        )
+        new_drone_order.save()
+        for i in range(cone_index, cone_index + drone.drone_type.capacity):
+            if i >= len(body["cones"]):
+                break
+            Cone(
+                drone_order=new_drone_order,
+                cone_type=get_object_or_404(ConeType, name=body["cones"][i]["coneType"]),
+                ice_cream_type=get_object_or_404(IceCreamType, name=body["cones"][i]["iceCreamType"]),
+                topping_type=get_object_or_404(ToppingType, name=body["cones"][i]["toppingType"]),
+            ).save()
+        cone_index += drone.drone_type.capacity
+
+    return JsonResponse({
+        "success": True,
+        "orderId": new_order.id
+    })
+
+    
 
 @verify_customer_token
 def private_customer_data(request, user):

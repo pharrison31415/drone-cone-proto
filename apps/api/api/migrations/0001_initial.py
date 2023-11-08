@@ -25,13 +25,6 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name='Cone',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created', models.DateTimeField(auto_now=True)),
-            ],
-        ),
-        migrations.CreateModel(
             name='ConeType',
             fields=[
                 ('name', models.CharField(max_length=128, primary_key=True, serialize=False)),
@@ -150,11 +143,10 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('price', models.PositiveIntegerField()),
+                ('cost', models.PositiveIntegerField()),
                 ('created', models.DateTimeField(auto_now=True)),
                 ('address', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='api.address')),
-                ('cone', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='api.cone')),
-                ('customer', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='api.customer')),
-                ('drone', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='api.drone')),
+                ('customer', models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, to='api.customer')),
                 ('status', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='api.orderstatus')),
             ],
         ),
@@ -179,6 +171,14 @@ class Migration(migrations.Migration):
             options={
                 'abstract': False,
             },
+        ),
+        migrations.CreateModel(
+            name='DroneOrder',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('drone', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='api.drone')),
+                ('order', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='api.order')),
+            ],
         ),
         migrations.AddField(
             model_name='drone',
@@ -206,24 +206,20 @@ class Migration(migrations.Migration):
                 'abstract': False,
             },
         ),
-        migrations.AddField(
-            model_name='cone',
-            name='cone_type',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='api.conetype'),
-        ),
-        migrations.AddField(
-            model_name='cone',
-            name='ice_cream_type',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='api.icecreamtype'),
-        ),
-        migrations.AddField(
-            model_name='cone',
-            name='topping_type',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='api.toppingtype'),
+        migrations.CreateModel(
+            name='Cone',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('created', models.DateTimeField(auto_now=True)),
+                ('cone_type', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='api.conetype')),
+                ('drone_order', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='api.droneorder')),
+                ('ice_cream_type', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='api.icecreamtype')),
+                ('topping_type', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='api.toppingtype')),
+            ],
         ),
         migrations.AddField(
             model_name='address',
             name='customer',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='api.customer'),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, to='api.customer'),
         ),
     ]
