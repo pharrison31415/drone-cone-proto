@@ -5,6 +5,8 @@
 
 <h2 class="centerText"> Inventory </h2>
 <div id="inventory" class="center" >
+<canvas id="Cones"></canvas>
+
 </div>
 
 <!--Revenue data-->
@@ -61,6 +63,22 @@ function createChart() {
   });
 }
 
+function createInventory(){
+  const cones = document.getElementById("Cones")
+
+  new Chart(cones,{
+    type: "doughnut",
+    data:{
+      datasets:[{
+        data:[120,100],
+        borderWidth: 3 
+      }]
+    }
+
+  }); 
+  
+}
+
 // "localhost:8000/api/[data]" url for api call for data
 let apiUrl = "http://localhost:8000/api/cone-types/"
 //**** Inventory Status ****
@@ -103,6 +121,7 @@ onMount(async () => {
 */
 
 onMount(createChart)
+onMount(createInventory)
 
 </script>
 
@@ -128,7 +147,7 @@ onMount(createChart)
         width: 50%;
         padding: 10px;
         text-align: center;
-            }       
+            }    
 
     #inventory {
         background:rgb(255, 255, 255);
