@@ -2,6 +2,7 @@ from functools import partial
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.csrf import csrf_exempt
 from .views_utils import JsonResponse, safe_querey, verify_token, CUSTOMER_USER, MANAGER_USER, OWNER_USER, verify_customer_token, verify_manager_token, verify_owner_token, optional_customer_token, verify_order_token, user_login, new_user
+from datetime import datetime
 import json
 
 from api.models import DroneStatus, Drone, DroneType, Customer, Manager, Owner, OrderStatus, CustomerToken, ManagerToken, OwnerToken, Address, Cone, ConeType, IceCreamType, ToppingType, Order, DroneOrder, Message
@@ -271,6 +272,7 @@ def new_order(request, user_found, user):
     delivering_status = DroneStatus.objects.get(text="delivering")
     for drone in drones_using:
         drone.status = delivering_status
+        drone.last_use = datetime.now()
         drone.save()
         new_drone_order = DroneOrder(
             drone=drone,
@@ -303,6 +305,18 @@ def order_delivered(request, order):
         })
 
     body = json.loads(request.body)
+
+    drone_orders = DroneOrder.objects.filter(order=order)
+    idle_status = DroneStatus.objects.get(text="idle")
+    delivered_status = OrderStatus.objects.get(text="delivered")
+    for drone_order in drone_orders:
+        drone_order.drone.status = idle_status
+        drone_order.drone.save()
+
+        drone_order.order.status = delivered_status
+        drone_order.order.save()
+
+    return JsonResponse({ "success": True })
 
 
 @verify_customer_token
