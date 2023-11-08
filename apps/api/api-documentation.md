@@ -196,8 +196,16 @@ Note that if a drone's status is set to `"delivering"`, the status is unable to 
 }
 ```
 
+## POST `/api/new-order/`
+
+**Cookie Optional**: `customer-token`
+
+**Request Body** must contain a non-empty array of `cones`, each of which is an object with a valid `coneType`, `iceCreamType`, and `toppingType`. If a valid `customer-token` cookie is provided, the `addressId` must be specified. If no valid `customer-token` cookie is provided, a `guestAddress` must be provided. The guest address's format is in the same format as used in `/api/add-address/`.
+
+**Response Data** will contain a `success` boolean. If false, a `message` string will be provided. If true, an `orderId` integer and `created` date will be provided. If the request body is bad, there will be an error because I don't want to fix that yet.
+
 ## POST `/api/new-message/`
 
 **Request Body** must contain a `content` string (max length 1024 characters), and an `email` string (max length 128 characters).
 
-**Response Data** will contain a `success` boolean.
+**Response Data** will contain a `success` boolean. If the request body is bad, there will be an error because I don't want to fix that yet.
