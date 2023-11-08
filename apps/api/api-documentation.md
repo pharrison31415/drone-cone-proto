@@ -204,6 +204,16 @@ Note that if a drone's status is set to `"delivering"`, the status is unable to 
 
 **Response Data** will contain a `success` boolean. If false, a `message` string will be provided. If true, an `orderId` integer and `created` date will be provided. If the request body is bad, there will be an error because I don't want to fix that yet.
 
+**Response Headers** has a `order-token` string 128 characters in length if `success` on the response data is true. If the request body is bad, there will be an error because I don't want to fix that yet.
+
+## POST `/api/order-delivered/`
+
+**Reason:** This operation marks the drones used for the order as being available for another delivery. We haven't figured out a way to make them automatically available after 10 minutes. We are still working on it. :(
+
+**Cookie Required** `order-token`
+
+**Response Data** will contain a `success` boolean of true.
+
 ## POST `/api/new-message/`
 
 **Request Body** must contain a `content` string (max length 1024 characters), and an `email` string (max length 128 characters).

@@ -313,8 +313,6 @@ def order_delivered(request, order):
             'message': 'POST method required'
         })
 
-    body = json.loads(request.body)
-
     drone_orders = DroneOrder.objects.filter(order=order)
     idle_status = DroneStatus.objects.get(text="idle")
     delivered_status = OrderStatus.objects.get(text="delivered")
