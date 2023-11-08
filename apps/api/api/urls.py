@@ -35,4 +35,6 @@ urlpatterns = [
     path('new-order/', views.new_order),
 
     path('inventory/', views.get_inventory),
+    
+    path('new-message/', views.new_message),
 ]

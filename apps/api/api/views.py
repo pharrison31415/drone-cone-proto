@@ -4,7 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from .views_utils import JsonResponse, safe_querey, verify_token, CUSTOMER_USER, MANAGER_USER, OWNER_USER, verify_customer_token, verify_manager_token, verify_owner_token, optional_customer_token, user_login, new_user
 import json
 
-from api.models import DroneStatus, Drone, DroneType, Customer, Manager, Owner, OrderStatus, CustomerToken, ManagerToken, OwnerToken, Address, Cone, ConeType, IceCreamType, ToppingType, Order, DroneOrder
+from api.models import DroneStatus, Drone, DroneType, Customer, Manager, Owner, OrderStatus, CustomerToken, ManagerToken, OwnerToken, Address, Cone, ConeType, IceCreamType, ToppingType, Order, DroneOrder, Message
 
 
 def hello_world(request):
@@ -317,3 +317,19 @@ def private_owner_data(request, user):
     return user.toJSON()
 
 
+@csrf_exempt
+def new_message(request):
+    if request.method != "POST":
+        return JsonResponse({
+            'success': False,
+            'message': 'POST method required'
+        })
+    
+    body = json.loads(request.body)
+
+    Message(
+        content=body["content"],
+        email=body["email"]
+    ).save()
+
+    return JsonResponse({"success": True})

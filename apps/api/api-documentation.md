@@ -195,3 +195,9 @@ Note that if a drone's status is set to `"delivering"`, the status is unable to 
   }
 }
 ```
+
+## POST `/api/new-message/`
+
+**Request Body** must contain a `content` string (max length 1024 characters), and an `email` string (max length 128 characters).
+
+**Response Data** will contain a `success` boolean.
