@@ -8,9 +8,11 @@ import json
 class JsonResponse(DjJsonResponse):
     def __init__(self, *args, **kwargs):
         super(JsonResponse, self).__init__(*args, **kwargs)
-        self.headers["Access-Control-Allow-Origin"] = "*"
+        # self.headers["Access-Control-Allow-Origin"] = "*"
+        self.headers["Access-Control-Allow-Origin"] = "http://127.0.0.1:5173"
         self.headers["Access-Control-Allow-Methods"] = "*"
-        self.headers["Access-Control-Allow-Headers"] = "*"
+        self.headers["Access-Control-Allow-Headers"] = "Origin, X-Requested-With, Content-Type, Accept"
+        self.headers["Access-Control-Allow-Credentials"] = "true"
 
 
 def safe_querey(table, **kwargs):
