@@ -32,6 +32,9 @@ urlpatterns = [
     path('my-drones/', views.get_my_drones),
     path('update-drone/', views.update_drone),
 
+    path('new-order/', views.new_order),
+    path('order-delivered/', views.order_delivered),
+
     path('inventory/', views.get_inventory),
     
     path('new-message/', views.new_message),

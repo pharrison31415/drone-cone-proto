@@ -19,7 +19,7 @@
     }
 
     function signUp (){
-        window.location.href = '/Sign_Up_Page'
+        window.location.href = '/Sign_Up_Page_Customer'
     }
 
 </script>

@@ -7,8 +7,8 @@
   <div id="sideBar" transition:slide ={{delay:0, duration: 400, axis: 'x'}}>
       <button class = "links" on:click={home}>Home</button>
       <button class = "links" on:click={customers}> Users Accounts </button>
-      <button class = "links" on:click={drone}> Drone Operator</button>
-      <button class = "links" on:click={manager}>Manager</button>
+      <button class = "links" on:click={drone}> Drone Sign In</button>
+      <button class = "links" on:click={manager}>Manager Sign In</button>
       <button class = "links" on:click = {slideNav}> Close </button>
   </div>
 
@@ -20,6 +20,8 @@
 </div>
 
 <script>
+
+  
   import { slide } from 'svelte/transition';
 
   let showSlide = false;
@@ -36,7 +38,7 @@
   }
 
   function manager(){
-    window.location.href = '/Manager_Page'
+    window.location.href = '/manager/manager_sign_In'
   }
 
   function customers(){
@@ -49,6 +51,10 @@
 
   function signIn(){
     window.location.href = '/Sign_In_Page'
+  }
+
+  function signUp(){
+    window.location.href = '/Sign_Up_Page_Customer'
   }
 </script>
   
