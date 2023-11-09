@@ -5,6 +5,7 @@
 
 <h2 class="centerText"> Inventory </h2>
 <div id="inventory" class="center" >
+<canvas id="Cones"></canvas>
 
 </div>
 
@@ -12,6 +13,7 @@
 <h2 class="centerText"> Revenue </h2>
 <div id="revenue" class="center">
   <canvas id="myChart"></canvas>
+  <p>Current revenue $500</p>
 </div>
 <!--Contact data-->
 <h2 class="centerText"> Customer's Contact </h2>
@@ -29,41 +31,68 @@ import { onMount } from "svelte";
 
 function createChart() {
   const chart = document.getElementById('myChart');
-
+ 
   new Chart(chart, {
     type: 'line',
     data: {
-      labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange', 'Black', 'White','Violet'],
+      // Labels Data types
+      labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple'],
+
+      //Datasets for the graph
       datasets: [{
-        label: '# of Votes',
-        data: [12, 19, 3, 5, 2, 3, 10, -25,40],
-        borderWidth: 1
+        label: 'Revenue',
+        data: [12, 16, 3, 5, 2],
+        borderWidth: 3
+      },
+      { 
+      //2nd Datasets for the graph
+      label: 'Expenees',
+        data: [-11,-32,-3,-4,-45],
+        borderWidth: 3
       }]
     },
+    //Options
     options: {
       scales: {
         y: {
-          beginAtZero: true
+          min: -50,
+          max: 50
         }
       }
     }
   });
 }
 
-// "localhost:8000/api/[data]" url for api call for data
+function createInventory(){
+  const cones = document.getElementById("Cones")
 
-/*  
-**** Inventory Status ****
+  new Chart(cones,{
+    type: "doughnut",
+    data:{
+      datasets:[{
+        data:[120,100],
+        borderWidth: 3 
+      }]
+    }
+
+  }); 
+  
+}
+
+// "localhost:8000/api/[data]" url for api call for data
+let apiUrl = "http://localhost:8000/api/cone-types/"
+//**** Inventory Status ****
 onMount(async () => {
-  fetch("")
-  .then(response => response.json())
+  fetch(apiUrl)
   .then(data => {
-		inventory = data;  
+		let inventory = data;
+    console.log(inventory) 
     }).catch(error => {
     console.log(error);
   });
 });
 
+/*
 **** Revenue Status ****
 onMount(async () => {
   fetch('')
@@ -92,15 +121,18 @@ onMount(async () => {
 */
 
 onMount(createChart)
+onMount(createInventory)
 
 </script>
 
 <!--Temp Style **** RELOCATE to CSS FILE WHEN DONE ****-->
 <style>
+    canvas{
+      margin: 0;
+    }
     h2 {
         font-family: 'Trebuchet MS', sans-serif;
     }
-
     .center {
         margin: auto;
         width: 50%;
@@ -115,12 +147,12 @@ onMount(createChart)
         width: 50%;
         padding: 10px;
         text-align: center;
-            }       
+            }    
 
     #inventory {
         background:rgb(255, 255, 255);
         width:75%;
-        height:250px;
+        height:500px;
         border-style: solid;
         margin-bottom: 20px;
         border-radius: 20px;
@@ -129,7 +161,7 @@ onMount(createChart)
         float:center; 
         background:hsl(0, 0%, 100%);
         width:75%;
-        height:250px;
+        height:500px;
         border-style: solid;
         margin-bottom: 20px;
         border-radius: 20px;
@@ -138,11 +170,15 @@ onMount(createChart)
         float:center; 
         background:rgb(249, 249, 249);
         width:75%;
-        height:250px;
+        height:500px;
         border-style: solid;
         margin-bottom: 20px;
         border-radius: 20px;
             }
+
+    #myChart{
+      width: 400px;
+    }
     
 </style>
 

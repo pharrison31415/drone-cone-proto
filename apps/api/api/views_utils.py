@@ -43,12 +43,35 @@ def verify_token(view, user_type):
     
     return wrapper_verify
 
+def optional_token(view, user_type):
+    def wrapper_optional(*args, **kwargs):
+        user_token = args[0].COOKIES.get(user_type.token_key, False)
+        retrieved_token, found = safe_querey(
+            user_type.token_model, token=user_token)
+        if not found:
+            return view(*args, user_found=False, user=None)
+
+        return view(*args, user_found=True, user=retrieved_token.user, **kwargs)
+
+    return wrapper_optional
 
 verify_customer_token = partial(verify_token, user_type=CUSTOMER_USER)
 verify_manager_token = partial(verify_token, user_type=MANAGER_USER)
 verify_owner_token = partial(verify_token, user_type=OWNER_USER)
 
+optional_customer_token = partial(optional_token, user_type=CUSTOMER_USER)
 
+def verify_order_token(view):
+    def wrapper_verify(*args, **kwargs):
+        order_token = view.COOKIES.get("owner-token", False)
+        retrieved_token, found = safe_querey(
+            OwnerToken, token=order_token)
+        if not found:
+            return JsonResponse({'success': False, 'message': 'bad token'})
+        
+        return view(*args, order=retrieved_token.order, **kwargs)
+
+    return wrapper_verify
 
 def user_login(request, user_type):
     if request.method != "POST":

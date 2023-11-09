@@ -46,7 +46,7 @@ class Address(md.Model):
     city = md.CharField(max_length=64)
     state = md.CharField(max_length=64)
     zip_code = md.CharField(max_length=16)
-    customer = md.ForeignKey(Customer, on_delete=md.PROTECT)
+    customer = md.ForeignKey(Customer, null=True, on_delete=md.PROTECT)
 
     def toJSON(self):
         return {
@@ -85,22 +85,6 @@ class InventoryItem(md.Model):
 class ConeType(InventoryItem): pass
 class IceCreamType(InventoryItem): pass
 class ToppingType(InventoryItem): pass
-
-class Cone(md.Model):
-    cone_type = md.ForeignKey(ConeType, on_delete=md.PROTECT)
-    ice_cream_type = md.ForeignKey(IceCreamType, on_delete=md.PROTECT)
-    topping_type = md.ForeignKey(ToppingType, on_delete=md.PROTECT)
-    created = md.DateTimeField(auto_now=True)
-
-    def toJSON(self):
-        return {
-            "id": self.id,
-            "coneType": self.cone_type.toJSON(),
-            "iceCreamType": self.ice_cream_type.toJSON(),
-            "toppingType": self.topping_type.toJSON(),
-            "created": self.created,
-        }
-
 
 class DroneType(md.Model):
     text = md.CharField(primary_key=True, max_length=32)
@@ -155,11 +139,10 @@ class OrderStatus(md.Model):
 
 
 class Order(md.Model):
-    customer = md.ForeignKey(Customer, on_delete=md.PROTECT)
+    customer = md.ForeignKey(Customer, null=True, on_delete=md.PROTECT)
     address = md.ForeignKey(Address, on_delete=md.PROTECT)
-    cone = md.ForeignKey(Cone, on_delete=md.PROTECT)
-    drone = md.ForeignKey(Drone, on_delete=md.PROTECT)
     price = md.PositiveIntegerField()
+    cost = md.PositiveIntegerField()
     status = md.ForeignKey(OrderStatus, on_delete=md.PROTECT)
     created = md.DateTimeField(auto_now=True)
 
@@ -168,11 +151,34 @@ class Order(md.Model):
             "id": self.id,
             "customer": self.customer.toJSON(),
             "address": self.address.toJSON(),
-            "cone": self.cone.toJSON(),
-            "drone": self.drone.toJSON(),
             "price": self.price,
             "status": self.status.toJSON(),
             "created": self.crated,
+        }
+
+class OrderToken(md.Model):
+    token = md.CharField(primary_key=True, max_length=128)
+    order = md.ForeignKey(Order, on_delete=md.PROTECT)
+    created = md.DateTimeField(auto_now=True)
+
+class DroneOrder(md.Model):
+    drone = md.ForeignKey(Drone, on_delete=md.PROTECT)
+    order = md.ForeignKey(Order, on_delete=md.PROTECT)
+
+class Cone(md.Model):
+    cone_type = md.ForeignKey(ConeType, on_delete=md.PROTECT)
+    ice_cream_type = md.ForeignKey(IceCreamType, on_delete=md.PROTECT)
+    topping_type = md.ForeignKey(ToppingType, on_delete=md.PROTECT)
+    drone_order = md.ForeignKey(DroneOrder, on_delete=md.PROTECT)
+    created = md.DateTimeField(auto_now=True)
+
+    def toJSON(self):
+        return {
+            "id": self.id,
+            "coneType": self.cone_type.toJSON(),
+            "iceCreamType": self.ice_cream_type.toJSON(),
+            "toppingType": self.topping_type.toJSON(),
+            "created": self.created,
         }
 
 class Message(md.Model):
