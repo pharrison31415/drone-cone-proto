@@ -110,13 +110,22 @@ def finances(request):
     return response
 
 @csrf_exempt
+@verify_manager_token
 def update_inventory(request):
     if request.method != "POST":
         return JsonResponse({
             'success': False,
             'message': 'POST method required'
         })
-    #TODO post request for update inventory - from manager
+    body = json.loads(request.body)
+    item = ConeType.objects.filter(id=body['id'])
+    if "amountChange" in body:
+        item.quantity += body["amountChange"]
+    if "price" in body:
+        item.unit_cost = body["price"]
+    if "name" in body:
+        item.name = body["name"]
+    item.save()
     response = JsonResponse({'success': True})
     return response
 """
