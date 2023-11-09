@@ -1,5 +1,5 @@
 # API Documentation
-
+**All requests and responses are in JSON**
 ## GET `/api/cone-types/`,`/api/ice-cream-types`,`/api/topping-types`
 
 **Response Data** consists of a `success` boolean and a `coneTypes`, `iceCreamTypes`, or `toppingTypes` array of those inventory objects with public data (no unit costs or stock count). Example below.
