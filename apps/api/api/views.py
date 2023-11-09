@@ -120,7 +120,7 @@ def update_inventory(request):
     body = json.loads(request.body)
     item = ConeType.objects.filter(id=body['id'])
     if "amountChange" in body:
-        item.quantity += body["amountChange"]
+        item.quantity += body["amountChange"]  
     if "price" in body:
         item.unit_cost = body["price"]
     if "name" in body:

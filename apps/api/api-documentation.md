@@ -178,8 +178,8 @@ Note that if a drone's status is set to `"delivering"`, the status is unable to 
 
 **Request Body** must contain the integer `id` of the inventory item to update. The following are properties that can be included for updating.
 - `name`
-- `amountChange` (positive or negative. This is how much of the item to add or subtract to the total inventory amount)
-- `price` (the new unit price for the item)
+- `amountChange` (positive or negative int. This is how much of the item to add or subtract to the total inventory amount)
+- `price` (postive float. the new unit price for the item)
 
 **Response Data** consists of a `success` boolean.
 
