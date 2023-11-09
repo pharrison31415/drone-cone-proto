@@ -112,10 +112,10 @@ def finances(request):
 @csrf_exempt
 @verify_manager_token
 def update_inventory(request):
-    if request.method != "POST":
+    if request.method != "PATCH":
         return JsonResponse({
             'success': False,
-            'message': 'POST method required'
+            'message': 'PATCH method required'
         })
     body = json.loads(request.body)
     item = ConeType.objects.filter(id=body['id'])
