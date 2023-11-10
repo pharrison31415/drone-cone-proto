@@ -68,10 +68,11 @@ class InventoryItem(md.Model):
     class Meta:
         abstract = True
 
-    def toJSON(self):
+    def toJSON_customer(self):
         return {
             "name": self.name,
             "imageUrl": self.image_url,
+            "price": int(self.unit_cost * 1.10),
         }
 
     def toJSON_manager(self):

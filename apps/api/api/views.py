@@ -74,17 +74,17 @@ def post_address(request, user):
 
 def get_cone_types(request):
     return JsonResponse({'success': True, 'coneTypes': [
-        i.toJSON() for i in ConeType.objects.all()
+        i.toJSON_customer() for i in ConeType.objects.all()
     ]})
 
 def get_ice_cream_types(request):
     return JsonResponse({'success': True, 'iceCreamTypes': [
-        i.toJSON() for i in IceCreamType.objects.all()
+        i.toJSON_customer() for i in IceCreamType.objects.all()
     ]})
 
 def get_topping_types(request):
     return JsonResponse({'success': True, 'toppingTypes': [
-        i.toJSON() for i in ToppingType.objects.all()
+        i.toJSON_customer() for i in ToppingType.objects.all()
     ]})
 
 @verify_manager_token

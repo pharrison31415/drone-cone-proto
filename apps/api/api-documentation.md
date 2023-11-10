@@ -12,7 +12,8 @@
   "coneTypes": [
     {
       "name": "Waffle",
-      "imageUrl": "#"
+      "imageUrl": "#",
+      "price": 40
     },
     ...
   ],
