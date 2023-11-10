@@ -13,7 +13,7 @@
 
         if (checkInput()){
             status = '';
-            fetch(apiUrl, {method: 'POST', mode: "cors", headers: {"Content-Type": "application/json"} , body: JSON.stringify({username: username, password: password})})
+            fetch(apiUrl, {credentials: "include", method: 'POST', mode: "cors", headers: {"Content-Type": "application/json"} , body: JSON.stringify({username: username, password: password})})
                 .then(resp => resp.json())
                 .then(json => {
                     if (json.hasOwnProperty('error')) {
