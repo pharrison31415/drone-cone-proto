@@ -180,6 +180,8 @@ Note that if a drone's status is set to `"delivering"`, the status is unable to 
 
 **Request Body** must contain the `name` of the inventory item to update. The following are properties that can be included for updating.
 
+- `itemType` (string telling if it is a cone, ice cream, or topping)
+  - options are `ConeType`, `IceCreamType`, or `ToppingType`
 - `price` (positive integer. the new unit price for the item in pennies)
 
 **Response Data** consists of a `success` boolean and, if false, a `message` string.

@@ -120,7 +120,14 @@ def update_inventory(request, user):
 
     body = json.loads(request.body)
     # item = ConeType.objects.filter(id=body['id'])
-    item, item_found = safe_querey(ConeType, name=body["name"])
+    if "itemType" in body:
+        itemType = body["itemType"]
+        types = ["ConeType","IcecreamType","ToppingType"]
+        if itemType not in types:
+            return JsonResponse({"success": False, "message": "item type not found"})
+    else:
+        return JsonResponse({"success": False, "message": "item type not found"})
+    item, item_found = safe_querey(itemType, name=body["name"])
     if not item_found:
         return JsonResponse({"success": False, "message": "item not found"})
 
