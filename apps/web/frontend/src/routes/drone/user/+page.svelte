@@ -42,7 +42,7 @@
     }
 
     async function get_myDrones() {
-        fetch(url + '/my-drones/', {method: 'GET'})
+        fetch(url + '/my-drones/', {credentials: "include", method: 'GET'})
         .then((response) => response.json())
         .then((json) => {
             if (json['success'] == true) {
@@ -55,7 +55,7 @@
     }
 
     async function post_newDrone(drone_name, drone_status, drone_type) {
-        fetch(url + '/add-drone/', {method: 'POST', body: JSON.stringify({name: drone_name, status: drone_status, droneType: drone_type})})
+        fetch(url + '/add-drone/', {credentials: "include", method: 'POST', body: JSON.stringify({name: drone_name, status: drone_status, droneType: drone_type})})
             .then((response) => response.json())
             .then((json) => {
                 if (json['success'] == true) {
@@ -76,7 +76,7 @@
     }
 
     async function edit_drone(drone_id, drone_info) {
-        fetch(url + '/update-drone/', {method: 'Patch', body: JSON.stringify({id: drone_id, name: drone_info.get('name'), droneType: drone_info.get('drone-type')})})
+        fetch(url + '/update-drone/', {credentials: "include", method: 'PATCH', mode: "cors", body: JSON.stringify({id: drone_id, name: drone_info.get('drone_name'), droneType: drone_info.get('drone_type')})})
             .then((response) => response.json())
             .then((json) => {
                 if (json['success'] == true) {
@@ -106,7 +106,7 @@
         else if (droneStatus_range.value == droneStatus_range.max) {
             newStatus = "idle";
         }
-        fetch(url + '/update-drone/', {method: 'PATCH', body: JSON.stringify({id: drone.id, status: newStatus})})
+        fetch(url + '/update-drone/', {credentials: "include", method: 'PATCH', mode: "cors", body: JSON.stringify({id: drone.id, status: newStatus})})
             .then((response) => response.json())
             .then((json) => {
                 if (json['success'] == true) {
@@ -138,9 +138,10 @@
     const showDialogClick_editDone = (asModal = true, drone) => {
 		try {
             drone_selected = drone;
+            document.getElementById("drone_name_edit").value = drone_selected.name;
             let radios = document.getElementsByName('drone_type');
             for (let i = 0; i < radios.length; i++) {
-                if (radios[i].type == 'radio' && radios[i].value == drone.status) {
+                if (radios[i].type == 'radio' && radios[i].value == drone.droneType.text) {
                     radios[i].checked = true;
                 }
             }
@@ -161,43 +162,51 @@
 
     const confirmClick_addDrone = () => {
         let form = document.querySelector("form");
-        if (dialogId == 'add_drone') {
-            if (checkInput()) {
-                dialog_addDrone.close();
-                const data = new FormData(form);
-                let output = "";
-                for (const entry of data) {
-                    output = `${output}${entry[0]}=${entry[1]}\r`;
-                }
-                post_newDrone(data.get('drone_name'), statuses[0].text, data.get('drone_type'));
-            }
-        }      
-    }
-
-    const confirmClick_editDrone = () => {
-        let form = document.querySelector("form");
         if (checkInput()) {
-            dialog_editDrone.close();
+            dialog_addDrone.close();
             const data = new FormData(form);
             let output = "";
             for (const entry of data) {
                 output = `${output}${entry[0]}=${entry[1]}\r`;
             }
+            post_newDrone(data.get('drone_name'), statuses[0].text, data.get('drone_type'));
+        }     
+    }
+
+    const confirmClick_editDrone = () => {
+        let form = document.getElementById("editDrone-form");
+        // console.log("im not broken")
+        if (checkInput()) {
+            const data = new FormData(form);
+            let output = "";
+            for (const entry of data) {
+                output = `${output}${entry[0]}=${entry[1]}\r`;
+            }
+            if (data.get('drone_name') == "") {
+                data.set('drone_name', drone_selected.name);
+            }
+            // console.log(data.get('drone_name'))
             edit_drone(drone_selected.id, data);
+            closeClick('edit_drone');
         }
     }
     
     const checkInput = () => {
-        if (droneName == '') {
+        if (document.getElementsByName.value == '') {
+            // console.log("drone name empty")
             return false;
         }
         let isButtonChecked = false;
         let radios = document.getElementsByName('drone_type');
         for (let i = 0; i < radios.length; i++) {
             if (radios[i].type == 'radio' && radios[i].checked) {
+                // console.log("a drone type is selected")
                 isButtonChecked = true;
             }
         }
+        // if (!isButtonChecked) {
+        //     console.log("no drone type selected")
+        // }
         return isButtonChecked;
     }
 
@@ -231,9 +240,9 @@
 
 <dialog id="edit_drone-dialog">
     <h3>Edit Drone</h3>
-    <form>
+    <form id="editDrone-form">
         <label for="drone_name">Drone Name:</label>
-        <input type="text" value={drone_selected.name} id="drone_name_edit" name="drone_name" placeholder="Drone Name">
+        <input type="text" value="" id="drone_name_edit" name="drone_name" placeholder="Drone Name">
 
         <fieldset>
             <legend>Size of Drone:</legend>
@@ -247,7 +256,7 @@
         </fieldset>
 
         <button on:click={() => closeClick('edit_drone')} type="reset">Cancel</button>
-        <button on:click={() => confirmClick_editDrone()}>Add Drone</button>
+        <button on:click={confirmClick_editDrone}>Submit Edits</button>
     </form>
 </dialog>
 
@@ -289,9 +298,11 @@
                         <li>Status: {drone.status.text}
                             <form>
                                 {#if drone.status.text == 'delivering'}
-                                    <input type="range" id="isActive" name="isActive" min="0" max="1" on:change={() => changeDroneStatus(drone)} disabled/>
+                                    <input type="range" id="isActive" name="isActive" min="0" max="1" value="1" on:change={() => changeDroneStatus(drone)} disabled/>
+                                {:else if drone.status.text == "idle"}
+                                    <input type="range" id="isActive" name="isActive" min="0" max="1" value="1" on:change={() => changeDroneStatus(drone)}/>
                                 {:else}
-                                    <input type="range" id="isActive" name="isActive" min="0" max="1" on:change={() => changeDroneStatus(drone)}/>
+                                    <input type="range" id="isActive" name="isActive" min="0" max="1" value="0" on:change={() => changeDroneStatus(drone)}/>
                                 {/if}
 
                                 {#if drone.status.text != "owner"}
@@ -352,6 +363,7 @@
         display: flex;
         border: solid black;
         padding-left: 20px;
+        margin-bottom: 10px;
     }
 
     .drone_error {
