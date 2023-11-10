@@ -318,7 +318,7 @@ def new_order(request, user_found, user):
         token=token,
         order=new_order
     ).save()
-    response.headers["Set-Cookie"] = f"order-token={token}" 
+    response.headers["Set-Cookie"] = f"order-token={token}; Path=/" 
 
     return response
 

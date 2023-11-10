@@ -99,7 +99,7 @@ def user_login(request, user_type):
         token=token,
         user=user
     ).save()
-    response.headers["Set-Cookie"] = f"{user_type.token_key}={token}"
+    response.headers["Set-Cookie"] = f"{user_type.token_key}={token}; Path=/"
 
     return response
 
