@@ -1,17 +1,27 @@
 <script>
     import { onMount } from 'svelte'
-
     const url = "http://localhost:8000/api"
 
-    let name = "";
+    let username = "";
+    let first_name = "";
+    let last_name = "";
     let addresses = [];
     let error = '';
+
+    let street_address = "";
+    let city = "";
+    let state = "";
+    let zip = "";
+
+    let showDialogClickError = "";
+
+    let addAddress_dialog;
 
     let removeBttn_height = 0;
 
     onMount(() => {
         get_myAddresses();
-        console.log(document.cookie)
+        addAddress_dialog = document.getElementById("addAddress_dialog");
     });
 
     async function get_myAddresses() {
@@ -23,21 +33,89 @@
                 }
                 else {
                     addresses = json['addresses'];
+                    if (addresses.length != 0) {
+                        username = addresses[0].customer.username
+                        first_name = addresses[0].customer['firstName']
+                        last_name = addresses[0].customer['lastName']
+                    }
                 }
             })
     }
+
+    async function post_newAddress() {
+        fetch(url + '/add-address/', {method: 'POST', credentials: "include", body: JSON.stringify({lineOne: street_address, lineTwo: "", city: city, state: state, zipCode: zip})})
+            .then((response) => response.json())
+            .then((json) => {
+                if (json['success'] == true) {
+                    console.log('post was successful');
+                    get_myAddresses();
+                }
+                else {
+                    console.log('there was an error');
+                    showDialogClickError = "There was an error when adding the address: " + json['message'];
+                }
+            });
+    }
+
+    const showDialogClick = (asModal = true) => {
+		try {
+			addAddress_dialog[asModal ? 'showModal' : 'show']();
+		} catch(e) {
+            showDialogClickError = e;
+		}  
+	};
+
+    const closeClick = () => {
+        addAddress_dialog.close();
+	};
+
+    const submitClick = () => {
+        if (street_address.length > 0 && city.length > 0 && state.length > 0 && zip.length > 0) {
+            post_newAddress();
+            street_address = "";
+            city = "";
+            state = "";
+            zip = "";
+            closeClick();
+        }
+    }
+
+
 </script>
 
-<h1>Account</h1>
+<dialog id="addAddress_dialog">
+    <h3>Add New Address</h3>
+    <form>
+        <label for="street">Street address:</label>
+        <input type="text" id="street" name="street" bind:value={street_address} placeholder="Street Address" required>
+
+        <label for="city">City:</label>
+        <input type="text" id="city" name="city" bind:value={city} placeholder="City" required>
+
+        <label for="state">State:</label>
+        <input type="text" id="state" name="state" bind:value={state} placeholder="State" required>
+
+        <label for="zip">Zip Code:</label>
+        <input type="text" id="zip" name="zip" bind:value={zip} placeholder="Zip Code" required>
+
+        <div>
+            <button type="submit" on:click={submitClick}>Add Address</button>
+            <button type="reset" on:click={closeClick}>Cancel</button>
+        </div>
+    </form>
+</dialog>
+
+<h1>Welcome, {username}</h1>
 <p>{error}</p>
-<p>Name: {name}</p>
+<p>Name: {first_name} {last_name}</p>
 <p style="margin: 1px;">Addresses:</p>
+<p>{showDialogClickError}</p>
 {#if addresses.length == 0}
-    <h3 style="margin: 5px;">You have no Addresses, please add one</h3>
+    <h4 style="margin: 5px;">You have no Addresses, please add one</h4>
 {:else}
     <div id="addresses">
         {#each addresses as address, index}
-            <div class="address">Address #{index}: 
+            <div class="address">Address #{index+1}: 
                 <p>{address.lineOne}, {address.lineTwo}</p>
                 <p>{address.city}, {address.state} {address.zipCode}</p>
                 <button id='editAddress'>
@@ -72,7 +150,7 @@
     </div>
 {/if}
 <div id="addAddress">
-    <button id="addAddress-button">
+    <button on:click={() => showDialogClick(true)} id="addAddress-button">
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
             <g clip-path="url(#clip0_5_2)">
                 <path d="M16 29C13.4288 29 10.9154 28.2376 8.77759 26.8091C6.63975 25.3807 4.97351 23.3503 3.98957 20.9749C3.00563 18.5995 2.74819 15.9856 3.2498 13.4638C3.75141 10.9421 4.98953 8.6257 6.80762 6.80762C8.6257 4.98953 10.9421 3.75141 13.4638 3.2498C15.9856 2.74819 18.5995 3.00563 20.9749 3.98957C23.3503 4.97351 25.3807 6.63975 26.8091 8.77759C28.2376 10.9154 29 13.4288 29 16C29 19.4478 27.6304 22.7544 25.1924 25.1924C22.7544 27.6304 19.4478 29 16 29ZM16 5.00001C13.8244 5.00001 11.6977 5.64514 9.88873 6.85384C8.07979 8.06254 6.66989 9.7805 5.83733 11.7905C5.00477 13.8005 4.78693 16.0122 5.21137 18.146C5.63581 20.2798 6.68345 22.2398 8.22183 23.7782C9.76021 25.3166 11.7202 26.3642 13.854 26.7886C15.9878 27.2131 18.1995 26.9952 20.2095 26.1627C22.2195 25.3301 23.9375 23.9202 25.1462 22.1113C26.3549 20.3023 27 18.1756 27 16C27 13.0826 25.8411 10.2847 23.7782 8.22183C21.7153 6.15893 18.9174 5.00001 16 5.00001Z" fill="black"/>
@@ -163,6 +241,7 @@
     #addresses {
         display: flex;
         flex-direction: row;
+        margin-left: 20px;
     }
 
     .address {
@@ -190,6 +269,9 @@
         border: solid black;
         display: flex;
         flex-shrink: 0;
+        margin-left: 10px;
+        margin-right: 10px;
+        padding-left: 5px;
     }
 
     .cone_details {
@@ -212,7 +294,7 @@
     }
     
 
-    h3 {
+    h4 {
         padding-left: 20px;
     }
 
@@ -255,6 +337,24 @@
     #addAddress-button {
         display: flex;
         align-items: center;
+    }
+
+    #addAddress_dialog > h3 {
+        margin: 5px;
+    }
+
+    #addAddress_dialog > form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    #addAddress_dialog > form > input {
+        margin-bottom: 5px;
+
+    }
+
+    #addAddress_dialog > form > div {
+        margin-top: 5px;
     }
 
 </style>
