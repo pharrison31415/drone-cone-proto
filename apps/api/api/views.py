@@ -111,23 +111,23 @@ def finances(request):
 
 @csrf_exempt
 @verify_manager_token
-def update_inventory(request):
+def update_inventory(request, user):
     if request.method != "PATCH":
         return JsonResponse({
             'success': False,
             'message': 'PATCH method required'
         })
+
     body = json.loads(request.body)
-    item = ConeType.objects.filter(id=body['id'])
-    if "amountChange" in body:
-        item.quantity += body["amountChange"]  
+    # item = ConeType.objects.filter(id=body['id'])
+    item, item_found = safe_querey(ConeType, name=body["name"])
+    if not item_found:
+        return JsonResponse({"success": False, "message": "item not found"})
+
     if "price" in body:
         item.unit_cost = body["price"]
-    if "name" in body:
-        item.name = body["name"]
     item.save()
-    response = JsonResponse({'success': True})
-    return response
+    return JsonResponse({'success': True})
 """
     price per unit
     added inventory
