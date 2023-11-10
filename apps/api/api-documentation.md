@@ -1,5 +1,7 @@
 # API Documentation
+
 **All requests and responses are in JSON**
+
 ## GET `/api/cone-types/`,`/api/ice-cream-types`,`/api/topping-types`
 
 **Response Data** consists of a `success` boolean and a `coneTypes`, `iceCreamTypes`, or `toppingTypes` array of those inventory objects with public data (no unit costs or stock count). Example below.
@@ -176,12 +178,11 @@ Note that if a drone's status is set to `"delivering"`, the status is unable to 
 
 **Cookie Required**: `manager-token`
 
-**Request Body** must contain the integer `id` of the inventory item to update. The following are properties that can be included for updating.
-- `name`
-- `amountChange` (positive or negative int. This is how much of the item to add or subtract to the total inventory amount)
+**Request Body** must contain the `name` of the inventory item to update. The following are properties that can be included for updating.
+
 - `price` (postive float. the new unit price for the item)
 
-**Response Data** consists of a `success` boolean.
+**Response Data** consists of a `success` boolean and, if false, a `message` string.
 
 ## GET `/api/inventory/`
 
