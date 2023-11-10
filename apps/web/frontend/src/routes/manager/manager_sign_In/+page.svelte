@@ -1,15 +1,10 @@
 <script>
-    let apiUrl = "http://127.0.0.1:8000/api/manager-login/";
+    let apiUrl = "http://127.0.0.1:8000/api/manager-login";
     let username = '';
     let password = '';
     let status = '';
     let success = false
 
-    function login(){
-        window.location.href = "/manager/manager_page"
-    }
-
-    /*
     function login(){
         var newDiv = document.createElement('div');
         var divContent = document.createElement('p');
@@ -50,7 +45,6 @@
         }
         return true
     }
-    */
 
 
 </script>
