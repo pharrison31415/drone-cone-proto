@@ -110,15 +110,24 @@ def finances(request):
     return response
 
 @csrf_exempt
-def update_inventory(request):
-    if request.method != "POST":
+@verify_manager_token
+def update_inventory(request, user):
+    if request.method != "PATCH":
         return JsonResponse({
             'success': False,
-            'message': 'POST method required'
+            'message': 'PATCH method required'
         })
-    #TODO post request for update inventory - from manager
-    response = JsonResponse({'success': True})
-    return response
+
+    body = json.loads(request.body)
+    # item = ConeType.objects.filter(id=body['id'])
+    item, item_found = safe_querey(ConeType, name=body["name"])
+    if not item_found:
+        return JsonResponse({"success": False, "message": "item not found"})
+
+    if "price" in body:
+        item.unit_cost = body["price"]
+    item.save()
+    return JsonResponse({'success': True})
 """
     price per unit
     added inventory
@@ -171,7 +180,9 @@ def update_drone(request, user):
         })
 
     body = json.loads(request.body)
-    drone = Drone.objects.filter(id=body["id"])
+    drone, drone_found = safe_querey(Drone, id=body["id"])
+    if not drone_found or drone.user != user:
+        return JsonResponse({"success": False, "message": "drone does not exist"})
 
     if "name" in body:
         drone.name = body["name"]
