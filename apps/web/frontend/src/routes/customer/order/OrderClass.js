@@ -3,6 +3,7 @@ export class Order {
     this.cart = [];
     }
 
+    //Add to Order list
     addtoOrder(cone){
     this.cart.push(cone)
     }
