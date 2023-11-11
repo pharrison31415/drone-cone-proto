@@ -197,3 +197,7 @@ class Message(md.Model):
             "handled": self.handled,
             "created": self.created,
         }
+
+class ManagerCost(md.Model):
+    amount = md.PositiveIntegerField()
+    message = md.CharField(max_length=128)
