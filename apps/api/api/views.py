@@ -5,7 +5,7 @@ from .views_utils import JsonResponse, safe_querey, verify_token, CUSTOMER_USER,
 from datetime import datetime
 import json
 
-from api.models import DroneStatus, Drone, DroneType, Customer, Manager, Owner, OrderStatus, CustomerToken, ManagerToken, OwnerToken, Address, Cone, ConeType, IceCreamType, ToppingType, Order, DroneOrder, Message, ManagerRevenue
+from api.models import DroneStatus, Drone, DroneType, Customer, Manager, Owner, OrderStatus, CustomerToken, ManagerToken, OwnerToken, Address, Cone, ConeType, IceCreamType, ToppingType, Order, DroneOrder, Message, ManagerRevenue, ManagerCost
 
 
 def hello_world(request):
@@ -383,6 +383,23 @@ def private_manager_data(request, user):
 def private_owner_data(request, user):
     return user.toJSON()
 
+
+@verify_manager_token
+def get_manager_revenues(request, user):
+    revenues = ManagerRevenue.objects.all()
+    return JsonResponse({
+        "success": True,
+        "revenues": [ r.toJSON() for r in revenues ]
+    })
+
+
+@verify_manager_token
+def get_manager_costs(request, user):
+    costs = ManagerCost.objects.all()
+    return JsonResponse({
+        "success": True,
+        "costs": [ c.toJSON() for c in costs ]
+    })
 
 @csrf_exempt
 def new_message(request):
