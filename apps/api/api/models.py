@@ -115,6 +115,7 @@ class Drone(md.Model):
     status = md.ForeignKey(DroneStatus, on_delete=md.PROTECT)
     drone_type = md.ForeignKey(DroneType, on_delete=md.PROTECT)
     owner = md.ForeignKey(Owner, on_delete=md.PROTECT)
+    revenue = md.PositiveIntegerField()
     last_use = md.DateTimeField(null=True, default=last_use_default)
     created = md.DateTimeField(auto_now=True)
     
@@ -199,5 +200,9 @@ class Message(md.Model):
         }
 
 class ManagerCost(md.Model):
+    amount = md.PositiveIntegerField()
+    message = md.CharField(max_length=128)
+
+class ManagerRevenue(md.Model):
     amount = md.PositiveIntegerField()
     message = md.CharField(max_length=128)
