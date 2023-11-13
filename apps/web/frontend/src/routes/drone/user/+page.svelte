@@ -1,5 +1,6 @@
 <script>
     import { onMount } from 'svelte'
+	import { get } from 'svelte/store';
 
     const url = 'http://localhost:8000/api';
 
@@ -24,10 +25,10 @@
     let dialog_editDrone; // Reference to the dialog for edit drones
 
 	onMount(() => {
-        get_privateInfo();
         get_droneTypes();
         get_droneStatuses();
         get_myDrones();
+        get_privateInfo();
 
 		dialog_addDrone = document.getElementById('add_drone-dialog');
         dialog_editDrone = document.getElementById('edit_drone-dialog');
@@ -71,15 +72,16 @@
 
     async function get_myDrones() {
         fetch(url + '/my-drones/', {credentials: "include", method: 'GET'})
-        .then((response) => response.json())
-        .then((json) => {
-            if (json['success'] == true) {
-                drones = json['drones'];
-            }
-            else {
-                myDrones_error = "There was an error getting your drones: " + json['message'];
-            }
-        });
+            .then((response) => response.json())
+            .then((json) => {
+                if (json['success'] == true) {
+                    drones = json['drones'];
+                    totalRevenue = get_totalRevenue();
+                }
+                else {
+                    myDrones_error = "There was an error getting your drones: " + json['message'];
+                }
+            });
     }
 
     async function post_newDrone(drone_name, drone_status, drone_type) {
@@ -152,6 +154,15 @@
                     showDialogClickError = "There was an error when editting the drone: " + json['message'];
                 }
             });
+        get_myDrones();
+    }
+
+    const get_totalRevenue = () => {
+        let revenue = 0;
+        for (let i = 0; i < drones.length; i++) {
+            revenue += drones[i].revenue;
+        }
+        return revenue;
     }
 	
 	// Show the dialog when clicking "Delete everything"
@@ -321,10 +332,9 @@
                 <div class="drone_details">
                     <h2>Drone: {drone.name}</h2>
                     <ul>
-                        <li>Type, capacity: {drone.droneType.text}, {drone.droneType.capacity}</li>
-                        <li>Deliveries: ????</li>x
-                        <li>Revenue: $</li>
-                        <!-- <li hidden>{totalRevenue += drone.revenue}</li> -->
+                        <li>Size: {drone.droneType.text}, Capacity: {drone.droneType.capacity} cone{#if drone.droneType.capacity > 1}s{/if}</li>
+                        <li>Deliveries: ????</li>
+                        <li>Revenue: ${drone.revenue}</li>
                         <li>Status: {drone.status.text}
                             <form>
                                 {#if drone.status.text == 'delivering'}

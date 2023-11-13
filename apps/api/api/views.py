@@ -217,7 +217,7 @@ def update_drone(request, user):
 
     body = json.loads(request.body)
     drone, drone_found = safe_querey(Drone, id=body["id"])
-    if not drone_found or drone.user != user:
+    if not drone_found or drone.owner != user:
         return JsonResponse({"success": False, "message": "drone does not exist"})
 
     if "name" in body:
