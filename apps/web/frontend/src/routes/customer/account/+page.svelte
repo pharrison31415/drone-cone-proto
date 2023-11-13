@@ -20,9 +20,32 @@
     let removeBttn_height = 0;
 
     onMount(() => {
+        get_privateData();
         get_myAddresses();
         addAddress_dialog = document.getElementById("addAddress_dialog");
     });
+
+    async function get_privateData() {
+        let okay = true;
+        fetch(url + "/private-customer-data", {method: "GET", credentials: "include"})
+            .then((response) => {
+                if (response.status != 200) {
+                    okay = false;
+                }
+                return response.json()
+
+            })
+            .then((json) => {
+                if (okay) {
+                    username = json.username;
+                    first_name = json.firstName;
+                    last_name = json.lastName;
+                }
+                else {
+                    showDialogClickError = "There was an error getting user data"
+                }
+            });
+    }
 
     async function get_myAddresses() {
         fetch(url + "/my-addresses/", {method: "GET", mode: 'cors', credentials: 'include'})
@@ -33,11 +56,6 @@
                 }
                 else {
                     addresses = json['addresses'];
-                    if (addresses.length != 0) {
-                        username = addresses[0].customer.username
-                        first_name = addresses[0].customer['firstName']
-                        last_name = addresses[0].customer['lastName']
-                    }
                 }
             })
     }
