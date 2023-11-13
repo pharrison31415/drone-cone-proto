@@ -1,15 +1,13 @@
 <script>
     import '../+layout.svelte'
 
-    let apiUrl = "http://127.0.0.1:8000/api/customer-login/";
+    let apiUrl = "http://localhost:8000/api/customer-login/";
     let username = '';
     let password = '';
     let status = '';
     let success = false
 
     function login(){
-        var newDiv = document.createElement('div');
-        var divContent = document.createElement('p');
 
         if (checkInput()){
             status = '';
@@ -20,7 +18,7 @@
                         throw json.error;
                     }
                     else {
-                        status = json.message
+                        status = json.status
                         success = json.success
                     }
                 })
