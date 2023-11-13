@@ -27,7 +27,7 @@
 
     async function get_privateData() {
         let okay = true;
-        fetch(url + "/private-customer-data", {method: "GET", credentials: "include"})
+        fetch(url + "/private-customer-data/", {method: "GET", credentials: "include"})
             .then((response) => {
                 if (response.status != 200) {
                     okay = false;
