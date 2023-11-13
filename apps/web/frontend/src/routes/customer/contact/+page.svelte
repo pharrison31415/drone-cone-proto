@@ -1,5 +1,53 @@
+<script>
+    import { onMount } from 'svelte'
+
+    const url = 'http://localhost:8000/api';
+
+    let error = "";
+
+    let name = '';
+    let content = '';
+    let email = '';
+
+    let width = "165px";
+    
+    async function postMessage() {
+        fetch(url + "/new-message/", {method: "POST", mode: 'cors', "Access-Control-Allow-Origin": "*", body: JSON.stringify({content: content, email: email})})
+            .then((response) => response.json())
+            .then((json) => {
+                if (json['success'] == false) {
+                    error = "There was an error: " + json['message'];
+                }
+                else {
+                    console.log("Message was sent.");
+                }
+
+            });
+    }
+
+    const submitMessage = () => {
+        if (name != "" && content != "" && email != "") {
+            console.log("not empty!");
+            postMessage();
+        }
+        else {
+            return;
+        }
+    }
+
+    const resize = () => {
+        let message_textArea = document.getElementById('message');
+        if (width != message_textArea.style.width) {
+            width = message_textArea.style.width;
+        }
+    }
+
+    console.log(width);
+</script>
+
 <h1>Contact Manager</h1>
-<form method="POST">
+<p>{error}</p>
+<form>
     <div>
         <label for="name">
             Name:
@@ -10,7 +58,9 @@
             name="name"
             autocomplete="off"
             placeholder="Your name"
-            required    
+            bind:value={name}
+            style:width={width}
+            required
         />
     </div>
 
@@ -24,6 +74,8 @@
             name="email"
             autocomplete="off"
             placeholder="Your email"
+            bind:value={email}
+            style:width={width}
             required
         />
     </div>
@@ -38,11 +90,14 @@
             autocomplete="off"
             rows="10"
             required
-            placeholder="Message to manager goes here." ></textarea>
+            bind:value={content}
+            style:width={width}
+            on:mousemove={resize}
+            placeholder="Message to manager goes here."></textarea>
     </div>
 
     <div id="button">
-        <input type="submit" value="Send Message"/>
+        <button value="Send Message" on:click={submitMessage}>Send Message</button>
     </div>
 
 </form>
@@ -74,7 +129,7 @@
         text-align: center;
     }
     
-    #button > input {
+    button {
         color: whitesmoke;
         border: 0;
         line-height: 1.5;
@@ -86,11 +141,11 @@
             inset -2px -2px 3px rgba(0, 0, 0, 0.6);
     }
 
-    #button > input:hover {
+    button:hover {
         background-color: blue;
     }
 
-    #button > input:active {
+    button:active {
         box-shadow:
             inset -2px -2px 3px rgba(255, 255, 255, 0.6),
             inset 2px 2px 3px rgba(0, 0, 0, 0.6);

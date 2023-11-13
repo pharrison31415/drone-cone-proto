@@ -402,15 +402,15 @@ def order_delivered(request, order):
 
 @verify_customer_token
 def private_customer_data(request, user):
-    return user.toJSON()
+    return JsonResponse(user.toJSON())
 
 @verify_manager_token
 def private_manager_data(request, user):
-    return user.toJSON()
+    return JsonResponse(user.toJSON())
 
 @verify_owner_token
 def private_owner_data(request, user):
-    return user.toJSON()
+    return JsonResponse(user.toJSON())
 
 
 @verify_manager_token
