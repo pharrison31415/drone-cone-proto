@@ -184,7 +184,6 @@
         Add new Address
     </button>
 </div>
-
 <h2>Recent Order:</h2>
 <div id="orders">
     <!-- for each order do this -->
