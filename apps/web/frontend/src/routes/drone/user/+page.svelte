@@ -7,6 +7,13 @@
     let types = [];
     let drones = [];
     let statuses = [];
+
+    let username = "";
+    let first_name = "";
+    let last_name = "";
+
+    let totalRevenue = 0;
+
     let myDrones_error = '';
     let showDialogClickError = '';
 
@@ -17,12 +24,29 @@
     let dialog_editDrone; // Reference to the dialog for edit drones
 
 	onMount(() => {
+        get_privateInfo();
         get_droneTypes();
         get_droneStatuses();
         get_myDrones();
+
 		dialog_addDrone = document.getElementById('add_drone-dialog');
         dialog_editDrone = document.getElementById('edit_drone-dialog');
 	});
+
+    // get the users private data
+    async function get_privateInfo() {
+        fetch(url + '/private-owner-data/', {credentials: 'include', method: 'GET', mode: "cors"})
+            .then((response) => {
+                // console.log(response)
+                return response.json()
+            })
+            .then((json) => {
+                username = json.username;
+                first_name = json.first_name;
+                last_name = json.last_name;
+                console.log(username);
+            });
+    }
 
     // get the different drone types from the database
     async function get_droneTypes() {
@@ -211,9 +235,10 @@
     }
 
 </script>
-<h1>Drone User</h1>
+<h1>Welcome, {username}</h1>
+<p>Name: {first_name} {last_name}</p>
 <p>Drones: {drones.length}</p>
-<p>Total Revenue: $$$$$</p>
+<p>Total Revenue: ${totalRevenue}</p>
 <p>Total Deliveries: ????</p>
 <dialog id="add_drone-dialog">
     <h3>Add Drone</h3>
@@ -293,8 +318,9 @@
                     <h2>Drone: {drone.name}</h2>
                     <ul>
                         <li>Type, capacity: {drone.droneType.text}, {drone.droneType.capacity}</li>
-                        <li>Deliveries: ????</li>
-                        <li>Revenue: $?</li>
+                        <li>Deliveries: ????</li>x
+                        <li>Revenue: $</li>
+                        <!-- <li hidden>{totalRevenue += drone.revenue}</li> -->
                         <li>Status: {drone.status.text}
                             <form>
                                 {#if drone.status.text == 'delivering'}
