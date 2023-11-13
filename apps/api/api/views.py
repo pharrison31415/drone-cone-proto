@@ -346,16 +346,7 @@ def order_delivered(request, order):
 
 @verify_customer_token
 def private_customer_data(request, user):
-    response = user.toJSON()
-    data = response.content
-    addresses = []
-    for address in Address:
-        if address.customer == user.pk:
-            address_data = address.toJSON.content
-            addresses.append(address_data)
-    data.update({"addresses" : addresses})
-    response.content = data
-    return response
+    return user.toJSON()
 
 @verify_manager_token
 def private_manager_data(request, user):
