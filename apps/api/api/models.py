@@ -126,6 +126,7 @@ class Drone(md.Model):
             "status": self.status.toJSON(),
             "droneType": self.drone_type.toJSON(),
             "owner": self.owner.toJSON(),
+            "revenue": self.revenue,
             "lastUse": self.last_use,
             "created": self.created,
         }
@@ -203,6 +204,20 @@ class ManagerCost(md.Model):
     amount = md.PositiveIntegerField()
     message = md.CharField(max_length=128)
 
+    def toJSON(self):
+        return {
+            "id": self.id,
+            "amount": self.amount,
+            "message": self.message,
+        }
+
 class ManagerRevenue(md.Model):
     amount = md.PositiveIntegerField()
     message = md.CharField(max_length=128)
+    
+    def toJSON(self):
+        return {
+            "id": self.id,
+            "amount": self.amount,
+            "message": self.message,
+        }
