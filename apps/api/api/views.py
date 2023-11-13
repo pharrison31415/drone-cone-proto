@@ -111,6 +111,33 @@ def finances(request):
 
 @csrf_exempt
 @verify_manager_token
+def update_inventory_items(request,user):
+    if request.method != "PATCH":
+        return JsonResponse({
+            'success': False,
+            'message': 'PATCHmethod required'
+        })
+    
+    body = json.loads(request.body)
+    itemType = ""
+    if "itemType" in body:
+        itemType = body["itemType"]
+        types = ["ConeType","IcecreamType","ToppingType"]
+        if itemType not in types:
+            return JsonResponse({"success": False, "message": "item type not found"})
+    else:
+        return JsonResponse({"success": False, "message": "item type not found"})
+    item, item_found = safe_querey(itemtype, name=body["name"])
+    if not item_found:
+        return JsonResponse({"success": False, "message": "item not found"})
+    
+    if "changeAmount" in body:
+        item.quantity += body["changeAmount"]
+    else:
+        return JsonResponse({"Success": False, "message": "inventory amount change not found"})
+
+@csrf_exempt
+@verify_manager_token
 def update_inventory(request, user):
     if request.method != "PATCH":
         return JsonResponse({
