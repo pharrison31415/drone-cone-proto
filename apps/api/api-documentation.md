@@ -175,6 +175,7 @@ Note that if a drone's status is set to `"delivering"`, the status is unable to 
 
 **Response Data** consists of a `success` boolean and a drone `id`. If the request body is bad, there will be an error because I don't want to fix that yet.
 
+
 ## PATCH `/api/update_inventory/`
 
 **Cookie Required**: `manager-token`
@@ -186,6 +187,20 @@ Note that if a drone's status is set to `"delivering"`, the status is unable to 
 - `price` (positive integer. the new unit price for the item in pennies)
 
 **Response Data** consists of a `success` boolean and, if false, a `message` string.
+
+## PATCh `/api/update_inventory_items/`
+
+**Cookie Required**: `manager-token`
+
+**Request Body** Must contain the following in the request body:
+- `name`: name of the item being updated
+- `itemType`: ConeType, IceCreamType, or ToppingType
+- `amountChange`: whole number of how much the total in the inventory is changing. 
+  - if positive you are adding that much to the inventory
+  - if negative you are subtracting that much from the inventory
+
+**Response Data** consists of a `success` boolean and, if false, a string `message`.
+
 
 ## GET `/api/inventory/`
 
