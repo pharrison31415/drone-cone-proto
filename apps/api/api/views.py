@@ -135,6 +135,8 @@ def update_inventory_items(request,user):
         item.quantity += body["changeAmount"]
     else:
         return JsonResponse({"Success": False, "message": "inventory amount change not found"})
+    item.save()
+    return JsonResponse({'success': True})
 
 @csrf_exempt
 @verify_manager_token
