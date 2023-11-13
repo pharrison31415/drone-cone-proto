@@ -5,7 +5,7 @@ from .views_utils import JsonResponse, safe_querey, verify_token, CUSTOMER_USER,
 from datetime import datetime
 import json
 
-from api.models import DroneStatus, Drone, DroneType, Customer, Manager, Owner, OrderStatus, CustomerToken, ManagerToken, OwnerToken, Address, Cone, ConeType, IceCreamType, ToppingType, Order, DroneOrder, Message
+from api.models import DroneStatus, Drone, DroneType, Customer, Manager, Owner, OrderStatus, CustomerToken, ManagerToken, OwnerToken, Address, Cone, ConeType, IceCreamType, ToppingType, Order, DroneOrder, Message, ManagerRevenue
 
 
 def hello_world(request):
@@ -273,7 +273,8 @@ def new_order(request, user_found, user):
         ])
 
     # markup cost for price
-    price = int(cost * 1.10)
+    MARKUP = 0.10
+    price = int(cost * (1 + MARKUP))
 
     new_order = Order(
         customer=(user if user_found else None),
@@ -285,13 +286,23 @@ def new_order(request, user_found, user):
     new_order.save()
     
 
+    # handle manager revenue
+    revenue_remaining = price - cost
+    MANAGER_DRONE_REVENUE_SPLIT = 0.5
+    manager_revenue_amount = int(revenue_remaining * MANAGER_DRONE_REVENUE_SPLIT)
+    revenue_remaining -= manager_revenue_amount
+
+    ManagerRevenue(
+        amount=manager_revenue_amount,
+        message=f"order id: {new_order.id}"
+    ).save()
+
     # create droneorders, cones
     cone_index = 0
     delivering_status = DroneStatus.objects.get(text="delivering")
     for drone in drones_using:
         drone.status = delivering_status
         drone.last_use = datetime.now()
-        drone.save()
         new_drone_order = DroneOrder(
             drone=drone,
             order=new_order,
@@ -300,13 +311,29 @@ def new_order(request, user_found, user):
         for i in range(cone_index, cone_index + drone.drone_type.capacity):
             if i >= len(body["cones"]):
                 break
+            cone_type = get_object_or_404(ConeType, name=body["cones"][i]["coneType"])
+            ice_cream_type = get_object_or_404(IceCreamType, name=body["cones"][i]["iceCreamType"])
+            topping_type = get_object_or_404(ToppingType, name=body["cones"][i]["toppingType"])
             Cone(
                 drone_order=new_drone_order,
-                cone_type=get_object_or_404(ConeType, name=body["cones"][i]["coneType"]),
-                ice_cream_type=get_object_or_404(IceCreamType, name=body["cones"][i]["iceCreamType"]),
-                topping_type=get_object_or_404(ToppingType, name=body["cones"][i]["toppingType"]),
+                cone_type=cone_type,
+                ice_cream_type=ice_cream_type,
+                topping_type=topping_type,
             ).save()
+            
+            cone_cost = sum([ item.unit_cost for item in [cone_type, ice_cream_type, topping_type]])
+            cone_revenue_drone = int(int(cone_cost * (1 + MARKUP)) * int((1 - MANAGER_DRONE_REVENUE_SPLIT)))
+            revenue_remaining -= cone_revenue_drone
+            drone.revenue += cone_revenue_drone
+
+        drone.save()
         cone_index += drone.drone_type.capacity
+
+    if revenue_remaining > 0:
+        ManagerRevenue(
+            amount=revenue_remaining,
+            message=f"rounding leftover from order id: {new_order.id}"
+        ).save()
 
     response = JsonResponse({
         "success": True,
