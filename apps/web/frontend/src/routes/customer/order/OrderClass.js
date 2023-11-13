@@ -7,4 +7,8 @@ export class Order {
     addtoOrder(cone){
     this.cart.push(cone)
     }
+
+    getCart(){
+        return this.cart
+    }
 }
