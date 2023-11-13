@@ -35,16 +35,20 @@
 
     // get the users private data
     async function get_privateInfo() {
+        let okay = true;
         fetch(url + '/private-owner-data/', {credentials: 'include', method: 'GET', mode: "cors"})
             .then((response) => {
-                // console.log(response)
+                if (response.status != 200) {
+                    okay = false;
+                }
                 return response.json()
             })
             .then((json) => {
-                username = json.username;
-                first_name = json.first_name;
-                last_name = json.last_name;
-                console.log(username);
+                if (okay) {
+                    username = json.username;
+                    first_name = json.firstName;
+                    last_name = json.lastName;
+                }
             });
     }
 
