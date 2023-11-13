@@ -229,6 +229,12 @@ Note that if a drone's status is set to `"delivering"`, the status is unable to 
 
 **Response Data** will contain a `success` boolean of true.
 
+## GET `/api/manager-revenues/`, `/api/manager-costs/`
+
+**Cookie Required** `manager-token`
+
+**Response Data** will contain a `success` boolean and either a `revenues` or `costs` array, each containing an amount in pennies and a message
+
 ## POST `/api/new-message/`
 
 **Request Body** must contain a `content` string (max length 1024 characters), and an `email` string (max length 128 characters).
