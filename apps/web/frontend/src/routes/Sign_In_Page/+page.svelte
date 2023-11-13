@@ -1,32 +1,13 @@
 <script>
     import '../+layout.svelte'
 
-    let apiUrl = "http://127.0.0.1:8000/api/customer-login/";
+    let apiUrl = "http://localhost:8000/api/customer-login/";
     let username = '';
     let password = '';
     let status = '';
     let success = false
 
-    //sourced from w3 schools (just seeing if this works...)
-    function getCookie(cname) {
-      let name = cname + "=";
-      let decodedCookie = decodeURIComponent(document.cookie);
-      let ca = decodedCookie.split(';');
-      for(let i = 0; i <ca.length; i++) {
-        let c = ca[i];
-        while (c.charAt(0) == ' ') {
-          c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-          return c.substring(name.length, c.length);
-        }
-      }
-      return "";
-    }
-
     function login(){
-        var newDiv = document.createElement('div');
-        var divContent = document.createElement('p');
 
         if (checkInput()){
             status = '';
@@ -47,9 +28,7 @@
                 .finally( () => {
                     if (status == undefined){
                         status = 'Login Successful'
-                        console.log(getCookie("customer-token"))
-                        console.log(document.cookie)
-                        //window.location.href = '/customer/account'
+                        window.location.href = '/customer/account'
                     }
                 })
         }
