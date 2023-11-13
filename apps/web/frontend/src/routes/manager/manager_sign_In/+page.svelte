@@ -1,5 +1,5 @@
 <script>
-    let apiUrl = "http://127.0.0.1:8000/api/manager-login";
+    let apiUrl = "http://127.0.0.1:8000/api/manager-login/";
     let username = '';
     let password = '';
     let status = '';
@@ -28,7 +28,7 @@
                 .finally( () => {
                     if (status == undefined){
                         status = 'Login Successful'
-                        window.location.href = '/customer/account'
+                        window.location.href = '/manager/manager_page'
                     }
                 })
         }
