@@ -68,10 +68,11 @@ class InventoryItem(md.Model):
     class Meta:
         abstract = True
 
-    def toJSON(self):
+    def toJSON_customer(self):
         return {
             "name": self.name,
             "imageUrl": self.image_url,
+            "price": int(self.unit_cost * 1.10),
         }
 
     def toJSON_manager(self):
@@ -114,6 +115,7 @@ class Drone(md.Model):
     status = md.ForeignKey(DroneStatus, on_delete=md.PROTECT)
     drone_type = md.ForeignKey(DroneType, on_delete=md.PROTECT)
     owner = md.ForeignKey(Owner, on_delete=md.PROTECT)
+    revenue = md.PositiveIntegerField()
     last_use = md.DateTimeField(null=True, default=last_use_default)
     created = md.DateTimeField(auto_now=True)
     
@@ -124,6 +126,7 @@ class Drone(md.Model):
             "status": self.status.toJSON(),
             "droneType": self.drone_type.toJSON(),
             "owner": self.owner.toJSON(),
+            "revenue": self.revenue,
             "lastUse": self.last_use,
             "created": self.created,
         }
@@ -195,4 +198,26 @@ class Message(md.Model):
             "email": self.email,
             "handled": self.handled,
             "created": self.created,
+        }
+
+class ManagerCost(md.Model):
+    amount = md.PositiveIntegerField()
+    message = md.CharField(max_length=128)
+
+    def toJSON(self):
+        return {
+            "id": self.id,
+            "amount": self.amount,
+            "message": self.message,
+        }
+
+class ManagerRevenue(md.Model):
+    amount = md.PositiveIntegerField()
+    message = md.CharField(max_length=128)
+    
+    def toJSON(self):
+        return {
+            "id": self.id,
+            "amount": self.amount,
+            "message": self.message,
         }

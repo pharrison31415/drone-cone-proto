@@ -5,7 +5,7 @@ from .views_utils import JsonResponse, safe_querey, verify_token, CUSTOMER_USER,
 from datetime import datetime
 import json
 
-from api.models import DroneStatus, Drone, DroneType, Customer, Manager, Owner, OrderStatus, CustomerToken, ManagerToken, OwnerToken, Address, Cone, ConeType, IceCreamType, ToppingType, Order, DroneOrder, Message
+from api.models import DroneStatus, Drone, DroneType, Customer, Manager, Owner, OrderStatus, CustomerToken, ManagerToken, OwnerToken, Address, Cone, ConeType, IceCreamType, ToppingType, Order, DroneOrder, Message, ManagerRevenue, ManagerCost
 
 
 def hello_world(request):
@@ -74,17 +74,17 @@ def post_address(request, user):
 
 def get_cone_types(request):
     return JsonResponse({'success': True, 'coneTypes': [
-        i.toJSON() for i in ConeType.objects.all()
+        i.toJSON_customer() for i in ConeType.objects.all()
     ]})
 
 def get_ice_cream_types(request):
     return JsonResponse({'success': True, 'iceCreamTypes': [
-        i.toJSON() for i in IceCreamType.objects.all()
+        i.toJSON_customer() for i in IceCreamType.objects.all()
     ]})
 
 def get_topping_types(request):
     return JsonResponse({'success': True, 'toppingTypes': [
-        i.toJSON() for i in ToppingType.objects.all()
+        i.toJSON_customer() for i in ToppingType.objects.all()
     ]})
 
 @verify_manager_token
@@ -108,6 +108,35 @@ def finances(request):
     response = JsonResponse({'status': 'unable to access database'})
     #TODO get request for the money spent and made - does revenue have it's own model or is it with inventory?
     return response
+
+@csrf_exempt
+@verify_manager_token
+def update_inventory_items(request,user):
+    if request.method != "PATCH":
+        return JsonResponse({
+            'success': False,
+            'message': 'PATCHmethod required'
+        })
+    
+    body = json.loads(request.body)
+    itemType = ""
+    if "itemType" in body:
+        itemType = body["itemType"]
+        types = ["ConeType","IcecreamType","ToppingType"]
+        if itemType not in types:
+            return JsonResponse({"success": False, "message": "item type not found"})
+    else:
+        return JsonResponse({"success": False, "message": "item type not found"})
+    item, item_found = safe_querey(itemtype, name=body["name"])
+    if not item_found:
+        return JsonResponse({"success": False, "message": "item not found"})
+    
+    if "changeAmount" in body:
+        item.quantity += body["changeAmount"]
+    else:
+        return JsonResponse({"Success": False, "message": "inventory amount change not found"})
+    item.save()
+    return JsonResponse({'success': True})
 
 @csrf_exempt
 @verify_manager_token
@@ -273,7 +302,8 @@ def new_order(request, user_found, user):
         ])
 
     # markup cost for price
-    price = int(cost * 1.10)
+    MARKUP = 0.10
+    price = int(cost * (1 + MARKUP))
 
     new_order = Order(
         customer=(user if user_found else None),
@@ -285,13 +315,23 @@ def new_order(request, user_found, user):
     new_order.save()
     
 
+    # handle manager revenue
+    revenue_remaining = price - cost
+    MANAGER_DRONE_REVENUE_SPLIT = 0.5
+    manager_revenue_amount = int(revenue_remaining * MANAGER_DRONE_REVENUE_SPLIT)
+    revenue_remaining -= manager_revenue_amount
+
+    ManagerRevenue(
+        amount=manager_revenue_amount,
+        message=f"order id: {new_order.id}"
+    ).save()
+
     # create droneorders, cones
     cone_index = 0
     delivering_status = DroneStatus.objects.get(text="delivering")
     for drone in drones_using:
         drone.status = delivering_status
         drone.last_use = datetime.now()
-        drone.save()
         new_drone_order = DroneOrder(
             drone=drone,
             order=new_order,
@@ -300,13 +340,29 @@ def new_order(request, user_found, user):
         for i in range(cone_index, cone_index + drone.drone_type.capacity):
             if i >= len(body["cones"]):
                 break
+            cone_type = get_object_or_404(ConeType, name=body["cones"][i]["coneType"])
+            ice_cream_type = get_object_or_404(IceCreamType, name=body["cones"][i]["iceCreamType"])
+            topping_type = get_object_or_404(ToppingType, name=body["cones"][i]["toppingType"])
             Cone(
                 drone_order=new_drone_order,
-                cone_type=get_object_or_404(ConeType, name=body["cones"][i]["coneType"]),
-                ice_cream_type=get_object_or_404(IceCreamType, name=body["cones"][i]["iceCreamType"]),
-                topping_type=get_object_or_404(ToppingType, name=body["cones"][i]["toppingType"]),
+                cone_type=cone_type,
+                ice_cream_type=ice_cream_type,
+                topping_type=topping_type,
             ).save()
+            
+            cone_cost = sum([ item.unit_cost for item in [cone_type, ice_cream_type, topping_type]])
+            cone_revenue_drone = int(int(cone_cost * (1 + MARKUP)) * int((1 - MANAGER_DRONE_REVENUE_SPLIT)))
+            revenue_remaining -= cone_revenue_drone
+            drone.revenue += cone_revenue_drone
+
+        drone.save()
         cone_index += drone.drone_type.capacity
+
+    if revenue_remaining > 0:
+        ManagerRevenue(
+            amount=revenue_remaining,
+            message=f"rounding leftover from order id: {new_order.id}"
+        ).save()
 
     response = JsonResponse({
         "success": True,
@@ -346,16 +402,7 @@ def order_delivered(request, order):
 
 @verify_customer_token
 def private_customer_data(request, user):
-    response = user.toJSON()
-    data = response.content
-    addresses = []
-    for address in Address:
-        if address.customer == user.pk:
-            address_data = address.toJSON.content
-            addresses.append(address_data)
-    data.update({"addresses" : addresses})
-    response.content = data
-    return response
+    return user.toJSON()
 
 @verify_manager_token
 def private_manager_data(request, user):
@@ -365,6 +412,23 @@ def private_manager_data(request, user):
 def private_owner_data(request, user):
     return user.toJSON()
 
+
+@verify_manager_token
+def get_manager_revenues(request, user):
+    revenues = ManagerRevenue.objects.all()
+    return JsonResponse({
+        "success": True,
+        "revenues": [ r.toJSON() for r in revenues ]
+    })
+
+
+@verify_manager_token
+def get_manager_costs(request, user):
+    costs = ManagerCost.objects.all()
+    return JsonResponse({
+        "success": True,
+        "costs": [ c.toJSON() for c in costs ]
+    })
 
 @csrf_exempt
 def new_message(request):
