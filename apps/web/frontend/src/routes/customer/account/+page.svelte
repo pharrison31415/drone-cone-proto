@@ -1,3 +1,22 @@
+<script>
+	import { onMount } from "svelte";
+
+    let apiUrl = "http://localhost:8000/api/private-customer-data/";
+
+    let status = '';
+    let success = false
+
+    function getInfo(){
+
+        status = '';
+        fetch(apiUrl)
+            .then(resp => resp.json())
+            .then(json => console.log(json))
+    }
+    onMount( () => { getInfo() })
+
+</script>
+
 <h1>Account</h1>
 <p>Name: ???????</p>
 <p>Address: ??????????</p>
