@@ -1,7 +1,7 @@
 <script>
-    import '../+layout.svelte'
+    // import '../+layout.svelte'
 
-    let apiUrl = "http://127.0.0.1:8000/api/new-customer/";
+    let apiUrl = "http://127.0.0.1:8000/api/new-owner/";
     let firstName = '';
     let lastName = '';
     let username = '';
@@ -33,6 +33,7 @@
                 .finally( () => {
                     if (status == undefined){
                         status = 'Account created! Please sign in.'
+                        window.location.href = "/drone/sign_in"
                     }
                 })
         }
