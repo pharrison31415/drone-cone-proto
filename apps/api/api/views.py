@@ -232,6 +232,16 @@ def update_drone(request, user):
     drone.save()
     return JsonResponse({"success": True, "id": drone.id})
 
+@verify_customer_token
+def get_past_orders(request, user):
+    #return the users past orders
+    orders = Order.objects.filter(customer=user)
+    return JsonResponse({
+        "success": True,
+        "orderInfo": [
+            order.toJSON() for order in orders
+        ]
+    })
 
 @csrf_exempt
 @optional_customer_token
