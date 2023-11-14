@@ -115,6 +115,29 @@
 }
 ```
 
+## GET `/api/get_past_orders/`
+
+**Cookie Required**: `customer-token`
+
+**Request Data** includes a specific user token is sent to retrieve the data about that customer's past orders.
+
+**Response Data** contains a `success` boolean and an array of `orders`:
+
+```
+{
+  "success":true
+  "orders": [
+    {"id": 1,
+    "customer": customer id,
+    "address": address id,
+    "price": 15.42,
+    "status": delivered,
+    "created": 2023-11-05T18:23:10.190Z,
+    },
+  ]
+}
+```
+
 ## POST `/api/add-drone/`
 
 **Cookie Required**: `owner-token`
