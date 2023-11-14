@@ -232,13 +232,6 @@ def update_drone(request, user):
     drone.save()
     return JsonResponse({"success": True, "id": drone.id})
 
-#TODO add all the information a customer will see **
-"""
-    first and last name
-    username
-    past orders
-    password?
-"""
 
 @csrf_exempt
 @optional_customer_token
