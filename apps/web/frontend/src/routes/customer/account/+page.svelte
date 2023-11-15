@@ -134,7 +134,7 @@
     <div id="addresses">
         {#each addresses as address, index}
             <div class="address">Address #{index+1}: 
-                <p>{address.lineOne}, {address.lineTwo}</p>
+                <p>{address.lineOne}{#if address.lineTwo != ""}, {address.lineTwo}{/if},</p>
                 <p>{address.city}, {address.state} {address.zipCode}</p>
                 <button id='editAddress'>
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
@@ -244,22 +244,7 @@
             </button>
         </div>
     </div>
-    <h2>My Addresses</h2>
-    {#if addresses = []}
-    <p>No addresses found</p>
-    {:else}
-    {#each addresses as address}
-        <h3>Address {address.id}</h3>
-        <p>{address.lineOne}</p>
-        {#if address.lineTwo != ""}
-        <p>{address.lineTwo}</p>
-        {/if}
-        <p>{address.city}</p>
-        <p>{address.state}</p>
-        <p>{address.zipCode}</p>
-    {/each}
-    {/if}
-{/if}
+</div>
 <style>
     h1 {
         text-align: center;
