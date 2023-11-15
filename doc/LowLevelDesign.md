@@ -73,6 +73,19 @@ def handle_data(data)
       return the requested data from the database
 ```
 
+### API Security
+
+When making any API requests for private information there is a token associated with who has access that must be given in order for a response to be returned to the client. These tokens are the following:
+- Customer Token
+- Manager Token
+- Owner Token
+
+When attempting to access or update any personal customer information the customer token must be verified. When attempting to access business related information such as total inventory, revenue, and price information the manager token must be verified. And when attemptin to access personal drone information the owner token must be verified.
+
+### Password Security
+
+Passwords will be stored and kept secure using the Django automatic hashing function. Not even managers viewing their customers will be able to view what the passwords are. When a customer views their profile their password will not show up. Currently, there is no way to recover their password, this may cause some inconvenience but will help protect customer privacy at this prototype level.
+
 ## Database
 
 Our database will use SQLite.
