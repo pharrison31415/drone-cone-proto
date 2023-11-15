@@ -8,6 +8,8 @@
     let addresses = [];
     let error = '';
 
+    let orders = [];
+
     let street_address = "";
     let city = "";
     let state = "";
@@ -22,6 +24,7 @@
     onMount(() => {
         get_privateData();
         get_myAddresses();
+        get_myOrders();
         addAddress_dialog = document.getElementById("addAddress_dialog");
     });
 
@@ -58,6 +61,19 @@
                     addresses = json['addresses'];
                 }
             })
+    }
+
+    async function get_myOrders() {
+        fetch(url + "/my-orders/", {method: "GET", credentials: 'include'})
+            .then((response) => response.json())
+            .then((json) => {
+                if (json['success'] == false) {
+                    error = "There was an error getting your orders: " + json['message'];
+                }
+                else {
+                    orders = json['orders'];
+                }
+            });
     }
 
     async function post_newAddress() {
@@ -185,66 +201,72 @@
     </button>
 </div>
 <h2>Recent Order:</h2>
-<div id="orders">
-    <!-- for each order do this -->
-    <div id="order">
-        <div class="cone_details">
-            <h3>Order #: ??????</h3>
-            <p>Order placed: HH:MM</p>
-            <p>Total Cost: $$$$$</p>
-            <ol>
-                <!-- repeat for every cone in the order -->
-                <li>
-                    <!-- this is the cone number so like the list would have cone: #1 then  all the details for that cone-->
-                    <p>Cone #: ?</p>
-                    <!-- the number of this cone ordered -->
-                    <p>Cone Qty. ???</p>
-                    <p>Cone Cost: $$$$</p>
-                    <ul>
-                        <li>Cone: ???</li>
-
+{#if orders.length == 0}
+    <h4 style="margin: 5px;">You have no orders, please place one</h4>
+{:else}
+    {#each orders as order}
+        <div id="orders">
+            <!-- for each order do this -->
+            <div id="order">
+                <div class="cone_details">
+                    <h3>Order #{order.id}</h3>
+                    <p>Order placed: {order.created}</p>
+                    <p>Total Cost: {order.price}</p>
+                    <ol>
+                        <!-- repeat for every cone in the order -->
                         <li>
-                            Scoops:
+                            <!-- this is the cone number so like the list would have cone: #1 then  all the details for that cone-->
+                            <p>Cone #: ?</p>
+                            <!-- the number of this cone ordered -->
+                            <p>Cone Qty. ???</p>
+                            <p>Cone Cost: $$$$</p>
                             <ul>
-                                <li>options</li>
-                                <li>options</li>
-                                <li>options</li>
+                                <li>Cone: ???</li>
+
+                                <li>
+                                    Scoops:
+                                    <ul>
+                                        <li>options</li>
+                                        <li>options</li>
+                                        <li>options</li>
+                                    </ul>
+                                </li>
+
+                                <li>
+                                    Toppings:
+                                    <ul>
+                                        <li>options</li>
+                                        <li>options</li>
+                                        <li>options</li>
+                                    </ul>
+                                </li>
+
                             </ul>
+
                         </li>
+                        
+                    </ol>
+                </div>
 
-                        <li>
-                            Toppings:
-                            <ul>
-                                <li>options</li>
-                                <li>options</li>
-                                <li>options</li>
-                            </ul>
-                        </li>
-
-                    </ul>
-
-                </li>
-                
-            </ol>
+                <div class="add_to_cart">
+                    <button type="button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
+                            <g clip-path="url(#clip0_11_8)">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M9 24C7.35 24 6 25.35 6 27C6 28.65 7.35 30 9 30C10.65 30 12 28.65 12 27C12 25.35 10.65 24 9 24ZM0 0V3H3L8.4 14.4L6.3 18C6.15 18.45 6 19.05 6 19.5C6 21.15 7.35 22.5 9 22.5H27V19.5H9.6C9.45 19.5 9.3 19.35 9.3 19.2V19.05L10.65 16.5H21.75C22.95 16.5 23.85 15.9 24.3 15L29.7 5.25C30 4.95 30 4.8 30 4.5C30 3.6 29.4 3 28.5 3H6.3L4.95 0H0ZM24 24C22.35 24 21 25.35 21 27C21 28.65 22.35 30 24 30C25.65 30 27 28.65 27 27C27 25.35 25.65 24 24 24Z" fill="black"/>
+                            </g>
+                            <defs>
+                            <clipPath id="clip0_11_8">
+                                <rect width="30" height="30" fill="white"/>
+                            </clipPath>
+                            </defs>
+                        </svg>
+                        <p>Add to Cart</p>
+                    </button>
+                </div>
+            </div>
         </div>
-
-        <div class="add_to_cart">
-            <button type="button">
-                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
-                    <g clip-path="url(#clip0_11_8)">
-                      <path fill-rule="evenodd" clip-rule="evenodd" d="M9 24C7.35 24 6 25.35 6 27C6 28.65 7.35 30 9 30C10.65 30 12 28.65 12 27C12 25.35 10.65 24 9 24ZM0 0V3H3L8.4 14.4L6.3 18C6.15 18.45 6 19.05 6 19.5C6 21.15 7.35 22.5 9 22.5H27V19.5H9.6C9.45 19.5 9.3 19.35 9.3 19.2V19.05L10.65 16.5H21.75C22.95 16.5 23.85 15.9 24.3 15L29.7 5.25C30 4.95 30 4.8 30 4.5C30 3.6 29.4 3 28.5 3H6.3L4.95 0H0ZM24 24C22.35 24 21 25.35 21 27C21 28.65 22.35 30 24 30C25.65 30 27 28.65 27 27C27 25.35 25.65 24 24 24Z" fill="black"/>
-                    </g>
-                    <defs>
-                      <clipPath id="clip0_11_8">
-                        <rect width="30" height="30" fill="white"/>
-                      </clipPath>
-                    </defs>
-                  </svg>
-                <p>Add to Cart</p>
-            </button>
-        </div>
-    </div>
-</div>
+    {/each}
+{/if}
 <style>
     h1 {
         text-align: center;
