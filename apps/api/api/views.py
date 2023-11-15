@@ -244,6 +244,26 @@ def get_past_orders(request, user):
         ]
     })
 
+"""
+@verify_customer_token
+def get_past_orders(request,user):
+    orders = Order.objects.filter(customer=user)
+    droneOrderIdList = []
+    response = []
+    for order in orders
+        id = order.id
+        droneOrderid = DroneOrder.objects.filter(order=id).id
+        droneOrderIdList.append(droneOrderid)
+    for i in droneOrderIdList
+        cones = Cones.objects.filter(drone_order=i)
+    return JsonResponse({
+        "success": True,
+        "coneInfo": [
+            cone.toJSON() for cone in cones
+        ]
+    })
+"""
+
 @csrf_exempt
 @optional_customer_token
 def new_order(request, user_found, user):
