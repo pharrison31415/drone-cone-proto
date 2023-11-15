@@ -15,9 +15,9 @@
             {/each}
         </select>
     <br>
-        {#each toppings as topping }
+        <!-- {#each toppings as topping }
             <label><input type="checkbox" value = {topping["name"]} bind:group={selectedToppings}> {topping["name"]} </label>
-        {/each}
+        {/each} -->
     <br>
         <button type="submit"> Add to Cart </button>
     </form>
