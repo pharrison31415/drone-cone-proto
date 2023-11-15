@@ -46,7 +46,7 @@
     //Variables for flavor, cone, toppings, and submitting data base testing
     let icecreamFlavor = [];
     let coneType = [];
-    let toppings = [];
+    let topping = "No topping";
 
     //Variables for new-order/ POST
     let address = {line1: "123 address" , line2: "" , city:"Logan", state:"UT", zipCode:"84321"};
@@ -58,11 +58,11 @@
     //Setters variables for selected items for HTML
     let selectedIcecream;
     let selectedConeType;
-    let selectedToppings = [];
+    let selectedToppings;
 
     //Once a cone is made by user, create cone object and add to order
     function submitCone(){
-        let cone = new Cone(selectedIcecream,selectedConeType,selectedToppings)
+        let cone = new Cone(selectedIcecream,selectedConeType,topping)
        
         order.addtoOrder(cone)
 

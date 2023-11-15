@@ -217,7 +217,7 @@ def update_drone(request, user):
 
     body = json.loads(request.body)
     drone, drone_found = safe_querey(Drone, id=body["id"])
-    if not drone_found or drone.user != user:
+    if not drone_found or drone.owner != user:
         return JsonResponse({"success": False, "message": "drone does not exist"})
 
     if "name" in body:
@@ -232,13 +232,16 @@ def update_drone(request, user):
     drone.save()
     return JsonResponse({"success": True, "id": drone.id})
 
-#TODO add all the information a customer will see **
-"""
-    first and last name
-    username
-    past orders
-    password?
-"""
+@verify_customer_token
+def get_past_orders(request, user):
+    #return the users past orders
+    orders = Order.objects.filter(customer=user)
+    return JsonResponse({
+        "success": True,
+        "orderInfo": [
+            order.toJSON() for order in orders
+        ]
+    })
 
 @csrf_exempt
 @optional_customer_token

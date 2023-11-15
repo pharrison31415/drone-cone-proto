@@ -1,5 +1,6 @@
 <script>
     import { onMount } from 'svelte'
+	import { get } from 'svelte/store';
 
     const url = 'http://localhost:8000/api';
 
@@ -7,6 +8,13 @@
     let types = [];
     let drones = [];
     let statuses = [];
+
+    let username = "";
+    let first_name = "";
+    let last_name = "";
+
+    let totalRevenue = 0;
+
     let myDrones_error = '';
     let showDialogClickError = '';
 
@@ -20,9 +28,30 @@
         get_droneTypes();
         get_droneStatuses();
         get_myDrones();
+        get_privateInfo();
+
 		dialog_addDrone = document.getElementById('add_drone-dialog');
         dialog_editDrone = document.getElementById('edit_drone-dialog');
 	});
+
+    // get the users private data
+    async function get_privateInfo() {
+        let okay = true;
+        fetch(url + '/private-owner-data/', {credentials: 'include', method: 'GET', mode: "cors"})
+            .then((response) => {
+                if (response.status != 200) {
+                    okay = false;
+                }
+                return response.json()
+            })
+            .then((json) => {
+                if (okay) {
+                    username = json.username;
+                    first_name = json.firstName;
+                    last_name = json.lastName;
+                }
+            });
+    }
 
     // get the different drone types from the database
     async function get_droneTypes() {
@@ -43,15 +72,16 @@
 
     async function get_myDrones() {
         fetch(url + '/my-drones/', {credentials: "include", method: 'GET'})
-        .then((response) => response.json())
-        .then((json) => {
-            if (json['success'] == true) {
-                drones = json['drones'];
-            }
-            else {
-                myDrones_error = "There was an error getting your drones: " + json['message'];
-            }
-        });
+            .then((response) => response.json())
+            .then((json) => {
+                if (json['success'] == true) {
+                    drones = json['drones'];
+                    totalRevenue = get_totalRevenue();
+                }
+                else {
+                    myDrones_error = "There was an error getting your drones: " + json['message'];
+                }
+            });
     }
 
     async function post_newDrone(drone_name, drone_status, drone_type) {
@@ -124,6 +154,15 @@
                     showDialogClickError = "There was an error when editting the drone: " + json['message'];
                 }
             });
+        get_myDrones();
+    }
+
+    const get_totalRevenue = () => {
+        let revenue = 0;
+        for (let i = 0; i < drones.length; i++) {
+            revenue += drones[i].revenue;
+        }
+        return revenue;
     }
 	
 	// Show the dialog when clicking "Delete everything"
@@ -211,9 +250,10 @@
     }
 
 </script>
-<h1>Drone User</h1>
+<h1>Welcome, {username}</h1>
+<p>Name: {first_name} {last_name}</p>
 <p>Drones: {drones.length}</p>
-<p>Total Revenue: $$$$$</p>
+<p>Total Revenue: ${totalRevenue}</p>
 <p>Total Deliveries: ????</p>
 <dialog id="add_drone-dialog">
     <h3>Add Drone</h3>
@@ -292,9 +332,9 @@
                 <div class="drone_details">
                     <h2>Drone: {drone.name}</h2>
                     <ul>
-                        <li>Type, capacity: {drone.droneType.text}, {drone.droneType.capacity}</li>
+                        <li>Size: {drone.droneType.text}, Capacity: {drone.droneType.capacity} cone{#if drone.droneType.capacity > 1}s{/if}</li>
                         <li>Deliveries: ????</li>
-                        <li>Revenue: $?</li>
+                        <li>Revenue: ${drone.revenue}</li>
                         <li>Status: {drone.status.text}
                             <form>
                                 {#if drone.status.text == 'delivering'}
