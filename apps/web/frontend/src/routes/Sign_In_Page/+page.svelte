@@ -14,11 +14,12 @@
             fetch(apiUrl, {credentials: "include", method: 'POST', mode: "cors", headers: {"Content-Type": "application/json"} , body: JSON.stringify({username: username, password: password})})
                 .then(resp => resp.json())
                 .then(json => {
+                    console.log(json)
                     if (json.hasOwnProperty('error')) {
                         throw json.error;
                     }
                     else {
-                        status = json.status
+                        status = json.message
                         success = json.success
                     }
                 })
@@ -26,9 +27,12 @@
                     status = err;
                 })
                 .finally( () => {
-                    if (status == undefined){
+                    if (success){
                         status = 'Login Successful'
-                        window.location.href = '/customer/account'
+                        //window.location.href = '/customer/account'
+                    }
+                    else {
+                        status = "Bad login, please try again or create a new account"
                     }
                 })
         }

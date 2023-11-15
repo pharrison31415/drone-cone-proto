@@ -244,8 +244,22 @@
             </button>
         </div>
     </div>
-</div>
-
+    <h2>My Addresses</h2>
+    {#if addresses = []}
+    <p>No addresses found</p>
+    {:else}
+    {#each addresses as address}
+        <h3>Address {address.id}</h3>
+        <p>{address.lineOne}</p>
+        {#if address.lineTwo != ""}
+        <p>{address.lineTwo}</p>
+        {/if}
+        <p>{address.city}</p>
+        <p>{address.state}</p>
+        <p>{address.zipCode}</p>
+    {/each}
+    {/if}
+{/if}
 <style>
     h1 {
         text-align: center;
