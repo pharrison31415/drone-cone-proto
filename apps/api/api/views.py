@@ -13,6 +13,10 @@ def hello_world(request):
     return JsonResponse({"helloWorld": False})
 
 
+def get_delivery_count(request):
+    pass
+
+
 def get_drone_statuses(request):
     statuses = DroneStatus.objects.all()
     return JsonResponse({"droneStatuses": [status.toJSON() for status in statuses]})
