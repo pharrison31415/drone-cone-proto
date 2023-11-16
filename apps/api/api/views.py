@@ -315,8 +315,8 @@ def new_order(request, user_found, user):
     # handle addressing: customer user or guest
     address = None
     if user_found:
-        address, address_found = safe_querey(Address, id=body["addressId"], customer=user)
-        if not address_found or address.deleted:
+        address, address_found = safe_querey(Address, id=body["addressId"], customer=user, deleted=False)
+        if not address_found:
             return JsonResponse({
             'success': False,
             'message': 'no address found'
