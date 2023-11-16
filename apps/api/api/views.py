@@ -49,7 +49,7 @@ def owner_login(request):
 
 @verify_customer_token
 def get_my_addresses(request, user):
-    addresses = Address.objects.filter(customer=user)
+    addresses = Address.objects.filter(customer=user, deleted=False)
     return JsonResponse({
         "success": True,
         "addresses": [
@@ -300,7 +300,7 @@ def new_order(request, user_found, user):
     address = None
     if user_found:
         address, address_found = safe_querey(Address, id=body["addressId"], customer=user)
-        if not address_found:
+        if not address_found or address.deleted:
             return JsonResponse({
             'success': False,
             'message': 'no address found'
