@@ -5,7 +5,12 @@
     let username = '';
     let password = '';
     let status = '';
-    let success = false
+    let success = false;
+    let signUpOption = false;
+
+    function signUp(){
+        window.location.href = '/Sign_Up_Page_Customer'
+    }
 
     function login(){
 
@@ -33,6 +38,7 @@
                     }
                     else {
                         status = "Bad login, please try again or create a new account"
+                        signUpOption = true
                     }
                 })
         }
@@ -56,7 +62,7 @@
     <div>
         <h1>Customer Log-In</h1>
         {#if !success}
-            <div>
+            <div id = "box">
                 <label for="username">
                     Username: 
                 </label>
@@ -82,6 +88,9 @@
             <div>
                 <p>
                     {status}
+                    {#if signUpOption}
+                        <button on:click={signUp}>Sign Up</button>
+                    {/if}
                 </p>
             </div>
         {:else}
@@ -122,6 +131,9 @@
     
     #signInButton:hover{
         background-color: rgb(230, 255, 130);
+    }
+
+    #box{
     }
 
 </style>
