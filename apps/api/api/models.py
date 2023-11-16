@@ -58,6 +58,7 @@ class Address(md.Model):
             "state": self.state,
             "zipCode": self.zip_code,
             "customer": self.customer.toJSON(),
+            "deleted": self.deleted,
         }
 
 class InventoryItem(md.Model):
