@@ -47,6 +47,7 @@ class Address(md.Model):
     state = md.CharField(max_length=64)
     zip_code = md.CharField(max_length=16)
     customer = md.ForeignKey(Customer, null=True, on_delete=md.PROTECT)
+    deleted = md.BooleanField(default=False)
 
     def toJSON(self):
         return {
