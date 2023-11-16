@@ -14,7 +14,8 @@ def hello_world(request):
 
 
 def get_delivery_count(request):
-    pass
+    drone_order_count = len(DroneOrder.objects.all())
+    return JsonResponse({"deliveryCount": drone_order_count})
 
 
 def get_drone_statuses(request):
