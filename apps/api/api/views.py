@@ -54,7 +54,7 @@ def owner_login(request):
 
 @verify_customer_token
 def get_my_addresses(request, user):
-    addresses = Address.objects.filter(customer=user)
+    addresses = Address.objects.filter(customer=user, deleted=False)
     return JsonResponse({
         "success": True,
         "addresses": [
@@ -77,6 +77,22 @@ def post_address(request, user):
     new_addr.save()
     return JsonResponse({'success': True, 'id': new_addr.id})
 
+@csrf_exempt
+@verify_customer_token
+def delete_address(request, user):
+    body = json.loads(request.body)
+
+    address, address_found = safe_querey(Address, id=body["addressId"], customer=user, deleted=False)
+    if not address_found:
+        return JsonResponse({
+            'success': False,
+            'message': 'no address found'
+        })
+
+    address.deleted = True
+    address.save()
+
+    return JsonResponse({'success': True})
 
 def get_cone_types(request):
     return JsonResponse({'success': True, 'coneTypes': [
@@ -304,7 +320,7 @@ def new_order(request, user_found, user):
     # handle addressing: customer user or guest
     address = None
     if user_found:
-        address, address_found = safe_querey(Address, id=body["addressId"], customer=user)
+        address, address_found = safe_querey(Address, id=body["addressId"], customer=user, deleted=False)
         if not address_found:
             return JsonResponse({
             'success': False,

@@ -90,6 +90,14 @@
 
 **Response Data** consists of a `success` boolean and an `id` integer of the new address. If the request body is bad, there will be an error because I don't want to fix that yet.
 
+## POST `/api/delete-address/`
+
+**Cookie Required**: `customer-token`
+
+**Request Body** contains an integer, `addressId`, the id of the address to delete
+
+**Response Data** consists of a `success` boolean and, if false, a `message` string.
+
 ## GET `/api/my-addresses/`
 
 **Cookie Required**: `customer-token`
