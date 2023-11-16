@@ -6,7 +6,7 @@ from .views_utils import JsonResponse, safe_querey, verify_token, CUSTOMER_USER,
 from datetime import datetime
 import json
 
-from api.models import DroneStatus, Drone, DroneType, Customer, Manager, Owner, OrderStatus, CustomerToken, ManagerToken, OwnerToken, Address, Cone, ConeType, IceCreamType, ToppingType, Order, DroneOrder, Message, ManagerRevenue, ManagerCost
+from api.models import DroneStatus, Drone, DroneType, Customer, Manager, Owner, OrderStatus, CustomerToken, ManagerToken, OwnerToken, Address, Cone, ConeType, IceCreamType, ToppingType, Order, DroneOrder, Message, ManagerRevenue, ManagerCost, OrderToken
 
 
 def hello_world(request):
