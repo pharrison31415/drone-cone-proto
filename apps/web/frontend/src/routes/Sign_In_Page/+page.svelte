@@ -62,7 +62,7 @@
     <div>
         <h1>Customer Log-In</h1>
         {#if !success}
-            <div id = "box">
+            <div class="stuff-box">
                 <label for="username">
                     Username: 
                 </label>
@@ -82,6 +82,7 @@
                     id="password"
                     placeholder="Password"
                 >
+                <br>
             </div>
             <button id = "signInButton" on:click={login}>Login</button>
         
@@ -131,9 +132,6 @@
     
     #signInButton:hover{
         background-color: rgb(230, 255, 130);
-    }
-
-    #box{
     }
 
 </style>
