@@ -375,14 +375,14 @@
         text-align: center;
     }
 
-    #editAddress > svg {
+    /* #editAddress > svg {
         padding-top: 3px;
         padding-bottom: 4px;
     }
 
     #editAddress {
         width: 53.64px;
-    }
+    } */
 
     #addAddress {
         padding: 5px;
