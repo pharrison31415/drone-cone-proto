@@ -7,7 +7,7 @@ from django.contrib.auth.hashers import make_password
 MANAGERS = [
     {
         "username": "manager01",
-        "password": "ilovedronecones",
+        "password": "password",
         "first_name": "Default",
         "last_name": "Manager"
     },
