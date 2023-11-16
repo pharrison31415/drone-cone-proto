@@ -72,6 +72,22 @@ def post_address(request, user):
     new_addr.save()
     return JsonResponse({'success': True, 'id': new_addr.id})
 
+@csrf_exempt
+@verify_customer_token
+def delete_address(request, user):
+    body = json.loads(request.body)
+
+    address, address_found = safe_querey(Address, id=body["addressId"], customer=user, deleted=False)
+    if not address_found:
+        return JsonResponse({
+            'success': False,
+            'message': 'no address found'
+        })
+
+    address.deleted = True
+    address.save()
+
+    return JsonResponse({'success': True})
 
 def get_cone_types(request):
     return JsonResponse({'success': True, 'coneTypes': [
