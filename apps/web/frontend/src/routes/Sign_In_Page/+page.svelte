@@ -29,7 +29,7 @@
                 .finally( () => {
                     if (success){
                         status = 'Login Successful'
-                        //window.location.href = '/customer/account'
+                        window.location.href = '/customer/account'
                     }
                     else {
                         status = "Bad login, please try again or create a new account"

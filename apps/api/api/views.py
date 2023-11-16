@@ -6,11 +6,16 @@ from .views_utils import JsonResponse, safe_querey, verify_token, CUSTOMER_USER,
 from datetime import datetime
 import json
 
-from api.models import DroneStatus, Drone, DroneType, Customer, Manager, Owner, OrderStatus, CustomerToken, ManagerToken, OwnerToken, Address, Cone, ConeType, IceCreamType, ToppingType, Order, DroneOrder, Message, ManagerRevenue, ManagerCost
+from api.models import DroneStatus, Drone, DroneType, Customer, Manager, Owner, OrderStatus, CustomerToken, ManagerToken, OwnerToken, Address, Cone, ConeType, IceCreamType, ToppingType, Order, DroneOrder, Message, ManagerRevenue, ManagerCost, OrderToken
 
 
 def hello_world(request):
     return JsonResponse({"helloWorld": False})
+
+
+def get_delivery_count(request):
+    drone_order_count = len(DroneOrder.objects.all())
+    return JsonResponse({"deliveryCount": drone_order_count})
 
 
 def get_drone_statuses(request):
@@ -49,7 +54,7 @@ def owner_login(request):
 
 @verify_customer_token
 def get_my_addresses(request, user):
-    addresses = Address.objects.filter(customer=user)
+    addresses = Address.objects.filter(customer=user, deleted=False)
     return JsonResponse({
         "success": True,
         "addresses": [
@@ -72,6 +77,22 @@ def post_address(request, user):
     new_addr.save()
     return JsonResponse({'success': True, 'id': new_addr.id})
 
+@csrf_exempt
+@verify_customer_token
+def delete_address(request, user):
+    body = json.loads(request.body)
+
+    address, address_found = safe_querey(Address, id=body["addressId"], customer=user, deleted=False)
+    if not address_found:
+        return JsonResponse({
+            'success': False,
+            'message': 'no address found'
+        })
+
+    address.deleted = True
+    address.save()
+
+    return JsonResponse({'success': True})
 
 def get_cone_types(request):
     return JsonResponse({'success': True, 'coneTypes': [
@@ -244,6 +265,26 @@ def get_past_orders(request, user):
         ]
     })
 
+"""
+@verify_customer_token
+def get_past_orders(request,user):
+    orders = Order.objects.filter(customer=user)
+    droneOrderIdList = []
+    response = []
+    for order in orders
+        id = order.id
+        droneOrderid = DroneOrder.objects.filter(order=id).id
+        droneOrderIdList.append(droneOrderid)
+    for i in droneOrderIdList
+        cones = Cones.objects.filter(drone_order=i)
+    return JsonResponse({
+        "success": True,
+        "coneInfo": [
+            cone.toJSON() for cone in cones
+        ]
+    })
+"""
+
 @csrf_exempt
 @optional_customer_token
 def new_order(request, user_found, user):
@@ -279,7 +320,7 @@ def new_order(request, user_found, user):
     # handle addressing: customer user or guest
     address = None
     if user_found:
-        address, address_found = safe_querey(Address, id=body["addressId"], customer=user)
+        address, address_found = safe_querey(Address, id=body["addressId"], customer=user, deleted=False)
         if not address_found:
             return JsonResponse({
             'success': False,
