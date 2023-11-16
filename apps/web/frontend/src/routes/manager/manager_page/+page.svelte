@@ -23,20 +23,65 @@
 
 </body>
 
-<!--TODO: api calls to GET data from data base for manager information-->
-
-
 <script>
+//Imported Items
 import { onMount } from "svelte";
 
-function createChart() {
+onMount(revenueChart , getInventory)
+
+//Variables
+
+let inventory;
+
+// ******** FUNCTIONS FOR INVENTORY *************************************************************
+// GET request for Inventory
+function getInventory(){
+  invURL = 'http://localhost:8000/api/inventory/'
+  
+  async() => {
+    const response = await fetch(invURL,{method: 'GET'})
+    .then(jsonData = await response.json())
+    .catch(console.log(error))
+  }
+  inventory = jsonData
+  console.log(inventory)
+}
+
+//update inventory price
+function updateInventory(){
+  updateInvURL = 'http://localhost:8000/api/update-inventory/'
+
+}
+
+//update inventory items amount
+function updateInventoryItems(){
+  updateInvItemURL = 'http://localhost:8000/api/update-inventory-item/'
+
+
+}
+
+
+// ******** FUNCTIONS FOR CONTACTS *************************************************************
+//GET request for list of contacts
+function getContacts(){
+
+}
+
+// ******** FUNCTIONS FOR REVENUE *************************************************************
+//GET request for revenue
+function getRevenue(){
+
+}
+
+// function for creating graph for manager
+function revenueChart() {
   const chart = document.getElementById('myChart');
  
   new Chart(chart, {
     type: 'line',
     data: {
       // Labels Data types
-      labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple'],
+      labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple',"TEST"],
 
       //Datasets for the graph
       datasets: [{
@@ -47,7 +92,7 @@ function createChart() {
       { 
       //2nd Datasets for the graph
       label: 'Expenees',
-        data: [-11,-32,-3,-4,-45],
+        data: [-11,-32,-3,-4,-45,420],
         borderWidth: 3
       }]
     },
@@ -55,74 +100,13 @@ function createChart() {
     options: {
       scales: {
         y: {
-          min: -50,
-          max: 50
+          min: -500,
+          max: 500
         }
       }
     }
   });
 }
-
-function createInventory(){
-  const cones = document.getElementById("Cones")
-
-  new Chart(cones,{
-    type: "doughnut",
-    data:{
-      datasets:[{
-        data:[120,100],
-        borderWidth: 3 
-      }]
-    }
-
-  }); 
-  
-}
-
-// "localhost:8000/api/[data]" url for api call for data
-let apiUrl = "http://localhost:8000/api/cone-types/"
-//**** Inventory Status ****
-onMount(async () => {
-  fetch(apiUrl)
-  .then(data => {
-		let inventory = data;
-    console.log(inventory) 
-    }).catch(error => {
-    console.log(error);
-  });
-});
-
-/*
-**** Revenue Status ****
-onMount(async () => {
-  fetch('')
-  .then(response => response.json())
-  .then(revenueData => {
-		revenue = revenueData
-    }).catch(error => {
-    console.log(error);
-  });
-});
-
-
-**** Contatct Status ****
-onMount(async () => {
-  fetch('')
-  .then(response => response.json())
-  .then(contactData => {
-		contact = contactData;  
-    }).catch(error => {
-    console.log(error);
-  });
-});
-
-
-
-*/
-
-onMount(createChart)
-onMount(createInventory)
-
 </script>
 
 <!--Temp Style **** RELOCATE to CSS FILE WHEN DONE ****-->

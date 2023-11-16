@@ -122,8 +122,8 @@
         const infoJson = await response.json()
         
         for(let item of infoJson["toppingTypes"]){
-            toppings.push(item);
-            toppings = toppings
+            //topping.push(item);
+            topping = topping
         }
 
     });
