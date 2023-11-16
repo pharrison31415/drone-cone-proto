@@ -52,43 +52,76 @@
 
 
 </script>
-
-<h1>Sign In Page Customer</h1>
-{#if !success}
+<body>
     <div>
-        <label for="username">
-            Username: 
-        </label>
-        <input 
-            bind:value={username}
-            type="text"
-            id="username"
-            placeholder="Username"
-        >
-        <br>
-        <label for="password">
-            Password: 
-        </label>
-        <input 
-            bind:value={password}
-            type="password"
-            id="password"
-            placeholder="Password"
-        >
+        <h1>Customer Log-In</h1>
+        {#if !success}
+            <div>
+                <label for="username">
+                    Username: 
+                </label>
+                <input 
+                    bind:value={username}
+                    type="text"
+                    id="username"
+                    placeholder="Username"
+                >
+                <br>
+                <label for="password">
+                    Password: 
+                </label>
+                <input 
+                    bind:value={password}
+                    type="password"
+                    id="password"
+                    placeholder="Password"
+                >
+            </div>
+            <button id = "signInButton" on:click={login}>Login</button>
+        
+            <div>
+                <p>
+                    {status}
+                </p>
+            </div>
+        {:else}
+            <div>
+                <p>
+                    {status}
+                </p>
+            </div>
+        {/if}
+        
     </div>
-    <button on:click={login}>Login</button>
+</body>
 
-    <div>
-        <p>
-            {status}
-        </p>
-    </div>
-{:else}
-    <div>
-        <p>
-            {status}
-        </p>
-    </div>
-{/if}
+<style>
+    body{
+        background-color: rgb(180, 255, 255);
+        margin: 0%;
+    }
 
+    div{
+        text-align: center;
+        margin: 50px;
+    }
+    p{
+        font-family: verdana, sans-serif;
+    }
+    #signInButton{
+        background-color: aquamarine;
+        height: 75px;
+        width: 200px;
+        border-radius: 10px;
+        text-align: center;
+        font-size: x-large;
+        font-family: Verdana, sans-serif;
+        font-weight: bold;
+        
+    }
+    
+    #signInButton:hover{
+        background-color: rgb(230, 255, 130);
+    }
 
+</style>
