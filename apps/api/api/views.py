@@ -147,7 +147,7 @@ def finances(request):
 
 @csrf_exempt
 @verify_manager_token
-def update_inventory_items(request, user):
+def purchase_inventory(request, user):
     if request.method != "PATCH":
         return JsonResponse({
             'success': False,
