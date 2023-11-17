@@ -13,6 +13,7 @@ MANAGERS = [
     },
 ]
 
+
 def populate(apps, schema_editor):
     Manager = apps.get_model("api", "Manager")
     for manager in MANAGERS:
@@ -22,6 +23,7 @@ def populate(apps, schema_editor):
             first_name=manager['first_name'],
             last_name=manager['last_name'],
         ).save()
+
 
 class Migration(migrations.Migration):
 
