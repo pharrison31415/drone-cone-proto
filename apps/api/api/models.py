@@ -8,7 +8,7 @@ class User(md.Model):
     first_name = md.CharField(max_length=64)
     last_name = md.CharField(max_length=64)
     created = md.DateTimeField(auto_now=True)
-    
+
     class Meta:
         abstract = True
 
@@ -20,25 +20,38 @@ class User(md.Model):
             "created": self.created,
         }
 
-class Customer(User): pass
-class Manager(User): pass
-class Owner(User): pass
+
+class Customer(User):
+    pass
+
+
+class Manager(User):
+    pass
+
+
+class Owner(User):
+    pass
+
 
 class Token(md.Model):
     token = md.CharField(primary_key=True, max_length=128)
     created = md.DateTimeField(auto_now=True)
-    
+
     class Meta:
         abstract = True
+
 
 class CustomerToken(Token):
     user = md.ForeignKey(Customer, on_delete=md.PROTECT)
 
+
 class ManagerToken(Token):
     user = md.ForeignKey(Manager, on_delete=md.PROTECT)
 
+
 class OwnerToken(Token):
     user = md.ForeignKey(Owner, on_delete=md.PROTECT)
+
 
 class Address(md.Model):
     line_one = md.CharField(max_length=64)
@@ -60,6 +73,7 @@ class Address(md.Model):
             "customer": self.customer.toJSON(),
             "deleted": self.deleted,
         }
+
 
 class InventoryItem(md.Model):
     name = md.CharField(primary_key=True, max_length=128)
@@ -85,9 +99,18 @@ class InventoryItem(md.Model):
             "imageUrl": self.image_url,
         }
 
-class ConeType(InventoryItem): pass
-class IceCreamType(InventoryItem): pass
-class ToppingType(InventoryItem): pass
+
+class ConeType(InventoryItem):
+    pass
+
+
+class IceCreamType(InventoryItem):
+    pass
+
+
+class ToppingType(InventoryItem):
+    pass
+
 
 class DroneType(md.Model):
     text = md.CharField(primary_key=True, max_length=32)
@@ -120,7 +143,7 @@ class Drone(md.Model):
     revenue = md.PositiveIntegerField(default=0)
     last_use = md.DateTimeField(null=True, default=last_use_default)
     created = md.DateTimeField(auto_now=True)
-    
+
     def toJSON(self):
         return {
             "id": self.id,
@@ -161,14 +184,17 @@ class Order(md.Model):
             "created": self.created,
         }
 
+
 class OrderToken(md.Model):
     token = md.CharField(primary_key=True, max_length=128)
     order = md.ForeignKey(Order, on_delete=md.PROTECT)
     created = md.DateTimeField(auto_now=True)
 
+
 class DroneOrder(md.Model):
     drone = md.ForeignKey(Drone, on_delete=md.PROTECT)
     order = md.ForeignKey(Order, on_delete=md.PROTECT)
+
 
 class Cone(md.Model):
     cone_type = md.ForeignKey(ConeType, on_delete=md.PROTECT)
@@ -186,6 +212,7 @@ class Cone(md.Model):
             "created": self.created,
         }
 
+
 class Message(md.Model):
     content = md.CharField(max_length=1024)
     email = md.CharField(max_length=128)
@@ -202,6 +229,7 @@ class Message(md.Model):
             "created": self.created,
         }
 
+
 class ManagerCost(md.Model):
     amount = md.PositiveIntegerField()
     message = md.CharField(max_length=128)
@@ -213,10 +241,11 @@ class ManagerCost(md.Model):
             "message": self.message,
         }
 
+
 class ManagerRevenue(md.Model):
     amount = md.PositiveIntegerField()
     message = md.CharField(max_length=128)
-    
+
     def toJSON(self):
         return {
             "id": self.id,

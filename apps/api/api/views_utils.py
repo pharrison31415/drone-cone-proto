@@ -5,6 +5,7 @@ from django.utils.crypto import get_random_string
 from api.models import DroneStatus, DroneType, Customer, Manager, Owner, CustomerToken, ManagerToken, OwnerToken
 import json
 
+
 class JsonResponse(DjJsonResponse):
     def __init__(self, *args, **kwargs):
         super(JsonResponse, self).__init__(*args, **kwargs)
@@ -21,15 +22,17 @@ def safe_querey(table, **kwargs):
 
     return querey_set[0], True
 
+
 class UserType:
     def __init__(self, user_model, token_model, token_key):
         self.user_model = user_model
         self.token_model = token_model
         self.token_key = token_key
 
+
 CUSTOMER_USER = UserType(Customer, CustomerToken, "customer-token")
 MANAGER_USER = UserType(Manager, ManagerToken, "manager-token")
-OWNER_USER = UserType(Owner, OwnerToken,"owner-token")
+OWNER_USER = UserType(Owner, OwnerToken, "owner-token")
 
 
 def verify_token(view, user_type):
@@ -37,12 +40,13 @@ def verify_token(view, user_type):
         user_token = args[0].COOKIES.get(user_type.token_key, False)
         retrieved_token, found = safe_querey(
             user_type.token_model, token=user_token)
-        if not found: 
+        if not found:
             return JsonResponse({'success': False, 'message': 'bad token'})
 
         return view(*args, user=retrieved_token.user, **kwargs)
-    
+
     return wrapper_verify
+
 
 def optional_token(view, user_type):
     def wrapper_optional(*args, **kwargs):
@@ -56,11 +60,13 @@ def optional_token(view, user_type):
 
     return wrapper_optional
 
+
 verify_customer_token = partial(verify_token, user_type=CUSTOMER_USER)
 verify_manager_token = partial(verify_token, user_type=MANAGER_USER)
 verify_owner_token = partial(verify_token, user_type=OWNER_USER)
 
 optional_customer_token = partial(optional_token, user_type=CUSTOMER_USER)
+
 
 def verify_order_token(view):
     def wrapper_verify(*args, **kwargs):
@@ -69,10 +75,11 @@ def verify_order_token(view):
             OwnerToken, token=order_token)
         if not found:
             return JsonResponse({'success': False, 'message': 'bad token'})
-        
+
         return view(*args, order=retrieved_token.order, **kwargs)
 
     return wrapper_verify
+
 
 def user_login(request, user_type):
     if request.method != "POST":
@@ -80,7 +87,7 @@ def user_login(request, user_type):
             'success': False,
             'message': 'POST method required.',
         })
-    
+
     body = json.loads(request.body)
 
     user, user_found = safe_querey(
@@ -118,7 +125,7 @@ def new_user(request, user_type):
             'success': False,
             'message': 'username taken'
         })
-    
+
     user_type.user_model(
         username=body['username'],
         password_hash=make_password(body['password']),
