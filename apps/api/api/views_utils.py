@@ -70,7 +70,7 @@ optional_customer_token = partial(optional_token, user_type=CUSTOMER_USER)
 
 def verify_order_token(view):
     def wrapper_verify(*args, **kwargs):
-        order_token = view.COOKIES.get("owner-token", False)
+        order_token = args[0].COOKIES.get("owner-token", False)
         retrieved_token, found = safe_querey(
             OwnerToken, token=order_token)
         if not found:
