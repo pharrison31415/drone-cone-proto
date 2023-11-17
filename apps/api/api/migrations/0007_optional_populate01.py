@@ -67,7 +67,7 @@ def populate(apps, schema_editor):
                 customer=customer,
             )
             address.save()
-    
+
     Owner = apps.get_model("api", "Owner")
     Drone = apps.get_model("api", "Drone")
     DroneStatus = apps.get_model("api", "DroneStatus")
@@ -90,8 +90,6 @@ def populate(apps, schema_editor):
                 owner=owner,
             )
             drone.save()
-
-    
 
 
 class Migration(migrations.Migration):
