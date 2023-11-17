@@ -222,17 +222,15 @@ Note that if a drone's status is set to `"delivering"`, the status is unable to 
 
 **Response Data** consists of a `success` boolean and, if false, a `message` string.
 
-## PATCh `/api/update_inventory_items/`
+## POST `/api/purchase-inventory/`
 
 **Cookie Required**: `manager-token`
 
-**Request Body** Must contain the following in the request body:
+**Request Body** must contain the following:
 
-- `name`: name of the item being updated
-- `itemType`: ConeType, IceCreamType, or ToppingType
-- `amountChange`: whole number of how much the total in the inventory is changing.
-  - if positive you are adding that much to the inventory
-  - if negative you are subtracting that much from the inventory
+- `name`: name of the item being purchased
+- `itemType`: is the type of the item being purchased: `coneType`, `iceCreamType`, or `toppingType`
+- `additionalUnits`: positive integer of number of units to add to the inventory
 
 **Response Data** consists of a `success` boolean and, if false, a string `message`.
 
