@@ -76,6 +76,12 @@
 
 **Response Headers** has a `customer-token`, `manager-token`, or `owner-token` string 128 characters in length if `success` on the response data is true. If the request body is bad, there will be an error because I don't want to fix that yet.
 
+## GET `/api/private-customer-data/`, `/api/private-manager-data/`, `/api/private-owner-data/`
+
+**Cookie Required**: `customer-token`, `manager-token`, or `owner-token`
+
+**Response Data** consists of a `success` boolean and a `user` object with `firstName`, `lastName`, `username`, and a date `created`.
+
 ## POST `/api/add-address/`
 
 **Cookie Required**: `customer-token`
