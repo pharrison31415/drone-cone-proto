@@ -201,8 +201,8 @@ def update_inventory(request, user):
     if not item_found:
         return JsonResponse({"success": False, "message": "item not found"})
 
-    if "price" in body:
-        item.unit_cost = body["price"]
+    if "unitCost" in body:
+        item.unit_cost = body["unitCost"]
     item.save()
     return JsonResponse({'success': True})
 
