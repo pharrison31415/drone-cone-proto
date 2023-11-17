@@ -463,17 +463,26 @@ def order_delivered(request, order):
 
 @verify_customer_token
 def private_customer_data(request, user):
-    return JsonResponse(user.toJSON())
+    return JsonResponse({
+        "success": True,
+        "user": user.toJSON()
+    })
 
 
 @verify_manager_token
 def private_manager_data(request, user):
-    return JsonResponse(user.toJSON())
+    return JsonResponse({
+        "success": True,
+        "user": user.toJSON(),
+    })
 
 
 @verify_owner_token
 def private_owner_data(request, user):
-    return JsonResponse(user.toJSON())
+    return JsonResponse({
+        "success": True,
+        "user": user.toJSON()
+    })
 
 
 @verify_manager_token
