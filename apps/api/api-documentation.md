@@ -218,7 +218,7 @@ Note that if a drone's status is set to `"delivering"`, the status is unable to 
 
 - `itemType` (string telling if it is a cone, ice cream, or topping)
   - options are `coneType`, `iceCreamType`, or `toppingType`
-- `price` (positive integer. the new unit price for the item in pennies)
+- `unitCost` (positive integer. the new unit cost for the item in pennies)
 
 **Response Data** consists of a `success` boolean and, if false, a `message` string.
 
