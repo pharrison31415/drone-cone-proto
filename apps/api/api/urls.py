@@ -43,6 +43,7 @@ urlpatterns = [
     path('manager-revenues/', views.get_manager_revenues),
     path('manager-costs/', views.get_manager_costs),
     path('purchase-inventory/', views.purchase_inventory),
+    path('update-inventory/', views.update_inventory),
 
     path('new-message/', views.new_message),
 ]

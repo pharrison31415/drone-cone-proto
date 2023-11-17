@@ -192,7 +192,7 @@ def update_inventory(request, user):
     # item = ConeType.objects.filter(id=body['id'])
     if "itemType" in body:
         itemType = body["itemType"]
-        types = ["ConeType", "IcecreamType", "ToppingType"]
+        types = ["coneType", "iceCreamType", "toppingType"]
         if itemType not in types:
             return JsonResponse({"success": False, "message": "item type not found"})
     else:
@@ -205,15 +205,6 @@ def update_inventory(request, user):
         item.unit_cost = body["price"]
     item.save()
     return JsonResponse({'success': True})
-
-
-"""
-    price per unit
-    added inventory
-    changed types of cones
-    changed types of ice cream
-    changed types of toppings
-"""
 
 
 @csrf_exempt
