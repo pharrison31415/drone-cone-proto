@@ -158,7 +158,7 @@ class Order(md.Model):
             "address": self.address.toJSON(),
             "price": self.price,
             "status": self.status.toJSON(),
-            "created": self.crated,
+            "created": self.created,
         }
 
 class OrderToken(md.Model):

@@ -22,7 +22,7 @@ urlpatterns = [
     path('customer-login/', views.customer_login),
     path('manager-login/', views.manager_login),
     path('owner-login/', views.owner_login),
-    
+
     path('private-customer-data/', views.private_customer_data),
     path('private-manager-data/', views.private_manager_data),
     path('private-owner-data/', views.private_owner_data),
@@ -37,10 +37,12 @@ urlpatterns = [
 
     path('new-order/', views.new_order),
     path('order-delivered/', views.order_delivered),
+    path('past-orders/', views.get_past_orders),
 
     path('inventory/', views.get_inventory),
     path('manager-revenues/', views.get_manager_revenues),
     path('manager-costs/', views.get_manager_costs),
-    
+    path('purchase-inventory/', views.purchase_inventory),
+
     path('new-message/', views.new_message),
 ]

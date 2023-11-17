@@ -27,23 +27,28 @@
 //Imported Items
 import { onMount } from "svelte";
 
-onMount(revenueChart , getInventory)
+onMount(()=>{
+  getRevenueandCost();
+  getInventory();
+});
 
 //Variables
 
 let inventory;
+let revenue;
 
 // ******** FUNCTIONS FOR INVENTORY *************************************************************
 // GET request for Inventory
-function getInventory(){
-  invURL = 'http://localhost:8000/api/inventory/'
+async function getInventory(){
+  let invURL = 'http://localhost:8000/api/inventory/'
   
-  async() => {
-    const response = await fetch(invURL,{method: 'GET'})
-    .then(jsonData = await response.json())
-    .catch(console.log(error))
-  }
-  inventory = jsonData
+  const response = await fetch (
+    invURL,{
+      method: "GET",
+      credentials: "include"
+    })
+  const infoJson = await response.json()
+  inventory = infoJson['inventory']
   console.log(inventory)
 }
 
@@ -69,7 +74,28 @@ function getContacts(){
 
 // ******** FUNCTIONS FOR REVENUE *************************************************************
 //GET request for revenue
-function getRevenue(){
+async function getRevenueandCost(){
+  let revURL = 'http://localhost:8000/api/manager-revenues/'
+  let costURL = 'http://localhost:8000/api/manager-costs/'
+  
+  const response = await fetch (
+    revURL,{
+      method: "GET",
+      credentials: "include"
+    })
+  const infoJson = await response.json()
+  //inventory = infoJson['revenue']
+  console.log(infoJson)
+
+
+  const response2 = await fetch(
+    costURL,{
+      method: "GET",
+      credentials: "include"
+    })
+  const infoJson2 = await response2.json()
+  //inventory = infoJson['cost']
+  console.log(infoJson2)
 
 }
 
