@@ -6,8 +6,8 @@
   <!--Links and for side bar-->
   <div id="sideBar" transition:slide ={{delay:0, duration: 400, axis: 'x'}}>
       <button class = "links" on:click={home}>Home</button>
-      <button class = "links" on:click={customers}> Users Accounts </button>
       <button class = "links" on:click={drone}> Drone Sign In</button>
+      <button class = "links" on:click={drone2}> Drone Sign Up</button>
       <button class = "links" on:click={manager}>Manager Sign In</button>
       <button class = "links" on:click = {slideNav}> Close </button>
   </div>
@@ -26,7 +26,7 @@
 
   let showSlide = false;
 
-  let signedIn = false;
+
 
   
   function slideNav(){
@@ -46,7 +46,11 @@
   }
 
   function drone(){
-    window.location.href = '/drone_user'
+    window.location.href = '/drone/sign_in'
+  }
+
+  function drone2(){
+    window.location.href = '/drone/sign_up'
   }
 
   function signIn(){
