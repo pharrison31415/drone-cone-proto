@@ -37,6 +37,7 @@ urlpatterns = [
 
     path('new-order/', views.new_order),
     path('order-delivered/', views.order_delivered),
+    path('past-orders/', views.get_past_orders),
 
     path('inventory/', views.get_inventory),
     path('manager-revenues/', views.get_manager_revenues),

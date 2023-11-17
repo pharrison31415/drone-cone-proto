@@ -258,11 +258,22 @@ def update_drone(request, user):
 def get_past_orders(request, user):
     #return the users past orders
     orders = Order.objects.filter(customer=user)
+    orders_json_list = []
+    for order in orders:
+        drone_orders = DroneOrder.objects.filter(order=order)
+        cones = []
+        for drone_order in drone_orders:
+            cone_query_set = Cone.objects.filter(drone_order=drone_order)
+            cones.append(list(cone_query_set))
+
+        order_json = order.toJSON()
+        order_json["cones"] = cones
+
+        orders_json_list.append(order_json)
+
     return JsonResponse({
         "success": True,
-        "orderInfo": [
-            order.toJSON() for order in orders
-        ]
+        "orders": orders_json_list,
     })
 
 """
