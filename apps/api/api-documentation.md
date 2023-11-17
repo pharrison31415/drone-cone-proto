@@ -76,6 +76,12 @@
 
 **Response Headers** has a `customer-token`, `manager-token`, or `owner-token` string 128 characters in length if `success` on the response data is true. If the request body is bad, there will be an error because I don't want to fix that yet.
 
+## GET `/api/private-customer-data/`, `/api/private-manager-data/`, `/api/private-owner-data/`
+
+**Cookie Required**: `customer-token`, `manager-token`, or `owner-token`
+
+**Response Data** consists of a `success` boolean and a `user` object with `firstName`, `lastName`, `username`, and a date `created`.
+
 ## POST `/api/add-address/`
 
 **Cookie Required**: `customer-token`
@@ -210,29 +216,27 @@ Note that if a drone's status is set to `"delivering"`, the status is unable to 
 
 **Response Data** consists of a `success` boolean and a drone `id`. If the request body is bad, there will be an error because I don't want to fix that yet.
 
-## PATCH `/api/update_inventory/`
+## PATCH `/api/update-inventory/`
 
 **Cookie Required**: `manager-token`
 
 **Request Body** must contain the `name` of the inventory item to update. The following are properties that can be included for updating.
 
 - `itemType` (string telling if it is a cone, ice cream, or topping)
-  - options are `ConeType`, `IceCreamType`, or `ToppingType`
-- `price` (positive integer. the new unit price for the item in pennies)
+  - options are `coneType`, `iceCreamType`, or `toppingType`
+- `unitCost` (positive integer. the new unit cost for the item in pennies)
 
 **Response Data** consists of a `success` boolean and, if false, a `message` string.
 
-## PATCh `/api/update_inventory_items/`
+## POST `/api/purchase-inventory/`
 
 **Cookie Required**: `manager-token`
 
-**Request Body** Must contain the following in the request body:
+**Request Body** must contain the following:
 
-- `name`: name of the item being updated
-- `itemType`: ConeType, IceCreamType, or ToppingType
-- `amountChange`: whole number of how much the total in the inventory is changing.
-  - if positive you are adding that much to the inventory
-  - if negative you are subtracting that much from the inventory
+- `name`: name of the item being purchased
+- `itemType`: is the type of the item being purchased: `coneType`, `iceCreamType`, or `toppingType`
+- `additionalUnits`: positive integer of number of units to add to the inventory
 
 **Response Data** consists of a `success` boolean and, if false, a string `message`.
 

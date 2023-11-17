@@ -191,7 +191,7 @@ class OrderToken(md.Model):
     created = md.DateTimeField(auto_now=True)
 
 
-class DroneOrder(md.Model):
+class Delivery(md.Model):
     drone = md.ForeignKey(Drone, on_delete=md.PROTECT)
     order = md.ForeignKey(Order, on_delete=md.PROTECT)
 
@@ -200,7 +200,7 @@ class Cone(md.Model):
     cone_type = md.ForeignKey(ConeType, on_delete=md.PROTECT)
     ice_cream_type = md.ForeignKey(IceCreamType, on_delete=md.PROTECT)
     topping_type = md.ForeignKey(ToppingType, on_delete=md.PROTECT)
-    drone_order = md.ForeignKey(DroneOrder, on_delete=md.PROTECT)
+    delivery = md.ForeignKey(Delivery, on_delete=md.PROTECT)
     created = md.DateTimeField(auto_now=True)
 
     def toJSON(self):

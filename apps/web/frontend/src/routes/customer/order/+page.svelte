@@ -79,11 +79,11 @@
 
     //Variables for new-order/ POST
     let address = {
-        line1: "", 
-        line2: "", 
-        city:"", 
-        state:"", 
-        zipCode:""
+        line1: "test 123", 
+        line2: "thes", 
+        city:"Franklin", 
+        state:"ID", 
+        zipCode:"843237"
     };
     let price = 0;
     let cost = 0;
@@ -110,6 +110,8 @@
         order.addtoOrder(cone);
         cart.push(cone);
         cart = cart
+
+        console.log(order);
         }
     }
 
@@ -129,10 +131,11 @@
     
         fetch(orderURL,{
             method: 'POST',
+            credentials: "include",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({
                 cones: order.getCart(), // array of cones
-                id: 1,
+                id: 2,
                 price: price,
                 cost: cost,
                 created: created,
@@ -148,8 +151,6 @@
     onMount(async() => {
         const response = await fetch (coneUrl, {method: "GET"})
         const infoJson = await response.json()
-
-        console.log(infoJson)
 
         for(let item of infoJson["coneTypes"]){
             coneType.push(item["name"]);
