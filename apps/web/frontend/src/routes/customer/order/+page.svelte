@@ -32,7 +32,9 @@
         </div>  
         {/each}  
     </div>
+    <button on:click={submitOrder}> Submit Order </button>
     </div>
+
     <div class = "parent2" id ="customer_info">
         <div class = "child2">
         <form on:submit={nothing}>
@@ -49,7 +51,31 @@
             <button type ="submit"> Order Fake</button>
         </form>
         </div>
-    
+    </div>
+
+
+    <div class ="parent2" id="customer_payment">
+        <div class = "child2">
+            <form on:submit={nothing}>
+                <label for="line1">Enter Payments:</label><br>
+                <input bind:value={address["line1"]} placeholder= "Credit Card"><br>
+                <input bind:value={address["line2"]} placeholder= "Wacky three number on the back of the card"><br>
+                <input bind:value={address["city"]} placeholder= "Expired Date"><br>
+
+                <label for="line1">Billing Info:</label><br>
+                <input bind:value={address["line1"]} placeholder= "Street Address"><br>
+                <input bind:value={address["line2"]} placeholder= "Line 2 (optional)"><br>
+                <input bind:value={address["city"]} placeholder= "City"><br>
+                <select bind:value={address["state"]}>
+                    {#each states as state }
+                    <option value={state}> {state}</option> 
+                    {/each}
+                </select><br>
+                <input bind:value={address["zipCode"]} placeholder= "zipCode"><br>
+                <button type ="submit"> Order Fake</button>
+            </form>
+            </div>
+        
     </div>
     <button on:click={submitOrder}> Order REAL </button>
 </body>
@@ -79,11 +105,11 @@
 
     //Variables for new-order/ POST
     let address = {
-        line1: "test 123", 
-        line2: "thes", 
-        city:"Franklin", 
-        state:"ID", 
-        zipCode:"843237"
+        lineOne: "test 1st south", 
+        lineTwo: " ", 
+        city:"Logan", 
+        state:"UT", 
+        zipCode:"84321"
     };
     let price = 0;
     let cost = 0;
@@ -131,7 +157,6 @@
     
         fetch(orderURL,{
             method: 'POST',
-            credentials: "include",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({
                 cones: order.getCart(), // array of cones
@@ -145,7 +170,7 @@
         })
         .then((response) => response.json())
         .then((json) => console.log(json))
-    }
+    };
 
     //**** Inventory Status ****
     onMount(async() => {
@@ -212,6 +237,11 @@
     }
 
     #customer_info {
+        text-align: center;
+
+    }
+
+    #customer_payment {
         text-align: center;
 
     }
