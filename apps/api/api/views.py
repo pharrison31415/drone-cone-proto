@@ -192,7 +192,7 @@ def update_inventory(request, user):
     # item = ConeType.objects.filter(id=body['id'])
     if "itemType" in body:
         itemType = body["itemType"]
-        types = ["ConeType", "IcecreamType", "ToppingType"]
+        types = ["coneType", "iceCreamType", "toppingType"]
         if itemType not in types:
             return JsonResponse({"success": False, "message": "item type not found"})
     else:
@@ -201,19 +201,10 @@ def update_inventory(request, user):
     if not item_found:
         return JsonResponse({"success": False, "message": "item not found"})
 
-    if "price" in body:
-        item.unit_cost = body["price"]
+    if "unitCost" in body:
+        item.unit_cost = body["unitCost"]
     item.save()
     return JsonResponse({'success': True})
-
-
-"""
-    price per unit
-    added inventory
-    changed types of cones
-    changed types of ice cream
-    changed types of toppings
-"""
 
 
 @csrf_exempt
@@ -472,17 +463,26 @@ def order_delivered(request, order):
 
 @verify_customer_token
 def private_customer_data(request, user):
-    return JsonResponse(user.toJSON())
+    return JsonResponse({
+        "success": True,
+        "user": user.toJSON()
+    })
 
 
 @verify_manager_token
 def private_manager_data(request, user):
-    return JsonResponse(user.toJSON())
+    return JsonResponse({
+        "success": True,
+        "user": user.toJSON(),
+    })
 
 
 @verify_owner_token
 def private_owner_data(request, user):
-    return JsonResponse(user.toJSON())
+    return JsonResponse({
+        "success": True,
+        "user": user.toJSON()
+    })
 
 
 @verify_manager_token
