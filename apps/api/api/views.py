@@ -148,29 +148,33 @@ def finances(request):
 @csrf_exempt
 @verify_manager_token
 def purchase_inventory(request, user):
-    if request.method != "PATCH":
+    if request.method != "POST":
         return JsonResponse({
             'success': False,
-            'message': 'PATCHmethod required'
+            'message': 'POST method required'
         })
 
     body = json.loads(request.body)
-    itemType = ""
+    item_type = ""
     if "itemType" in body:
-        itemType = body["itemType"]
-        types = ["ConeType", "IcecreamType", "ToppingType"]
-        if itemType not in types:
-            return JsonResponse({"success": False, "message": "item type not found"})
+        item_type = body["itemType"]
+        types = ["coneType", "iceCreamType", "toppingType"]
+        if item_type not in types:
+            return JsonResponse({"success": False, "message": "itemType not found"})
     else:
-        return JsonResponse({"success": False, "message": "item type not found"})
-    item, item_found = safe_querey(itemtype, name=body["name"])
+        return JsonResponse({"success": False, "message": "itemType not found"})
+    item, item_found = safe_querey(item_type, name=body["name"])
     if not item_found:
         return JsonResponse({"success": False, "message": "item not found"})
 
-    if "changeAmount" in body:
-        item.quantity += body["changeAmount"]
+    if "additionalUnits" in body:
+        item.quantity += body["additionalUnits"]
+        ManagerCost(
+            amount=int(body["additionalUnits"] * item.unit_cost),
+            message=f"{body['additionalUnits']} units of {item.name}"
+        ).save()
     else:
-        return JsonResponse({"Success": False, "message": "inventory amount change not found"})
+        return JsonResponse({"success": False, "message": "additionalUnits not found"})
     item.save()
     return JsonResponse({'success': True})
 
