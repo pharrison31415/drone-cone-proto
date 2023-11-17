@@ -91,6 +91,21 @@
             });
     }
 
+    async function deleteAddress(addressId) {
+        fetch(url + '/delete-address/', {method: 'POST', credentials: 'include', body: JSON.stringify({addressId: addressId})})
+            .then((response) => response.json())
+            .then((json) => {
+                if (json['success'] == true) {
+                    console.log('delete address, addressID: ' + addressId + ' was successful');
+                    get_myAddresses();
+                }
+                else {
+                    console.log('there was an error deleting the address');
+                    showDialogClickError = 'There was an error when deleting the address: ' + json['message'];
+                }
+            });
+    }
+
     const showDialogClick = (asModal = true) => {
 		try {
 			addAddress_dialog[asModal ? 'showModal' : 'show']();
@@ -152,7 +167,8 @@
             <div class="address">Address #{index+1}: 
                 <p>{address.lineOne}{#if address.lineTwo != ""}, {address.lineTwo}{/if},</p>
                 <p>{address.city}, {address.state} {address.zipCode}</p>
-                <button id='editAddress'>
+                <!-- will not be using -->
+                <!-- <button id='editAddress'>
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
                         <g clip-path="url(#clip0_7_2)">
                             <path fill-rule="evenodd" clip-rule="evenodd" d="M0 14.2V18H3.8L14.8 6.9L11 3.1L0 14.2ZM17.7 4C18.1 3.6 18.1 3 17.7 2.6L15.4 0.3C15 -0.1 14.4 -0.1 14 0.3L12.2 2.1L16 5.9L17.7 4Z" fill="black"/>
@@ -164,9 +180,9 @@
                         </defs>
                     </svg>
                     <p>Edit</p>
-                </button>
+                </button> -->
 
-                <button id='removeAddress'>
+                <button id='removeAddress' on:click={deleteAddress(address.id)}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">
                         <g clip-path="url(#clip0_8_8)">
                             <path d="M6.25001 19.7917C6.25001 20.9427 7.1823 21.875 8.33334 21.875H16.6667C17.8177 21.875 18.75 20.9427 18.75 19.7917V7.29167H6.25001V19.7917ZM19.7917 4.16667H16.1458L15.1042 3.125H9.89584L8.85418 4.16667H5.20834V6.25H19.7917V4.16667Z" fill="black"/>
