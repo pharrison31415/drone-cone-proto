@@ -21,11 +21,11 @@
 
 <script>
     function signIn (){
-        window.location.href = '/Sign_In_Page'
+        window.location.href = 'customer/Sign_In_Page'
     }
 
     function signUp (){
-        window.location.href = '/Sign_Up_Page_Customer'
+        window.location.href = 'customer/Sign_Up_Page_Customer'
     }
 
     function order(){

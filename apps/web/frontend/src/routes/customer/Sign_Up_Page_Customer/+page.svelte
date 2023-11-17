@@ -1,5 +1,5 @@
 <script>
-    import '../+layout.svelte'
+    import '../../+layout.svelte'
 
     let apiUrl = "http://127.0.0.1:8000/api/new-customer/";
     let firstName = '';

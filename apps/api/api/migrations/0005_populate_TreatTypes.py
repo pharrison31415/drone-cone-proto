@@ -5,12 +5,12 @@ from django.db import migrations
 CONE_TYPES = [
     {
         "name": "Waffle",
-        "unit_cost": 48, # https://www.amazon.com/Large-Size-Cream-Waffle-Cone/dp/B07JZJ883C/
+        "unit_cost": 48,  # https://www.amazon.com/Large-Size-Cream-Waffle-Cone/dp/B07JZJ883C/
         "image_url": "#",
     },
     {
         "name": "Cake",
-        "unit_cost": 16, # https://www.amazon.com/Keebler-Cones-Cake-Pack-600/dp/B07PWZXYBX/
+        "unit_cost": 16,  # https://www.amazon.com/Keebler-Cones-Cake-Pack-600/dp/B07PWZXYBX/
         "image_url": "#",
     },
 ]
@@ -18,27 +18,29 @@ CONE_TYPES = [
 ICE_CREAM_TYPES = [
     {
         "name": "Vanilla",
-        "unit_cost": 21, # https://www.walmart.com/ip/Great-Value-Vanilla-Ice-Cream-1-Gallon/455193695/
+        # https://www.walmart.com/ip/Great-Value-Vanilla-Ice-Cream-1-Gallon/455193695/
+        "unit_cost": 21,
         "image_url": "#",
     },
     {
         "name": "Chocolate",
-        "unit_cost": 21, # https://www.walmart.com/ip/Great-Value-Chocolate-Ice-Cream-1-Gallon/256249194/
+        # https://www.walmart.com/ip/Great-Value-Chocolate-Ice-Cream-1-Gallon/256249194/
+        "unit_cost": 21,
         "image_url": "#",
     },
     {
         "name": "Strawberry",
-        "unit_cost": 21, # ¯\_(ツ)_/¯
+        "unit_cost": 21,  # ¯\_(ツ)_/¯
         "image_url": "#",
     },
     {
         "name": "Cookies + Creme",
-        "unit_cost": 21, # ¯\_(ツ)_/¯
+        "unit_cost": 21,  # ¯\_(ツ)_/¯
         "image_url": "#",
     },
     {
         "name": "Mint + Chip",
-        "unit_cost": 21, # ¯\_(ツ)_/¯
+        "unit_cost": 21,  # ¯\_(ツ)_/¯
         "image_url": "#",
     },
 ]
@@ -51,28 +53,29 @@ TOPPING_TYPES = [
     },
     {
         "name": "Chocolate Sprinkles",
-        "unit_cost": 7, # https://www.amazon.com/Chocolate-Sprinkles-Flavored-Resealable-Container/dp/B072KL63T3/
+        "unit_cost": 7,  # https://www.amazon.com/Chocolate-Sprinkles-Flavored-Resealable-Container/dp/B072KL63T3/
         "image_url": "#",
     },
     {
         "name": "Whipped Cream",
-        "unit_cost": 9, # https://www.amazon.com/365-Everyday-Value-Dairy-Whipped/dp/B074H7NP9V/
+        "unit_cost": 9,  # https://www.amazon.com/365-Everyday-Value-Dairy-Whipped/dp/B074H7NP9V/
         "image_url": "#",
     },
     {
         "name": "Chocolate Sauce",
-        "unit_cost": 8, # https://www.amazon.com/HERSHEYS-Chocolate-Syrup-Pound-Ounce/dp/B001SGZ5VO/
+        "unit_cost": 8,  # https://www.amazon.com/HERSHEYS-Chocolate-Syrup-Pound-Ounce/dp/B001SGZ5VO/
         "image_url": "#",
     },
     {
         "name": "Cherry",
-        "unit_cost": 10, # https://www.amazon.com/Regal-oz-Maraschino-Cherries-Stems/dp/B07JZJ46R7/
+        "unit_cost": 10,  # https://www.amazon.com/Regal-oz-Maraschino-Cherries-Stems/dp/B07JZJ46R7/
         "image_url": "#",
     },
 ]
 
 treat_arrays = [CONE_TYPES, ICE_CREAM_TYPES, TOPPING_TYPES]
 model_names = ["ConeType", "IceCreamType", "ToppingType"]
+
 
 def populate(apps, schema_editor):
     for treats, model_name in zip(treat_arrays, model_names):
@@ -83,6 +86,7 @@ def populate(apps, schema_editor):
                 unit_cost=treat["unit_cost"],
                 image_url=treat["image_url"],
             ).save()
+
 
 class Migration(migrations.Migration):
 

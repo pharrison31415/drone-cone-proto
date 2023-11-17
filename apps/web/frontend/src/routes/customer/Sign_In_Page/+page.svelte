@@ -1,5 +1,5 @@
 <script>
-    import '../+layout.svelte'
+    import '../../+layout.svelte'
 
     let apiUrl = "http://localhost:8000/api/customer-login/";
     let username = '';
@@ -9,7 +9,7 @@
     let signUpOption = false;
 
     function signUp(){
-        window.location.href = '/Sign_Up_Page_Customer'
+        window.location.href = '/customer/Sign_Up_Page_Customer'
     }
 
     function login(){
