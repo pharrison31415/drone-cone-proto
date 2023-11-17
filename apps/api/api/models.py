@@ -172,6 +172,7 @@ class Order(md.Model):
     price = md.PositiveIntegerField()
     cost = md.PositiveIntegerField()
     status = md.ForeignKey(OrderStatus, on_delete=md.PROTECT)
+    delivered_at = md.DateTimeField(null=True)
     created = md.DateTimeField(auto_now=True)
 
     def toJSON(self):
@@ -181,6 +182,7 @@ class Order(md.Model):
             "address": self.address.toJSON(),
             "price": self.price,
             "status": self.status.toJSON(),
+            "delivered_at": self.delivered_at,
             "created": self.created,
         }
 
