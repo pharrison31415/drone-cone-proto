@@ -133,7 +133,7 @@
 }
 ```
 
-## GET `/api/get_past_orders/`
+## GET `/api/past-orders/`
 
 **Cookie Required**: `customer-token`
 

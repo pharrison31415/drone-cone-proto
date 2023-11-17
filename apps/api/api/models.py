@@ -206,9 +206,9 @@ class Cone(md.Model):
     def toJSON(self):
         return {
             "id": self.id,
-            "coneType": self.cone_type.toJSON(),
-            "iceCreamType": self.ice_cream_type.toJSON(),
-            "toppingType": self.topping_type.toJSON(),
+            "coneType": self.cone_type.name,
+            "iceCreamType": self.ice_cream_type.name,
+            "toppingType": self.topping_type.name,
             "created": self.created,
         }
 
