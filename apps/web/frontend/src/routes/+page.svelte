@@ -9,7 +9,13 @@
         <div>
         <button id = "signInButton" on:click={signIn}> Sign In</button>
         <p> For Returning Customer</p>
-        </div>    
+        </div>
+        
+        
+        <div>
+        <button id = "orderButton" on:click={order}> Order Now!</button>
+        <p> Continue as Guest</p>
+        </div> 
     </div>
 </body>
 
@@ -20,6 +26,10 @@
 
     function signUp (){
         window.location.href = '/Sign_Up_Page_Customer'
+    }
+
+    function order(){
+        window.location.href = 'customer/order'
     }
 
 </script>
@@ -66,5 +76,21 @@
 
     #signUpButton:hover{
         background-color: rgb(230, 255, 130);
+    }
+
+
+    #orderButton{
+        background-color: rgb(255, 90, 90);
+        height: 75px;
+        width: 200px;
+        border-radius: 10px;
+        text-align: center;
+        font-size: x-large;
+        font-family: Verdana, sans-serif;
+        font-weight: bold;
+    }
+
+    #orderButton:hover{
+        background-color: rgb(249, 255, 73);
     }
 </style>
