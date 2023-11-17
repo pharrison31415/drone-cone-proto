@@ -279,12 +279,14 @@ def get_past_orders(request, user):
         cones = []
         for delivery in deliveries:
             cone_query_set = Cone.objects.filter(delivery=delivery)
-            cones.append(list(cone_query_set))
+            cones += [cone.toJSON() for cone in cone_query_set]
 
         order_json = order.toJSON()
         order_json["cones"] = cones
 
         orders_json_list.append(order_json)
+    from pprint import pprint
+    pprint(orders_json_list)
 
     return JsonResponse({
         "success": True,
