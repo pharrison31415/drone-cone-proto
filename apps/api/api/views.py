@@ -458,6 +458,7 @@ def order_delivered(request, order):
         delivery.drone.save()
 
         delivery.order.status = delivered_status
+        delivery.order.delivered_at = datetime.now()
         delivery.order.save()
 
     return JsonResponse({"success": True})
