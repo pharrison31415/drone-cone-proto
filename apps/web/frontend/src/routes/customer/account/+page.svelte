@@ -110,7 +110,9 @@
             .then((response) => response.json())
             .then((json) => {
                 console.log(json);
-            })
+            });
+
+        get_myOrders();
     }
 
     const showDialogClick = (asModal = true) => {
@@ -140,6 +142,10 @@
         window.location.href = "/customer/Sign_In_Page"
     }
 
+    const placeOrder = () => {
+        window.location.href = "/customer/order"
+    }
+
 
 </script>
 
@@ -165,11 +171,7 @@
     </form>
 </dialog>
 
-<h1>Welcome
-    {#if username != ""}
-        , {username}
-    {/if}
-</h1>
+<h1>Welcome{#if username != ""}, {username}{/if}</h1>
 
 <h2>{error}</h2>
 <p>{showDialogClickError}</p>
@@ -235,6 +237,7 @@
 
     {#if orders.length == 0}
         <h4 style="margin: 5px;">You have no orders, please place one</h4>
+        <button on:click={placeOrder}>Place Order</button>
     {:else}
         {#each orders as order}
             <div id="orders">
@@ -246,12 +249,12 @@
                         <p># of cones: {order.cones.length}</p>
                         <p>Total Cost: ${order.price}</p>
                         <p>Status: {order.status.text}</p>
-                        <button on:click={markAsDelivered(order)}>Marked as delivered</button>
                         {#if order.status.text == "delivered"}
                             <ul>
-                                <li>Delivered:</li>
+                                <li>Delivered: {new Date(order.delivered_at).toLocaleString()}</li>
                             </ul>
                         {/if}
+                        <button on:click={markAsDelivered(order)}>Marked as delivered</button>
                         <ol>
                             <!-- repeat for every cone in the order -->
                             {#each order.cones as cone, index}
