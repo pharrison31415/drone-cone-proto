@@ -24,11 +24,15 @@
     let dialog_addDrone; // Reference to the dialog tag
     let dialog_editDrone; // Reference to the dialog for edit drones
 
+    let error = "";
+
+    let doneLoading = false;
+
 	onMount(() => {
+        get_privateInfo();
         get_droneTypes();
         get_droneStatuses();
         get_myDrones();
-        get_privateInfo();
 
 		dialog_addDrone = document.getElementById('add_drone-dialog');
         dialog_editDrone = document.getElementById('edit_drone-dialog');
@@ -36,37 +40,57 @@
 
     // get the users private data
     async function get_privateInfo() {
-        let okay = true;
         fetch(url + '/private-owner-data/', {credentials: 'include', method: 'GET', mode: "cors"})
-            .then((response) => {
-                if (response.status != 200) {
-                    okay = false;
-                }
-                return response.json()
-            })
+            .then((response) => response.json())
             .then((json) => {
-                if (okay) {
-                    username = json.username;
-                    first_name = json.firstName;
-                    last_name = json.lastName;
+                if (json['success'] == true) {
+                    username = json.user.username;
+                    first_name = json.user.firstName;
+                    last_name = json.user.lastName;
                 }
+                else {
+                    showDialogClickError = "Something went wrong: " + json.message;
+                }
+                doneLoading = true;
             });
     }
 
     // get the different drone types from the database
     async function get_droneTypes() {
+        let okay = false;
         fetch(url + '/drone-types/', {method: 'GET',})
-            .then((response) => response.json())
+            .then((response) => {
+                if (response.okay || response.status == 200) {
+                    okay = true;
+                }
+                return response.json()
+            })
             .then((json) => {
-                types = json['droneTypes'];            
+                if (json.success == true || okay) {
+                    types = json['droneTypes'];            
+                }
+                else {
+                    showDialogClickError = "Something went wrong: unable to get drone types";
+                }
             });
     }
 
     async function get_droneStatuses() {
+        let okay = false;
         fetch(url + '/drone-statuses/', {method: 'GET',})
-            .then((response) => response.json())
+            .then((response) => {
+                if (response.okay || response.status == 200) {
+                    okay = true;
+                }
+                return response.json()
+            })
             .then((json) => {
-                statuses = json['droneStatuses'];
+                if (json.success == true || okay){
+                    statuses = json['droneStatuses'];
+                }
+                else {
+                    showDialogClickError = "Something went wrong: unable to get drone statuses";
+                }
             });
     }
 
@@ -249,12 +273,12 @@
         return isButtonChecked;
     }
 
+    const signIn = () => {
+        window.location.href = "/drone/sign_in"
+    }
+
 </script>
-<h1>Welcome, {username}</h1>
-<p>Name: {first_name} {last_name}</p>
-<p>Drones: {drones.length}</p>
-<p>Total Revenue: ${totalRevenue}</p>
-<p>Total Deliveries: ????</p>
+
 <dialog id="add_drone-dialog">
     <h3>Add Drone</h3>
     <form>
@@ -300,81 +324,102 @@
     </form>
 </dialog>
 
-<p>{showDialogClickError}</p>
-<button on:click={() => showDialogClick_addDone(true)} id="add_drone-button">
-    <span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
-            <g clip-path="url(#clip0_5_2)">
-                <path d="M16 29C13.4288 29 10.9154 28.2376 8.77759 26.8091C6.63975 25.3807 4.97351 23.3503 3.98957 20.9749C3.00563 18.5995 2.74819 15.9856 3.2498 13.4638C3.75141 10.9421 4.98953 8.6257 6.80762 6.80762C8.6257 4.98953 10.9421 3.75141 13.4638 3.2498C15.9856 2.74819 18.5995 3.00563 20.9749 3.98957C23.3503 4.97351 25.3807 6.63975 26.8091 8.77759C28.2376 10.9154 29 13.4288 29 16C29 19.4478 27.6304 22.7544 25.1924 25.1924C22.7544 27.6304 19.4478 29 16 29ZM16 5.00001C13.8244 5.00001 11.6977 5.64514 9.88873 6.85384C8.07979 8.06254 6.66989 9.7805 5.83733 11.7905C5.00477 13.8005 4.78693 16.0122 5.21137 18.146C5.63581 20.2798 6.68345 22.2398 8.22183 23.7782C9.76021 25.3166 11.7202 26.3642 13.854 26.7886C15.9878 27.2131 18.1995 26.9952 20.2095 26.1627C22.2195 25.3301 23.9375 23.9202 25.1462 22.1113C26.3549 20.3023 27 18.1756 27 16C27 13.0826 25.8411 10.2847 23.7782 8.22183C21.7153 6.15893 18.9174 5.00001 16 5.00001Z" fill="black"/>
-                <path d="M16 23C15.7348 23 15.4804 22.8946 15.2929 22.7071C15.1054 22.5196 15 22.2652 15 22V10C15 9.73478 15.1054 9.48043 15.2929 9.29289C15.4804 9.10536 15.7348 9 16 9C16.2652 9 16.5196 9.10536 16.7071 9.29289C16.8946 9.48043 17 9.73478 17 10V22C17 22.2652 16.8946 22.5196 16.7071 22.7071C16.5196 22.8946 16.2652 23 16 23Z" fill="black"/>
-                <path d="M22 17H10C9.73478 17 9.48043 16.8946 9.29289 16.7071C9.10536 16.5196 9 16.2652 9 16C9 15.7348 9.10536 15.4804 9.29289 15.2929C9.48043 15.1054 9.73478 15 10 15H22C22.2652 15 22.5196 15.1054 22.7071 15.2929C22.8946 15.4804 23 15.7348 23 16C23 16.2652 22.8946 16.5196 22.7071 16.7071C22.5196 16.8946 22.2652 17 22 17Z" fill="black"/>
-            </g>
-            <defs>
-                <clipPath id="clip0_5_2">
-                <rect width="32" height="32" fill="white"/>
-                </clipPath>
-            </defs>
-        </svg>
-    </span>
-    Add new Drone
-</button>
-<div id="drones">
-    <!-- for each drone that the user has -->
-    {#if drones.length == 0}
-        <div class='drone_error'>
-            <h3>No Drones</h3>
-            <p>To add a drone click the 'Add Drone' button</p>
-            <p>{myDrones_error}</p>
-        </div>
-    {:else}
-        {#each drones as drone}
-            <div class="drone">
-                <div class="drone_details">
-                    <h2>Drone: {drone.name}</h2>
-                    <ul>
-                        <li>Size: {drone.droneType.text}, Capacity: {drone.droneType.capacity} cone{#if drone.droneType.capacity > 1}s{/if}</li>
-                        <li>Deliveries: ????</li>
-                        <li>Revenue: ${drone.revenue}</li>
-                        <li>Status: {drone.status.text}
-                            <form>
-                                {#if drone.status.text == 'delivering'}
-                                    <input type="range" id="isActive" name="isActive" min="0" max="1" value="1" on:change={() => changeDroneStatus(drone)} disabled/>
-                                {:else if drone.status.text == "idle"}
-                                    <input type="range" id="isActive" name="isActive" min="0" max="1" value="1" on:change={() => changeDroneStatus(drone)}/>
-                                {:else}
-                                    <input type="range" id="isActive" name="isActive" min="0" max="1" value="0" on:change={() => changeDroneStatus(drone)}/>
-                                {/if}
+<h1>Welcome{#if username != ""}, {username}{/if}</h1>
 
-                                {#if drone.status.text != "owner"}
-                                    <label for="isActive">Deactivate</label>
-                                {:else}
-                                    <label for="isActive">Activate</label>
-                                {/if}
-                            </form>
-                        </li>
-                    </ul>
-                </div>
+{#if !doneLoading}
+    <h2>Loading...</h2>
+    <p>Please wait</p>
+{/if}
 
-                <div class="edit_drone">
-                    <button on:click={() => showDialogClick_editDone(true, drone)} id="edit_drone-button">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
-                            <g clip-path="url(#clip0_7_2)">
-                              <path fill-rule="evenodd" clip-rule="evenodd" d="M0 14.2V18H3.8L14.8 6.9L11 3.1L0 14.2ZM17.7 4C18.1 3.6 18.1 3 17.7 2.6L15.4 0.3C15 -0.1 14.4 -0.1 14 0.3L12.2 2.1L16 5.9L17.7 4Z" fill="black"/>
-                            </g>
-                            <defs>
-                              <clipPath id="clip0_7_2">
-                                <rect width="18" height="18" fill="white"/>
-                              </clipPath>
-                            </defs>
-                          </svg>
-                          <p>Edit Drone</p>
-                    </button>
-                </div>
+<p>{error}</p>
+
+{#if error != ""}
+    <p>Please make sure you are signed in</p>
+    <button on:click={signIn}>Sign in</button>
+{/if}
+
+{#if first_name != "" && last_name != ""}
+    <p>Name: {first_name} {last_name}</p>
+    <p>Drones: {drones.length}</p>
+    <p>Total Revenue: ${totalRevenue}</p>
+    <p>Total Deliveries: ????</p>
+
+    <p>{showDialogClickError}</p>
+    <button on:click={() => showDialogClick_addDone(true)} id="add_drone-button">
+        <span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+                <g clip-path="url(#clip0_5_2)">
+                    <path d="M16 29C13.4288 29 10.9154 28.2376 8.77759 26.8091C6.63975 25.3807 4.97351 23.3503 3.98957 20.9749C3.00563 18.5995 2.74819 15.9856 3.2498 13.4638C3.75141 10.9421 4.98953 8.6257 6.80762 6.80762C8.6257 4.98953 10.9421 3.75141 13.4638 3.2498C15.9856 2.74819 18.5995 3.00563 20.9749 3.98957C23.3503 4.97351 25.3807 6.63975 26.8091 8.77759C28.2376 10.9154 29 13.4288 29 16C29 19.4478 27.6304 22.7544 25.1924 25.1924C22.7544 27.6304 19.4478 29 16 29ZM16 5.00001C13.8244 5.00001 11.6977 5.64514 9.88873 6.85384C8.07979 8.06254 6.66989 9.7805 5.83733 11.7905C5.00477 13.8005 4.78693 16.0122 5.21137 18.146C5.63581 20.2798 6.68345 22.2398 8.22183 23.7782C9.76021 25.3166 11.7202 26.3642 13.854 26.7886C15.9878 27.2131 18.1995 26.9952 20.2095 26.1627C22.2195 25.3301 23.9375 23.9202 25.1462 22.1113C26.3549 20.3023 27 18.1756 27 16C27 13.0826 25.8411 10.2847 23.7782 8.22183C21.7153 6.15893 18.9174 5.00001 16 5.00001Z" fill="black"/>
+                    <path d="M16 23C15.7348 23 15.4804 22.8946 15.2929 22.7071C15.1054 22.5196 15 22.2652 15 22V10C15 9.73478 15.1054 9.48043 15.2929 9.29289C15.4804 9.10536 15.7348 9 16 9C16.2652 9 16.5196 9.10536 16.7071 9.29289C16.8946 9.48043 17 9.73478 17 10V22C17 22.2652 16.8946 22.5196 16.7071 22.7071C16.5196 22.8946 16.2652 23 16 23Z" fill="black"/>
+                    <path d="M22 17H10C9.73478 17 9.48043 16.8946 9.29289 16.7071C9.10536 16.5196 9 16.2652 9 16C9 15.7348 9.10536 15.4804 9.29289 15.2929C9.48043 15.1054 9.73478 15 10 15H22C22.2652 15 22.5196 15.1054 22.7071 15.2929C22.8946 15.4804 23 15.7348 23 16C23 16.2652 22.8946 16.5196 22.7071 16.7071C22.5196 16.8946 22.2652 17 22 17Z" fill="black"/>
+                </g>
+                <defs>
+                    <clipPath id="clip0_5_2">
+                    <rect width="32" height="32" fill="white"/>
+                    </clipPath>
+                </defs>
+            </svg>
+        </span>
+        Add new Drone
+    </button>
+    <div id="drones">
+        <!-- for each drone that the user has -->
+        {#if drones.length == 0}
+            <div class='drone_error'>
+                <h3>No Drones</h3>
+                <p>To add a drone click the 'Add Drone' button</p>
+                <p>{myDrones_error}</p>
             </div>
-        {/each}
-    {/if}
-    
-</div>
+        {:else}
+            {#each drones as drone}
+                <div class="drone">
+                    <div class="drone_details">
+                        <h2>Drone: {drone.name}</h2>
+                        <ul>
+                            <li>Size: {drone.droneType.text}, Capacity: {drone.droneType.capacity} cone{#if drone.droneType.capacity > 1}s{/if}</li>
+                            <!-- <li>Deliveries: ????</li> -->
+                            <li>Revenue: ${drone.revenue}</li>
+                            <li>Status: {drone.status.text}
+                                <form style="display: flex; flex-direction: column">
+                                    {#if drone.status.text == 'delivering'}
+                                        <input type="range" id="isActive" name="isActive" min="0" max="1" value="1" on:change={() => changeDroneStatus(drone)} disabled/>
+                                    {:else if drone.status.text == "idle"}
+                                        <input type="range" id="isActive" name="isActive" min="0" max="1" value="1" on:change={() => changeDroneStatus(drone)}/>
+                                    {:else}
+                                        <input type="range" id="isActive" name="isActive" min="0" max="1" value="0" on:change={() => changeDroneStatus(drone)}/>
+                                    {/if}
+
+                                    {#if drone.status.text != "owner"}
+                                        <label for="isActive">Slide Left to Deactivate</label>
+                                    {:else}
+                                        <label for="isActive">Slide Right to Activate</label>
+                                    {/if}
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="edit_drone">
+                        <button on:click={() => showDialogClick_editDone(true, drone)} id="edit_drone-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                <g clip-path="url(#clip0_7_2)">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M0 14.2V18H3.8L14.8 6.9L11 3.1L0 14.2ZM17.7 4C18.1 3.6 18.1 3 17.7 2.6L15.4 0.3C15 -0.1 14.4 -0.1 14 0.3L12.2 2.1L16 5.9L17.7 4Z" fill="black"/>
+                                </g>
+                                <defs>
+                                <clipPath id="clip0_7_2">
+                                    <rect width="18" height="18" fill="white"/>
+                                </clipPath>
+                                </defs>
+                            </svg>
+                            <p>Edit Drone</p>
+                        </button>
+                    </div>
+                </div>
+            {/each}
+        {/if}
+        
+    </div>
+{/if}
 
 <style>
     h1 {
@@ -430,6 +475,10 @@
 
     .edit_drone > button > svg {
         padding-top: 5px;
+    }
+
+    li > form > input {
+        width: min-content;
     }
 
 

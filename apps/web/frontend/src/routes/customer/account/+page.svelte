@@ -21,6 +21,8 @@
 
     let removeBttn_height = 0;
 
+    let doneLoading = false;
+
     onMount(() => {
         get_privateData();
         get_myAddresses();
@@ -43,6 +45,7 @@
                 else {
                     showDialogClickError = "There was an error"
                 }
+                doneLoading = true;
             });
     }
 
@@ -172,6 +175,11 @@
 </dialog>
 
 <h1>Welcome{#if username != ""}, {username}{/if}</h1>
+
+{#if !doneLoading}
+    <h2>Loading...</h2>
+    <p>Please wait</p>
+{/if}
 
 <h2>{error}</h2>
 <p>{showDialogClickError}</p>
