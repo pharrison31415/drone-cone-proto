@@ -25,7 +25,8 @@ def get_drone_statuses(request):
 
 def get_drone_types(request):
     drone_types = DroneType.objects.all()
-    return JsonResponse({"droneTypes": [drone_type.toJSON() for drone_type in drone_types]})
+    return JsonResponse({"droneTypes": [drone_type.text for drone_type in drone_types]},
+                        {"droneCapacity": [drone_type.capacity for drone_type in drone_types]})
 
 
 @csrf_exempt
