@@ -49,7 +49,7 @@
                     last_name = json.user.lastName;
                 }
                 else {
-                    showDialogClickError = "Something went wrong: " + json.message;
+                    error = "Something went wrong: " + json.message;
                 }
                 doneLoading = true;
             });
@@ -103,7 +103,7 @@
                     totalRevenue = get_totalRevenue();
                 }
                 else {
-                    myDrones_error = "There was an error getting your drones: " + json['message'];
+                    error = "There was an error getting your drones: " + json['message'];
                 }
             });
     }
