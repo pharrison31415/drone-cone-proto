@@ -39,7 +39,7 @@
         <div class = "child2">
         <form on:submit={nothing}>
             <label for="line1">Enter Address:</label><br>
-            <input bind:value={address["line1"]} placeholder= "Street Address"><br>
+            <input bind:value={address["line1"]} placeholder= "Street Address: Line 1"><br>
             <input bind:value={address["line2"]} placeholder= "Line 2 (optional)"><br>
             <input bind:value={address["city"]} placeholder= "City"><br>
             <select bind:value={address["state"]}>
@@ -48,7 +48,6 @@
                 {/each}
             </select><br>
             <input bind:value={address["zipCode"]} placeholder= "zipCode"><br>
-            <button type ="submit"> Order Fake</button>
         </form>
         </div>
     </div>
@@ -58,26 +57,23 @@
         <div class = "child2">
             <form on:submit={nothing}>
                 <label for="line1">Enter Payments:</label><br>
-                <input bind:value={address["line1"]} placeholder= "Credit Card"><br>
-                <input bind:value={address["line2"]} placeholder= "Wacky three number on the back of the card"><br>
-                <input bind:value={address["city"]} placeholder= "Expired Date"><br>
+                <input bind:value={billing["creditCard"]} placeholder= "Credit Card"><br>
+                <input bind:value={billing["ccv"]} placeholder= "cvv"><br>
+                <input bind:value={billing["expireDate"]} placeholder= "Expired Date"><br>
 
                 <label for="line1">Billing Info:</label><br>
-                <input bind:value={address["line1"]} placeholder= "Street Address"><br>
-                <input bind:value={address["line2"]} placeholder= "Line 2 (optional)"><br>
-                <input bind:value={address["city"]} placeholder= "City"><br>
-                <select bind:value={address["state"]}>
+                <input bind:value={billing["line1"]} placeholder= "Street Address: Line 1"><br>
+                <input bind:value={billing["line2"]} placeholder= "Line 2 (optional)"><br>
+                <input bind:value={billing["city"]} placeholder="City" ><br>
+                <select bind:value={billing["state"]}>
                     {#each states as state }
                     <option value={state}> {state}</option> 
                     {/each}
                 </select><br>
-                <input bind:value={address["zipCode"]} placeholder= "zipCode"><br>
-                <button type ="submit"> Order Fake</button>
+                <input bind:value={billing["zipCode"]} placeholder="zipCode" ><br>
             </form>
-            </div>
-        
+            </div>     
     </div>
-    <button on:click={submitOrder}> Order REAL </button>
 </body>
 
 
@@ -107,10 +103,11 @@
     let address = {
         lineOne: "test 1st south", 
         lineTwo: " ", 
-        city:"Logan", 
-        state:"UT", 
-        zipCode:"84321"
+        city:" ", 
+        state:" ", 
+        zipCode:" "
     };
+
     let price = 0;
     let cost = 0;
     let created = new Date().getTime();
@@ -128,6 +125,16 @@
 
     // MISC Variables
     let states = ["ID","UT"];
+    let billing = {
+        creditCard:"",
+        cvv:"",
+        expireDate:'',
+        lineOne: " ", 
+        lineTwo: " ", 
+        city:" ", 
+        state:" ", 
+        zipCode:" "
+    }
 
     //Once a cone is made by user, create cone object and add to order
     function submitCone(){
@@ -140,8 +147,9 @@
         console.log(order);
         }
     }
-
+    // nothing
     function nothing(){}
+
     //Check Inputs for Cones
     function checkOrderInputs(){
         if (selectedConeType == 'Select a Cone' || selectedIcecream == "Select a Ice Cream Flavor" || selectedToppings =='Select a Topping'){
@@ -174,7 +182,7 @@
 
     //**** Inventory Status ****
     onMount(async() => {
-        const response = await fetch (coneUrl, {method: "GET"})
+        const response = await fetch (coneUrl)
         const infoJson = await response.json()
 
         for(let item of infoJson["coneTypes"]){
@@ -271,7 +279,6 @@
 
     .child {
         display: inline-block;
-        border: 3px solid red;
     }
 
     .parent2{
@@ -284,7 +291,7 @@
 
     .child2 {
         display: inline-block;
-        border: 3px solid red;
-    }
+        }
+    
 
 </style>
