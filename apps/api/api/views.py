@@ -20,14 +20,14 @@ def get_delivery_count(request):
 
 def get_drone_statuses(request):
     statuses = DroneStatus.objects.all()
-    return JsonResponse("success": True,
-                        {"droneStatuses": [status.toJSON for status in statuses]})
+    return JsonResponse({"success": True,
+                        "droneStatuses": [status.toJSON() for status in statuses]})
 
 
 def get_drone_types(request):
     drone_types = DroneType.objects.all()
-    return JsonResponse("success": True,
-                        {"droneTypes": [drone_type.toJSON for drone_type in drone_types]})
+    return JsonResponse({"success": True,
+                        "droneTypes": [drone_type.toJSON() for drone_type in drone_types]})
 
 
 @csrf_exempt
