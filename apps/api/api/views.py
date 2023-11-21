@@ -20,7 +20,7 @@ def get_delivery_count(request):
 
 def get_drone_statuses(request):
     statuses = DroneStatus.objects.all()
-    return JsonResponse({"droneStatuses": [status.toJSON() for status in statuses]})
+    return JsonResponse({"droneStatuses": [status.text for status in statuses]})
 
 
 def get_drone_types(request):
