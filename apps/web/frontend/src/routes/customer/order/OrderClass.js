@@ -11,4 +11,8 @@ export class Order {
     getCart(){
         return this.cart
     }
+
+    removeCart(){
+        this.cart.pop()
+    }
 }

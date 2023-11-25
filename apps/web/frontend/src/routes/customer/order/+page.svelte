@@ -1,6 +1,7 @@
 <body>
     <div class = "parent">
     <div id = "order" class = "child">
+        <h1>Order Here</h1>
         <form on:submit|preventDefault={submitCone}>
             <select bind:value={selectedToppings} class="select1">
                 {#each toppings as toppings }
@@ -23,24 +24,27 @@
             <button type="submit"> Add to Cart </button>
         </form>
     </div>
-    <div id = "cart" class='child'>
+    <div id = "cart" class='child' bind:this={element}>
         {#each cart as cone }
         <div class = "cone">
         <p>Topping: {cone.toppingType}</p>  
         <p>Ice Cream Flavor: {cone.iceCreamType}</p> 
         <p>Cone: {cone.coneType}</p> 
         </div>  
-        {/each}  
+        {/each} 
     </div>
+    </div>
+
+    <br>
     <button on:click={submitOrder}> Submit Order </button>
-    </div>
+    <br>
 
     <div class = "parent2" id ="customer_info">
         <div class = "child2">
         <form on:submit={nothing}>
             <label for="line1">Enter Address:</label><br>
-            <input bind:value={address["line1"]} placeholder= "Street Address: Line 1"><br>
-            <input bind:value={address["line2"]} placeholder= "Line 2 (optional)"><br>
+            <input bind:value={address["lineOne"]} placeholder= "Street Address: Line 1"><br>
+            <input bind:value={address["lineTwo"]} placeholder= "Line 2 (optional)"><br>
             <input bind:value={address["city"]} placeholder= "City"><br>
             <select bind:value={address["state"]}>
                 {#each states as state }
@@ -48,10 +52,12 @@
                 {/each}
             </select><br>
             <input bind:value={address["zipCode"]} placeholder= "zipCode"><br>
+            <button type = "submit"> see address inputs </button>
         </form>
         </div>
     </div>
 
+    <br>
 
     <div class ="parent2" id="customer_payment">
         <div class = "child2">
@@ -84,6 +90,7 @@
 	import { onMount } from "svelte";
     import { Order } from "./OrderClass.js";
     import { Cone } from "./ConeClass.js";
+    import { afterUpdate} from 'svelte';
 
     /*Creates a new order object once enter into the page*/
     onMount(createOrderClass)
@@ -99,13 +106,13 @@
     let coneType = ["Select a Cone"];
     let toppings = ["Select a Topping"];
 
-    //Variables for new-order/ POST
+    //Variables for new-order/ POST function to check inputs
     let address = {
-        lineOne: "test 1st south", 
-        lineTwo: " ", 
-        city:" ", 
-        state:" ", 
-        zipCode:" "
+        lineOne: "", 
+        lineTwo: "", 
+        city:"", 
+        state:"", 
+        zipCode:""
     };
 
     let price = 0;
@@ -129,26 +136,29 @@
         creditCard:"",
         cvv:"",
         expireDate:'',
-        lineOne: " ", 
-        lineTwo: " ", 
-        city:" ", 
-        state:" ", 
-        zipCode:" "
+        lineOne: "", 
+        lineTwo: "", 
+        city:"", 
+        state:"", 
+        zipCode:""
     }
+    let element;
+
 
     //Once a cone is made by user, create cone object and add to order
     function submitCone(){
         if (checkOrderInputs()){
         let cone = new Cone(selectedIcecream,selectedConeType,selectedToppings);
         order.addtoOrder(cone);
-        cart.push(cone);
-        cart = cart
+        cart = order.getCart();
 
         console.log(order);
         }
     }
     // nothing
-    function nothing(){}
+    function nothing(){
+        console.log(address)
+    }
 
     //Check Inputs for Cones
     function checkOrderInputs(){
@@ -168,7 +178,7 @@
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({
                 cones: order.getCart(), // array of cones
-                id: 2,
+                id: 1,
                 price: price,
                 cost: cost,
                 created: created,
@@ -179,8 +189,29 @@
         .then((response) => response.json())
         .then((json) => console.log(json))
     };
+    
+    //Scroll Cart	
+	// Either afterUpdate()
+	afterUpdate(() => {
+		if(cart) scrollToBottom(element);
+    });
+	
+	$: if(cart && element) {
+		scrollToBottom(element);
+	}
 
-    //**** Inventory Status ****
+    const scrollToBottom = async (node) => {
+        node.scroll({ top: node.scrollHeight, behavior: 'smooth' });
+    }; 
+
+    //Remove cone from list
+    function removeCone(){
+        order.removeCart()
+        cart = order.getCart();
+    }
+	
+
+//**** Inventory Status ****
     onMount(async() => {
         const response = await fetch (coneUrl)
         const infoJson = await response.json()
@@ -236,6 +267,10 @@
 
     #cart {
         text-align: center;
+        overflow:auto;
+        height: 350px;
+        border: 3px solid rgb(255, 0, 0);
+
 
     }
 
@@ -262,18 +297,15 @@
         font-size: medium;
     }
 
-
     .cone{
         border: 3px solid black;
-
-
     }
 
     .parent{
         border: 3px solid black;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr;
         width: 100%;
-        height: 300px;
+        height: 350px;
         display: grid;
     }
 
@@ -291,7 +323,12 @@
 
     .child2 {
         display: inline-block;
-        }
+    }
+
+    .child3{
+        width: 100%;
+        height: 33%;
+    }
     
 
 </style>
