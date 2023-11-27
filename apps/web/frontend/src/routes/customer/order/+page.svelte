@@ -26,65 +26,96 @@
     </div>
     <div id = "cart" class='child' bind:this={element}>
         {#each cart as cone }
-        <div class = "cone">
-        <p>Topping: {cone.toppingType}</p>  
-        <p>Ice Cream Flavor: {cone.iceCreamType}</p> 
-        <p>Cone: {cone.coneType}</p> 
+        <div class="parent3">
+            <div class = "child3">
+                <p>Ice Cream Description:</p>
+                <p>Topping: {cone.toppingType}</p>  
+                <p>Ice Cream Flavor: {cone.iceCreamType}</p> 
+                <p>Cone: {cone.coneType}</p>
+                <br>
+            </div>
+            <div class = "child3">
+                <button class = "delete_button" on:click={removeCone(cone.id)}></button>
+            </div>
         </div>  
         {/each} 
     </div>
     </div>
 
-    <br>
-    <button on:click={submitOrder}> Submit Order </button>
-    <br>
+  
 
     <div class = "parent2" id ="customer_info">
         <div class = "child2">
-        <form on:submit={nothing}>
-            <label for="line1">Enter Address:</label><br>
-            <input bind:value={address["lineOne"]} placeholder= "Street Address: Line 1"><br>
-            <input bind:value={address["lineTwo"]} placeholder= "Line 2 (optional)"><br>
-            <input bind:value={address["city"]} placeholder= "City"><br>
+
+            <h1> Delivery Address</h1>
+
+            <form on:submit={nothing}>
+
+            <div class="form__group field">
+                <label for="Line One" class="form__label"> Street Line 1:</label>
+                <input type="input" class="form__field" placeholder="Street Line 1" bind:value={address["lineOne"]}/>
+            </div>
+            <div class="form__group field">
+                <label for="Line One" class="form__label"> Line 2:</label>
+                <input type="input" class="form__field" placeholder="Street Address: Line 1" bind:value={address["lineTwo"]}/>
+            </div>
+            <div class="form__group field">
+                <label for="Line One" class="form__label"> City:</label>
+                <input type="input" class="form__field" placeholder="City" bind:value={address["city"]}/>
+            </div>
+            <div class="form__group field">
+                <label for="Line One" class="form__label"> Zip Code:</label>
+                <input type="input" class="form__field" placeholder="Zip Code" bind:value={address["zipCode"]}/>
+            </div>
             <select bind:value={address["state"]}>
                 {#each states as state }
                 <option value={state}> {state}</option> 
                 {/each}
             </select><br>
-            <input bind:value={address["zipCode"]} placeholder= "zipCode"><br>
             <button type = "submit"> see address inputs </button>
         </form>
         </div>
     </div>
 
-    <br>
-
     <div class ="parent2" id="customer_payment">
         <div class = "child2">
+            <h1> Payment Information</h1>
             <form on:submit={nothing}>
-                <label for="line1">Enter Payments:</label><br>
-                <input bind:value={billing["creditCard"]} placeholder= "Credit Card"><br>
-                <input bind:value={billing["ccv"]} placeholder= "cvv"><br>
-                <input bind:value={billing["expireDate"]} placeholder= "Expired Date"><br>
-
-                <label for="line1">Billing Info:</label><br>
-                <input bind:value={billing["line1"]} placeholder= "Street Address: Line 1"><br>
-                <input bind:value={billing["line2"]} placeholder= "Line 2 (optional)"><br>
-                <input bind:value={billing["city"]} placeholder="City" ><br>
-                <select bind:value={billing["state"]}>
-                    {#each states as state }
-                    <option value={state}> {state}</option> 
-                    {/each}
-                </select><br>
-                <input bind:value={billing["zipCode"]} placeholder="zipCode" ><br>
+                <div class="form__group field">
+                    <label for="Line One" class="form__label"> Credit Card Number</label>
+                    <input type="input" class="form__field" placeholder="Street Line 1" bind:value={billing["creditCard"]}/>
+                </div>
+                <div class="form__group field">
+                    <label for="Line One" class="form__label"> CVV </label>
+                    <input type="input" class="form__field" placeholder="CVV" bind:value={billing["ccv"]}/>
+                </div>
+                <div class="form__group field">
+                    <label for="Line One" class="form__label"> Expire Date</label>
+                    <input type="input" class="form__field" placeholder="City" bind:value={billing["expireDate"]}/>
+                </div>
+                <div class="form__group field">
+                    <label for="Line One" class="form__label"> Street Line 1:</label>
+                    <input type="input" class="form__field" placeholder="Street Line 1" bind:value={billing["lineOne"]}/>
+                </div>
+                <div class="form__group field">
+                    <label for="Line One" class="form__label"> Line 2:</label>
+                    <input type="input" class="form__field" placeholder="Street Address: Line 1" bind:value={billing["lineTwo"]}/>
+                </div>
+                <div class="form__group field">
+                    <label for="Line One" class="form__label"> City:</label>
+                    <input type="input" class="form__field" placeholder="City" bind:value={billing["city"]}/>
+                </div>
+                <div class="form__group field">
+                    <label for="Line One" class="form__label"> Zip Code:</label>
+                    <input type="input" class="form__field" placeholder="Zip Code" bind:value={billing["zipCode"]}/>
+                </div>
             </form>
             </div>     
     </div>
+    <div class="parent2_orderButton_div">
+        <button on:click={submitOrder} class="orderButton"> Submit Order </button>
+    </div>
 </body>
-
-
-
-
 
 <script>
 	import { onMount } from "svelte";
@@ -131,7 +162,7 @@
     let topUrl = "http://localhost:8000/api/topping-types/";
 
     // MISC Variables
-    let states = ["ID","UT"];
+    let states = ["Idaho","Utah"];
     let billing = {
         creditCard:"",
         cvv:"",
@@ -143,16 +174,19 @@
         zipCode:""
     }
     let element;
+    let id = 0;
 
 
     //Once a cone is made by user, create cone object and add to order
     function submitCone(){
         if (checkOrderInputs()){
-        let cone = new Cone(selectedIcecream,selectedConeType,selectedToppings);
+        let cone = new Cone(id, selectedIcecream,selectedConeType,selectedToppings);
+        id++;
         order.addtoOrder(cone);
         cart = order.getCart();
 
         console.log(order);
+        console.log(id)
         }
     }
     // nothing
@@ -163,6 +197,14 @@
     //Check Inputs for Cones
     function checkOrderInputs(){
         if (selectedConeType == 'Select a Cone' || selectedIcecream == "Select a Ice Cream Flavor" || selectedToppings =='Select a Topping'){
+            console.log("Your options")
+            return false
+        }
+        return true
+    }
+
+    function checkAddressInputs(){
+        if (address["lineOne"] == '' || address["city"]=="" || address){
             console.log("Your options")
             return false
         }
@@ -205,8 +247,8 @@
     }; 
 
     //Remove cone from list
-    function removeCone(){
-        order.removeCart()
+    function removeCone(id){
+        order.removeCone(id)
         cart = order.getCart();
     }
 	
@@ -249,10 +291,14 @@
     body{
         background-color: rgb(180, 255, 255);
         margin: 0%;
+        font-family: "Poppins", sans-serif;
     }
 
     p{
         margin: 0%;
+        font-family: 'Arial', sans-serif;
+        font-size: 16px;
+        color: #333;
     }
 
     input {
@@ -266,12 +312,9 @@
     }
 
     #cart {
-        text-align: center;
         overflow:auto;
-        height: 350px;
-        border: 3px solid rgb(255, 0, 0);
-
-
+        height: 450px; 
+        background-color: aquamarine;
     }
 
     #order {
@@ -286,6 +329,7 @@
 
     #customer_payment {
         text-align: center;
+        height: 600px;
 
     }
 
@@ -295,40 +339,114 @@
         width: 250px;
         text-align: center;
         font-size: medium;
+        border-radius: 10px;
     }
 
     .cone{
         border: 3px solid black;
+        background-color: white;
     }
 
     .parent{
-        border: 3px solid black;
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 1fr;
         width: 100%;
-        height: 350px;
+        height: 450px;
         display: grid;
     }
 
     .child {
         display: inline-block;
+        border: dotted 4px;
+        border-top: none;
     }
 
     .parent2{
-        border: 3px solid black;
         grid-template-columns: 1fr;
         width: 100%;
-        height: 300px;
+        height: 450px;
         display: grid;
+        border-top: dotted 4px;
     }
 
     .child2 {
         display: inline-block;
     }
 
-    .child3{
+    .parent3{
+        border: 3px solid rgb(0, 0, 0);
+        grid-template-columns: 1fr 1fr;
         width: 100%;
-        height: 33%;
+        height: 20%;
+        display: grid;
     }
-    
 
+    .child3{
+        border: 1px solid rgb(0, 0, 0);
+        background-color: white;
+        }
+
+    .delete_button{
+        background: url("/211836_trash_icon.png");
+        width: 48px;
+        height: 48px;
+        border: none;    
+        margin-left: 45%;
+    }
+
+    .form__group{
+        width: 75%;
+        height: 60px;
+        margin-left: 15%;
+        margin-bottom: 10px;
+        margin-top: 5px;
+        text-align: center;
+        grid-template-rows: 100px 2;
+        display: grid;
+    }
+
+    .form__field{
+        font-size: large;
+        width: 500px;
+        margin-left: 22%;
+        border-radius: 10px;
+    }
+
+    .form__field:focus::-webkit-input-placeholder{
+        opacity: 0;
+    }
+
+    .form__label{
+        width: 16rem;
+        font-size: medium;
+        margin-left: 22%;
+        text-align: left;
+    }
+
+    .orderButton{
+        width: 200px;
+        height: 100px;
+        font-size: x-large;
+        border-radius: 40px;
+        background-color: red;
+        margin-left: 42%;
+        font-weight: bold;
+
+    }
+
+    .orderButton:hover{
+        width: 200px;
+        height: 100px;
+        font-size: x-large;
+        border-radius: 40px;
+        background-color: yellow;
+        margin-left: 42%;
+        font-weight: bold;
+    }
+
+    .parent2_orderButton_div{
+        grid-template-columns: 1fr;
+        width: 100%;
+        height: 450px;
+        display: grid;
+    }
 </style>

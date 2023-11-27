@@ -1,1 +1,1 @@
-export let avaliableStates = ["ID","UT"]
+export let avaliableStates = ["Idaho","Utah"]

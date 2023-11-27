@@ -1,7 +1,8 @@
 export class Cone {
-    constructor(flavor,cone,toppings){
+    constructor(id, flavor,cone,toppings){
         this.iceCreamType = flavor;
         this.coneType = cone;
         this.toppingType = toppings;
+        this.id = id
     }
 }
