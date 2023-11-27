@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404, render
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.crypto import get_random_string
 from .views_utils import JsonResponse, safe_querey, verify_token, CUSTOMER_USER, MANAGER_USER, OWNER_USER, verify_customer_token, verify_manager_token, verify_owner_token, optional_customer_token, verify_order_token, user_login, new_user
-from datetime import datetime
+from datetime import datetime, timezone
 import json
 
 from api.models import DroneStatus, Drone, DroneType, Customer, Manager, Owner, OrderStatus, CustomerToken, ManagerToken, OwnerToken, Address, Cone, ConeType, IceCreamType, ToppingType, Order, Delivery, Message, ManagerRevenue, ManagerCost, OrderToken
@@ -390,7 +390,7 @@ def new_order(request, user_found, user):
     delivering_status = DroneStatus.objects.get(text="delivering")
     for drone in drones_using:
         drone.status = delivering_status
-        drone.last_use = datetime.now()
+        drone.last_use = datetime.now(timezone.utc)
         new_delivery = Delivery(
             drone=drone,
             order=new_order,
@@ -460,7 +460,7 @@ def order_delivered(request, order):
         delivery.drone.save()
 
         delivery.order.status = delivered_status
-        delivery.order.delivered_at = datetime.now()
+        delivery.order.delivered_at = datetime.now(timezone.utc)
         delivery.order.save()
 
     return JsonResponse({"success": True})
