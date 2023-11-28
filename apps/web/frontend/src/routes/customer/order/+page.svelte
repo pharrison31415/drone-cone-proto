@@ -77,22 +77,26 @@
         </div>
     </div>
 
-    <div class ="parent2" id="customer_payment">
+    <div class ="parent2__paymentInfo" id="customer_payment">
         <div class = "child2">
             <h1> Payment Information</h1>
+            <br>
             <form on:submit={nothing}>
+                <h2> Credit Card Information:</h2>
                 <div class="form__group field">
                     <label for="Line One" class="form__label"> Credit Card Number</label>
                     <input type="input" class="form__field" placeholder="Street Line 1" bind:value={billing["creditCard"]}/>
                 </div>
                 <div class="form__group field">
                     <label for="Line One" class="form__label"> CVV </label>
-                    <input type="input" class="form__field" placeholder="CVV" bind:value={billing["ccv"]}/>
+                    <input type="input" class="form__field__cvv" placeholder="cvv" bind:value={billing["ccv"]}/>
                 </div>
                 <div class="form__group field">
                     <label for="Line One" class="form__label"> Expire Date</label>
-                    <input type="input" class="form__field" placeholder="City" bind:value={billing["expireDate"]}/>
+                    <input type="input" class="form__field__cvv" placeholder="MM/YY" bind:value={billing["expireDate"]}/>
                 </div>
+                <br>
+                <h2> Billing Address:</h2>
                 <div class="form__group field">
                     <label for="Line One" class="form__label"> Street Line 1:</label>
                     <input type="input" class="form__field" placeholder="Street Line 1" bind:value={billing["lineOne"]}/>
@@ -197,42 +201,21 @@
     //Check Inputs for Cones
     function checkOrderInputs(){
         if (selectedConeType == 'Select a Cone' || selectedIcecream == "Select a Ice Cream Flavor" || selectedToppings =='Select a Topping'){
-            console.log("Your options")
+            console.log("Your Rechoose youoptions")
             return false
         }
         return true
     }
 
     function checkAddressInputs(){
-        if (address["lineOne"] == '' || address["city"]=="" || address){
+        if (address["lineOne"] == ''){
             console.log("Your options")
             return false
         }
         return true
     }
-
-    //POST order into database
-    async function submitOrder(){
-        let orderURL = "http://localhost:8000/api/new-order/"
     
-        fetch(orderURL,{
-            method: 'POST',
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({
-                cones: order.getCart(), // array of cones
-                id: 1,
-                price: price,
-                cost: cost,
-                created: created,
-                address_id: address,
-                status: status
-            })
-        })
-        .then((response) => response.json())
-        .then((json) => console.log(json))
-    };
-    
-    //Scroll Cart	
+// ****************************************** Cart/Order Usage  ******************************************	
 	// Either afterUpdate()
 	afterUpdate(() => {
 		if(cart) scrollToBottom(element);
@@ -252,8 +235,28 @@
         cart = order.getCart();
     }
 	
+      //POST order into database
+      async function submitOrder(){
+        let orderURL = "http://localhost:8000/api/new-order/"
+    
+        fetch(orderURL,{
+            method: 'POST',
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                cones: order.getCart(), // array of cones
+                id: 1,
+                price: price,
+                cost: cost,
+                created: created,
+                address_id: address,
+                status: status
+            })
+        })
+        .then((response) => response.json())
+        .then((json) => console.log(json))
+    };
 
-//**** Inventory Status ****
+//****************************************** Inventory Status ******************************************
     onMount(async() => {
         const response = await fetch (coneUrl)
         const infoJson = await response.json()
@@ -329,8 +332,7 @@
 
     #customer_payment {
         text-align: center;
-        height: 600px;
-
+        height: 800px;
     }
 
     .select1{
@@ -340,11 +342,6 @@
         text-align: center;
         font-size: medium;
         border-radius: 10px;
-    }
-
-    .cone{
-        border: 3px solid black;
-        background-color: white;
     }
 
     .parent{
@@ -364,6 +361,14 @@
         grid-template-columns: 1fr;
         width: 100%;
         height: 450px;
+        display: grid;
+        border-top: dotted 4px;
+    }
+
+    .parent2__paymentInfo{
+        grid-template-columns: 1fr;
+        width: 100%;
+        height: 650px;
         display: grid;
         border-top: dotted 4px;
     }
@@ -407,6 +412,13 @@
     .form__field{
         font-size: large;
         width: 500px;
+        margin-left: 22%;
+        border-radius: 10px;
+    }
+
+    .form__field__cvv{
+        font-size: large;
+        width: 65px;
         margin-left: 22%;
         border-radius: 10px;
     }

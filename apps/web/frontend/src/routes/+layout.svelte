@@ -8,7 +8,7 @@
       <button class = "links" on:click={home}>Home</button>
       <button class = "links" on:click={drone}> Drone Sign In</button>
       <button class = "links" on:click={drone2}> Drone Sign Up</button>
-      <button class = "links" on:click={manager}>Manager Sign In</button>
+      <button class = "links" on:click={manager}>Manager</button>
       <button class = "links" on:click = {slideNav}> Close </button>
   </div>
 
@@ -38,7 +38,14 @@
   }
 
   function manager(){
-    window.location.href = '/manager/manager_sign_In'
+    let cookies = document.cookie.split('=')
+    for (let cookie of cookies){
+      if (cookie === 'manager-token'){
+        return window.location.href = '/manager/manager_page'
+      }
+    }
+
+    return window.location.href = '/manager/manager_sign_In'
   }
 
   function customers(){
