@@ -14,6 +14,14 @@
 
 # Running
 
+When running for the first time, run the following.
+
+```sh
+$ python apps/api/manage.py migrate
+$ cd apps/web/frontend/
+$ npm install
+```
+
 To start the api, run `$ python apps/api/manage.py runserver`
 
 To start the frontend server, under `apps/web/frontend/`, run `$ npm run dev`
