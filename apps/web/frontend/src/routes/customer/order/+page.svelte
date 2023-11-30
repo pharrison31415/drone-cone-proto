@@ -28,7 +28,7 @@
         {#each cart as cone }
         <div class="parent3">
             <div class = "child3">
-                <p>Ice Cream Description:</p>
+                <h4>Ice Cream Description:</h4>
                 <p>Topping: {cone.toppingType}</p>  
                 <p>Ice Cream Flavor: {cone.iceCreamType}</p> 
                 <p>Cone: {cone.coneType}</p>
@@ -233,10 +233,10 @@
     function removeCone(id){
         order.removeCone(id)
         cart = order.getCart();
-    }
+    };
 	
       //POST order into database
-      async function submitOrder(){
+    async function submitOrder(){
         let orderURL = "http://localhost:8000/api/new-order/"
     
         fetch(orderURL,{
@@ -381,7 +381,7 @@
         border: 3px solid rgb(0, 0, 0);
         grid-template-columns: 1fr 1fr;
         width: 100%;
-        height: 20%;
+        height: 30%;
         display: grid;
     }
 

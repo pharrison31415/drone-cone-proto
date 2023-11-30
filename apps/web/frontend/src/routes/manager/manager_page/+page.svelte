@@ -2,10 +2,9 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <!--Inventory data-->
-<h1 class="centerText"> Inventory </h1>
 
-<div class="center">
-  <button on:click={test}>TEST</button>
+<div class="max">
+  <h1 class="centerText"> Inventory </h1>
 </div>
 
 <div id="inventory" class="center" >
@@ -40,13 +39,51 @@
       </div> 
       {/each}
     </div>
+  </div>
+</div>
+
+<div class="parent3" >
+  <div class="child3">
+    <h1>Resupply</h1>
+    <div class="form__group field">
+      <label for="Line One" class="form__label"> Item Type:</label>
+      <input type="input" class="form__field" placeholder="Item Type" bind:value={itemType}/>
+    </div>
+
+    <div class="form__group field">
+      <label for="Line One" class="form__label"> Item Name:</label>
+      <input type="input" class="form__field" placeholder="Item Name" bind:value={itemName}/>
+    </div>
+
+    <div class="form__group field">
+      <label for="Line One" class="form__label"> Amount:</label>
+      <input type="input" class="form__field" placeholder="Amount" bind:value={amount}/>
+    </div>
+
+    <button on:click={updateInventory} class = "orderButton">Purchase</button>
+    <p> <p>
+  </div>
+  <div class="child3">
+    <h1>Update Prices</h1>
+    <div class="form__group field">
+      <label for="Line One" class="form__label"> Item Type:</label>
+      <input type="input" class="form__field" placeholder="Item Type" bind:value={itemType2}/>
+    </div>
+
+    <div class="form__group field">
+      <label for="Line One" class="form__label"> Unit Cost:</label>
+      <input type="input" class="form__field" placeholder="Unit Cost" bind:value={unitCost}/>
+    </div>
+    <button on:click={updateInventory} class="orderButton">Update Item</button>
 
   </div>
-
+  
 </div>
 
 <!--Revenue data-->
-<h1 class="centerText"> Revenue </h1>
+<div class="max">
+  <h1 class="centerText"> Revenue </h1>
+</div>
 
 <div id="revenue" class="center">
   <div class="parent2">
@@ -62,7 +99,9 @@
 
 
 <!--Contact data-->
-<h1 class="centerText"> Customer's Contact </h1>
+<div class="max">
+  <h1 class="centerText"> Customer Contacts </h1>
+</div>
   
 <div id="customer_contact"  class="center">
 </div>
@@ -73,6 +112,7 @@
 //Imported Items
 import { onMount } from "svelte";
 
+//Trigger function once called
 onMount(()=>{
   getRevenueandCost();
   getInventory();
@@ -88,6 +128,13 @@ let toppings = [];
 
 let revenue = 500;
 let cost = 500;
+
+let itemType;
+let itemName;
+let amount;
+
+let itemType2;
+let unitCost;
 
 let labels = ['Monday', 'Tuesday', 'Wenesday', 'Thursday', 'Friday',"Saturday"];
 let dataG = [-11,-32,-3,-4,-45,420];
@@ -122,12 +169,24 @@ async function getInventory(){
     toppings.push(item);
     toppings = toppings;
   }
-}
+};
 
-//update inventory price
-function updateInventory(){
-  updateInvURL = 'http://localhost:8000/api/update-inventory/'
+//update inventory amount
+async function updateInventory(){
+  let updateInvURL = "http://127.0.0.1:8000/api/purchase-inventory/";
 
+  fetch(updateInvURL, {
+    method: 'POST',
+    credentials: 'include',
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      name:"Cake",
+      itemType: "coneType",
+      additionalItems: 100,
+    })
+  })
+  .then(resp => resp.json())
+  .then(json => console.log(json))
 }
 
 //update inventory items amount
@@ -194,6 +253,8 @@ function revenueChart() {
         data: dataC,
         borderWidth: 3
       },
+
+      //3rd Datasets for the graph
       {
       label: 'Net',
       data: dataN,
@@ -283,6 +344,25 @@ function test(){
       border: 10px solid black;
   }
 
+  .parent3{
+      grid-template-columns: 1fr 1fr;
+      width: 100%;
+      display: grid;
+      background:rgb(255, 255, 255);
+      width:90%;
+      height:400px;
+      margin: auto;
+      border: 3px solid rgb(0, 0, 0);
+      font-family: 'Trebuchet MS', sans-serif;
+  }
+
+  .child3{
+      display: inline-block;
+      border-top: none;
+      overflow: auto;
+      border: 10px solid black;
+  }
+
   .parent2{
       grid-template-columns: 80% 20%;
       width: 100%;
@@ -324,5 +404,66 @@ function test(){
       width: 400px;
     }
     
+    .form__group{
+        width: 75%;
+        height: 60px;
+        margin-left: 10%;
+        margin-bottom: 10px;
+        margin-top: 5px;
+        text-align: center;
+        grid-template-rows: 100px 2;
+        display: grid;
+    }
+
+    .form__field{
+        font-size: large;
+        width: 250px;
+        margin-left: 22%;
+        border-radius: 10px;
+    }
+
+    .form__field__cvv{
+        font-size: large;
+        width: 65px;
+        margin-left: 22%;
+        border-radius: 10px;
+    }
+
+    .form__field:focus::-webkit-input-placeholder{
+        opacity: 0;
+    }
+
+    .form__label{
+        width: 16rem;
+        font-size: medium;
+        margin-left: 22%;
+        text-align: left;
+    }
+
+    .orderButton{
+        width: 200px;
+        height: 50px;
+        font-size: x-large;
+        border-radius: 40px;
+        background-color: rgb(0, 255, 166);
+        margin-left: 30%;
+        font-weight: bold;
+
+    }
+
+    .orderButton:hover{
+        width: 200px;
+        height: 50px;
+        font-size: x-large;
+        border-radius: 40px;
+        background-color: yellow;
+        margin-left: 30%;
+        font-weight: bold;
+    }
+    .max{
+      width: 100%;
+      border-bottom: 50px black double;
+    }
+
 </style>
 
