@@ -1,6 +1,6 @@
 # Customer User Manual
 
-## Instroduction
+## Introduction
 
 This is the user manual for a customer on the Drone Cones website. If you have any questions, please follow the instructions below. These instructions will guide you through creating a new account, signing in, adding your address to your account, and ordering a drone cone.
 
