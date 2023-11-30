@@ -35,9 +35,9 @@
         <div class="parent3">
             <div class = "child3">
                 <h4>Ice Cream Description:</h4>
-                <p>Topping: {cone.toppingType}</p>  
-                <p>Ice Cream Flavor: {cone.iceCreamType}</p> 
-                <p>Cone: {cone.coneType}</p>
+                <p><strong>Topping: </strong>{cone.toppingType}</p>
+                <p><strong>Cream Flavor: </strong>{cone.iceCreamType}</p>
+                <p><strong>Cone: </strong>{cone.coneType}</p>
                 <br>
             </div>
             <div class = "child3">
@@ -63,7 +63,7 @@
             </div>
             <div class="form__group field">
                 <label for="Line One" class="form__label"> Line 2:</label>
-                <input type="input" class="form__field" placeholder="Street Address: Line 1" bind:value={address["lineTwo"]}/>
+                <input type="input" class="form__field" placeholder="Line 2 (optional)" bind:value={address["lineTwo"]}/>
             </div>
             <div class="form__group field">
                 <label for="Line One" class="form__label"> City:</label>
@@ -76,7 +76,7 @@
             </select><br>
             <div class="form__group field">
                 <label for="Line One" class="form__label"> Zip Code:</label>
-                <input type="number" class="form__field" placeholder="Zip Code" bind:value={address["zipCode"]}/>
+                <input type="number" max="99999" min="99999" class="form__field" placeholder="Zip Code" bind:value={address["zipCode"]}/>
             </div>
         </form>
         </div>
@@ -94,7 +94,7 @@
                 </div>
                 <div class="form__group field">
                     <label for="Line One" class="form__label"> CVV </label>
-                    <input type="input" class="form__field__cvv" placeholder="cvv" bind:value={billing["ccv"]}/>
+                    <input type="input" max="999" min="999" class="form__field__cvv" placeholder="cvv" bind:value={billing["ccv"]}/>
                 </div>
                 <div class="form__group field">
                     <label for="Line One" class="form__label"> Expire Date</label>
@@ -195,9 +195,6 @@
         id++;
         order.addtoOrder(cone);
         cart = order.getCart();
-
-        console.log(order);
-        console.log(id)
         }
     }
    
@@ -259,7 +256,7 @@
                 price: price,
                 cost: cost,
                 created: created,
-                address_id: address,
+                guessAddress: address,
                 status: status
             })
         })
@@ -319,7 +316,8 @@
         font-family: 'Arial', sans-serif;
         font-size: 16px;
         color: #333;
-        text-align: center;
+        text-align: left;
+        padding-left: 20px;
 
     }
 
@@ -338,6 +336,11 @@
 
     h4{
         text-align: center;
+    }
+
+    h5{
+        margin: 0%;
+        padding-left: 50px;
     }
 
     input {
