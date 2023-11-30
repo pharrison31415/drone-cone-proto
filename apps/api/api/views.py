@@ -158,14 +158,15 @@ def purchase_inventory(request, user):
 
     body = json.loads(request.body)
     item_type = ""
+    types = {"coneType": ConeType, "iceCreamType": IceCreamType,
+             "toppingType": ToppingType}
     if "itemType" in body:
         item_type = body["itemType"]
-        types = ["coneType", "iceCreamType", "toppingType"]
         if item_type not in types:
             return JsonResponse({"success": False, "message": "itemType not found"})
     else:
         return JsonResponse({"success": False, "message": "itemType not found"})
-    item, item_found = safe_querey(item_type, name=body["name"])
+    item, item_found = safe_querey(types[item_type], name=body["name"])
     if not item_found:
         return JsonResponse({"success": False, "message": "item not found"})
 
