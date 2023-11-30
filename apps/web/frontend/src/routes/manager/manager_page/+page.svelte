@@ -173,7 +173,7 @@ async function getInventory(){
 
 //update inventory amount
 async function updateInventory(){
-  let updateInvURL = "http://127.0.0.1:8000/api/purchase-inventory/";
+  let updateInvURL = "http://localhost:8000/api/purchase-inventory/";
 
   fetch(updateInvURL, {
     method: 'POST',
