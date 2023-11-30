@@ -45,19 +45,42 @@
 <div class="parent3" >
   <div class="child3">
     <h1>Resupply</h1>
-    <div class="form__group field">
-      <label for="Line One" class="form__label"> Item Type:</label>
-      <input type="input" class="form__field" placeholder="Item Type" bind:value={itemType}/>
-    </div>
+    <select bind:value={itemType} class="select1">
+      {#each itemList as item }
+      <option value={item}> {item}</option> 
+      {/each}
+    </select>
+
+
+    {#if itemType == "coneType"}
+    <select bind:value={itemName} class="select1">
+      {#each coneTypes as cone }
+      <option value={cone['name']}> {cone['name']}</option> 
+      {/each}
+    </select>
+
+    {:else if itemType == "iceCreamType"}
+    <select bind:value={itemName} class="select1">
+      {#each iceCreamTypes as flavor }
+      <option value={flavor['name']}> {flavor['name']}</option> 
+      {/each}
+    </select>
+
+    {:else if itemType == "toppingType"}
+    <select bind:value={itemName} class="select1">
+      {#each toppings as topping }
+      <option value={topping['name']}> {topping['name']}</option> 
+      {/each}
+    </select>
+
+    {:else}
+    <select class="select1"> </select>
+
+    {/if}
 
     <div class="form__group field">
-      <label for="Line One" class="form__label"> Item Name:</label>
-      <input type="input" class="form__field" placeholder="Item Name" bind:value={itemName}/>
-    </div>
-
-    <div class="form__group field">
-      <label for="Line One" class="form__label"> Amount:</label>
-      <input type="input" class="form__field" placeholder="Amount" bind:value={amount}/>
+      <label for="amount" class="form__label"> Amount:</label>
+      <input type="number" class="form__field" placeholder="Amount" bind:value={amount}/>
     </div>
 
     <button on:click={updateInventory} class = "orderButton">Purchase</button>
@@ -126,9 +149,10 @@ let iceCreamTypes = [];
 let coneTypes = [];
 let toppings = [];
 
-let revenue = 500;
-let cost = 500;
+let revenue = 150;
+let cost = -40;
 
+let itemList = ["", "coneType","iceCreamType", "toppingType"]
 let itemType;
 let itemName;
 let amount;
@@ -137,9 +161,9 @@ let itemType2;
 let unitCost;
 
 let labels = ['Monday', 'Tuesday', 'Wenesday', 'Thursday', 'Friday',"Saturday"];
-let dataG = [-11,-32,-3,-4,-45,420];
-let dataC = [12, 16, 3, 5, 2];
-let dataN = [11, 49, 94, 19, 200];
+let dataG = [0,100,50,60,100,150];
+let dataC = [-10,-50,-20,-70,-20,-40];
+let dataN = [-10,40,70,60,140,250];
 
 // ******** FUNCTIONS FOR INVENTORY *************************************************************
 // GET request for Inventory
@@ -157,6 +181,7 @@ async function getInventory(){
 
   for(let item of inventory["iceCreamTypes"]){
     iceCreamTypes.push(item);
+    
     iceCreamTypes = iceCreamTypes;
   }
 
@@ -180,13 +205,15 @@ async function updateInventory(){
     credentials: 'include',
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify({
-      name:"Cake",
-      itemType: "coneType",
-      additionalItems: 100,
+      name:itemName,
+      itemType: itemType,
+      additionalUnits: amount,
     })
   })
   .then(resp => resp.json())
   .then(json => console.log(json))
+  
+  window.location.href = '/manager/manager_page'
 }
 
 //update inventory items amount
@@ -422,13 +449,6 @@ function test(){
         border-radius: 10px;
     }
 
-    .form__field__cvv{
-        font-size: large;
-        width: 65px;
-        margin-left: 22%;
-        border-radius: 10px;
-    }
-
     .form__field:focus::-webkit-input-placeholder{
         opacity: 0;
     }
@@ -464,6 +484,16 @@ function test(){
       width: 100%;
       border-bottom: 50px black double;
     }
+
+    .select1{
+      margin: 25px;
+      height: 50px;
+      width: 250px;
+      text-align: center;
+      font-size: medium;
+      border-radius: 10px;
+  }
+    
 
 </style>
 

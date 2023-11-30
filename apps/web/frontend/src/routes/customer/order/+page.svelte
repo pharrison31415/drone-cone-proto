@@ -3,28 +3,34 @@
     <div id = "order" class = "child">
         <h1>Order Here</h1>
         <form on:submit|preventDefault={submitCone}>
+            <label for="topping">Select a Topping: </label><br>
             <select bind:value={selectedToppings} class="select1">
                 {#each toppings as toppings }
                 <option value={toppings}> {toppings}</option> 
                 {/each}
             </select>
-        <br>    
+        <br>
+            <br><label for="iceCreamFlavor">Select a Ice Cream Flavor: </label><br>
             <select bind:value={selectedIcecream} class="select1">
                 {#each icecreamFlavor as flavor }
                 <option value={flavor}> {flavor}</option>
                 {/each}
             </select>
         <br>
+            <br><label for="iceCreamFlavor">Select a Cone: </label><br>
             <select bind:value={selectedConeType} class="select1">
                 {#each coneType as cone }
                 <option value={cone}> {cone}</option> 
                 {/each}
             </select>
         <br>
-            <button type="submit"> Add to Cart </button>
+        <br>
+            <button type="submit" class="addCart"> Add to Cart </button>
+            <h3>{error}</h3>
         </form>
     </div>
     <div id = "cart" class='child' bind:this={element}>
+        <h1>Your Cart:</h1>
         {#each cart as cone }
         <div class="parent3">
             <div class = "child3">
@@ -38,7 +44,7 @@
                 <button class = "delete_button" on:click={removeCone(cone.id)}></button>
             </div>
         </div>  
-        {/each} 
+        {/each}
     </div>
     </div>
 
@@ -63,16 +69,15 @@
                 <label for="Line One" class="form__label"> City:</label>
                 <input type="input" class="form__field" placeholder="City" bind:value={address["city"]}/>
             </div>
-            <div class="form__group field">
-                <label for="Line One" class="form__label"> Zip Code:</label>
-                <input type="input" class="form__field" placeholder="Zip Code" bind:value={address["zipCode"]}/>
-            </div>
-            <select bind:value={address["state"]}>
+            <select bind:value={address["state"]} class="select2">
                 {#each states as state }
                 <option value={state}> {state}</option> 
                 {/each}
             </select><br>
-            <button type = "submit"> see address inputs </button>
+            <div class="form__group field">
+                <label for="Line One" class="form__label"> Zip Code:</label>
+                <input type="number" class="form__field" placeholder="Zip Code" bind:value={address["zipCode"]}/>
+            </div>
         </form>
         </div>
     </div>
@@ -85,7 +90,7 @@
                 <h2> Credit Card Information:</h2>
                 <div class="form__group field">
                     <label for="Line One" class="form__label"> Credit Card Number</label>
-                    <input type="input" class="form__field" placeholder="Street Line 1" bind:value={billing["creditCard"]}/>
+                    <input type="input" class="form__field" placeholder="Credit Number" bind:value={billing["creditCard"]}/>
                 </div>
                 <div class="form__group field">
                     <label for="Line One" class="form__label"> CVV </label>
@@ -110,8 +115,8 @@
                     <input type="input" class="form__field" placeholder="City" bind:value={billing["city"]}/>
                 </div>
                 <div class="form__group field">
-                    <label for="Line One" class="form__label"> Zip Code:</label>
-                    <input type="input" class="form__field" placeholder="Zip Code" bind:value={billing["zipCode"]}/>
+                    <label for="zipCode" class="form__label"> Zip Code:</label>
+                    <input type='number' class="form__field" placeholder="Zip Code" bind:value={billing["zipCode"]}/>
                 </div>
             </form>
             </div>     
@@ -177,8 +182,10 @@
         state:"", 
         zipCode:""
     }
-    let element;
+    let element = "";
     let id = 0;
+    let error = " ";
+    let inputError = " ";
 
 
     //Once a cone is made by user, create cone object and add to order
@@ -193,25 +200,29 @@
         console.log(id)
         }
     }
-    // nothing
-    function nothing(){
-        console.log(address)
-    }
-
+   
     //Check Inputs for Cones
     function checkOrderInputs(){
         if (selectedConeType == 'Select a Cone' || selectedIcecream == "Select a Ice Cream Flavor" || selectedToppings =='Select a Topping'){
-            console.log("Your Rechoose youoptions")
+            error = "One of your options is missing";
             return false
         }
+        error = " ";
         return true
     }
 
     function checkAddressInputs(){
-        if (address["lineOne"] == ''){
-            console.log("Your options")
+        if (address["lineOne"] == ''|| address["city"]== '' || address["state"] == ''|| address['zipCode'] == ''){
+            error = "You're address is missing required inputs"
             return false
         }
+
+        if (billing["lineOne"] == ''|| billing["city"]== '' || billing["state"] == ''|| billing['zipCode'] == ''){
+            error = "You're billing address is missing required inputs"
+            return false
+        }
+
+
         return true
     }
     
@@ -288,6 +299,12 @@
 
     });
 
+//*************************MISC FUNCTION*************************/
+
+    function nothing(){
+        console.log('')
+    }
+
 </script>
 
 <style>
@@ -302,6 +319,25 @@
         font-family: 'Arial', sans-serif;
         font-size: 16px;
         color: #333;
+        text-align: center;
+
+    }
+
+    h1{
+        text-align: center;
+    }
+
+    h2{
+        text-align: center;
+    }
+
+    h3{
+        text-align: center;
+        color: red;
+    }
+
+    h4{
+        text-align: center;
     }
 
     input {
@@ -316,7 +352,7 @@
 
     #cart {
         overflow:auto;
-        height: 450px; 
+        height: 550px; 
         background-color: aquamarine;
     }
 
@@ -344,10 +380,19 @@
         border-radius: 10px;
     }
 
+    .select2{
+        margin: 10px;
+        height: 50px;
+        width: 250px;
+        text-align: center;
+        font-size: medium;
+        border-radius: 10px;
+    }
+
     .parent{
         grid-template-columns: 1fr 1fr;
         width: 100%;
-        height: 450px;
+        height: 550px;
         display: grid;
     }
 
@@ -360,7 +405,7 @@
     .parent2{
         grid-template-columns: 1fr;
         width: 100%;
-        height: 450px;
+        height: 500px;
         display: grid;
         border-top: dotted 4px;
     }
@@ -388,9 +433,10 @@
     .child3{
         border: 1px solid rgb(0, 0, 0);
         background-color: white;
-        }
+    }
 
     .delete_button{
+        text-align: none;
         background: url("/211836_trash_icon.png");
         width: 48px;
         height: 48px;
@@ -460,5 +506,24 @@
         width: 100%;
         height: 450px;
         display: grid;
+    }
+
+    .addCart{
+        width: 200px;
+        height: 50px;
+        font-size: x-large;
+        border-radius: 40px;
+        background-color: rgb(0, 255, 21);
+        font-weight: bold;
+
+    }
+
+    .addCart:hover{
+        width: 200px;
+        height: 50px;
+        font-size: x-large;
+        border-radius: 40px;
+        background-color: yellow;
+        font-weight: bold;
     }
 </style>
