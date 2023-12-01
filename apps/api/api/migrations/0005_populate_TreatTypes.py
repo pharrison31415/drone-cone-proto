@@ -6,11 +6,13 @@ CONE_TYPES = [
     {
         "name": "Waffle",
         "unit_cost": 48,  # https://www.amazon.com/Large-Size-Cream-Waffle-Cone/dp/B07JZJ883C/
+        "quantity": 5,
         "image_url": "#",
     },
     {
         "name": "Cake",
         "unit_cost": 16,  # https://www.amazon.com/Keebler-Cones-Cake-Pack-600/dp/B07PWZXYBX/
+        "quantity": 5,
         "image_url": "#",
     },
 ]
@@ -20,27 +22,32 @@ ICE_CREAM_TYPES = [
         "name": "Vanilla",
         # https://www.walmart.com/ip/Great-Value-Vanilla-Ice-Cream-1-Gallon/455193695/
         "unit_cost": 21,
+        "quantity": 5,
         "image_url": "#",
     },
     {
         "name": "Chocolate",
         # https://www.walmart.com/ip/Great-Value-Chocolate-Ice-Cream-1-Gallon/256249194/
         "unit_cost": 21,
+        "quantity": 5,
         "image_url": "#",
     },
     {
         "name": "Strawberry",
         "unit_cost": 21,  # ¯\_(ツ)_/¯
+        "quantity": 5,
         "image_url": "#",
     },
     {
         "name": "Cookies + Creme",
         "unit_cost": 21,  # ¯\_(ツ)_/¯
+        "quantity": 5,
         "image_url": "#",
     },
     {
         "name": "Mint + Chip",
         "unit_cost": 21,  # ¯\_(ツ)_/¯
+        "quantity": 5,
         "image_url": "#",
     },
 ]
@@ -49,26 +56,31 @@ TOPPING_TYPES = [
     {
         "name": "No topping",
         "unit_cost": 0,
+        "quantity": 1,
         "image_url": "#",
     },
     {
         "name": "Chocolate Sprinkles",
         "unit_cost": 7,  # https://www.amazon.com/Chocolate-Sprinkles-Flavored-Resealable-Container/dp/B072KL63T3/
+        "quantity": 5,
         "image_url": "#",
     },
     {
         "name": "Whipped Cream",
         "unit_cost": 9,  # https://www.amazon.com/365-Everyday-Value-Dairy-Whipped/dp/B074H7NP9V/
+        "quantity": 5,
         "image_url": "#",
     },
     {
         "name": "Chocolate Sauce",
         "unit_cost": 8,  # https://www.amazon.com/HERSHEYS-Chocolate-Syrup-Pound-Ounce/dp/B001SGZ5VO/
+        "quantity": 5,
         "image_url": "#",
     },
     {
         "name": "Cherry",
         "unit_cost": 10,  # https://www.amazon.com/Regal-oz-Maraschino-Cherries-Stems/dp/B07JZJ46R7/
+        "quantity": 5,
         "image_url": "#",
     },
 ]
@@ -85,6 +97,7 @@ def populate(apps, schema_editor):
                 name=treat["name"],
                 unit_cost=treat["unit_cost"],
                 image_url=treat["image_url"],
+                quantity=treat["quantity"],
             ).save()
 
 
