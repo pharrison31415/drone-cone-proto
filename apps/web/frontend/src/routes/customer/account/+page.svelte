@@ -113,9 +113,11 @@
             .then((response) => response.json())
             .then((json) => {
                 console.log(json);
+                if (json.success == true) {
+                    get_myOrders();
+                }
             });
 
-        get_myOrders();
     }
 
     const showDialogClick = (asModal = true) => {
@@ -142,7 +144,7 @@
     }
 
     const signIn = () => {
-        window.location.href = "/customer/Sign_In_Page"
+        window.location.href = "/customer/sign_in"
     }
 
     const placeOrder = () => {
@@ -261,8 +263,9 @@
                             <ul>
                                 <li>Delivered: {new Date(order.delivered_at).toLocaleString()}</li>
                             </ul>
+                        {:else}
+                            <button on:click={markAsDelivered(order)}>Marked as delivered</button>
                         {/if}
-                        <button on:click={markAsDelivered(order)}>Marked as delivered</button>
                         <ol>
                             <!-- repeat for every cone in the order -->
                             {#each order.cones as cone, index}
