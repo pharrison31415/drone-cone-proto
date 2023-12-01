@@ -6,11 +6,13 @@ CONE_TYPES = [
     {
         "name": "Waffle",
         "unit_cost": 48,  # https://www.amazon.com/Large-Size-Cream-Waffle-Cone/dp/B07JZJ883C/
+        "quantity": 5,
         "image_url": "#",
     },
     {
         "name": "Cake",
         "unit_cost": 16,  # https://www.amazon.com/Keebler-Cones-Cake-Pack-600/dp/B07PWZXYBX/
+        "quantity": 5,
         "image_url": "#",
     },
 ]
