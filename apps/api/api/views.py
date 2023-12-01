@@ -29,6 +29,11 @@ def get_drone_types(request):
     return JsonResponse({"success": True,
                         "droneTypes": [drone_type.toJSON() for drone_type in drone_types]})
 
+@verify_manager_token
+def get_messages(request):
+    messages = Message.objects.all()
+    return JsonResponse({"success": True,
+                         "messages": [messages.toJSON() for message in messages]})
 
 @csrf_exempt
 def new_customer(request):
