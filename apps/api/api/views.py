@@ -351,6 +351,13 @@ def new_order(request, user_found, user):
         )
         address.save()
 
+    # check that we have stock
+    for cone in body["cones"]:
+        if get_object_or_404(ConeType, name=cone["coneType"]).quantity <= 0 or \
+                get_object_or_404(IceCreamType, name=cone["iceCreamType"]).quantity <= 0 or \
+                get_object_or_404(ToppingType, name=cone["toppingType"]).quantity <= 0:
+            return JsonResponse({"success": False, "message": "not enough stock to make order"})
+
     # find price
     PRICE_PER_CONE = 250
     price = len(body["cones"]) * PRICE_PER_CONE
@@ -404,6 +411,13 @@ def new_order(request, user_found, user):
                 ice_cream_type=ice_cream_type,
                 topping_type=topping_type,
             ).save()
+
+            cone_type.quantity -= 1
+            cone_type.save()
+            ice_cream_type.quantity -= 1
+            ice_cream_type.save()
+            topping_type.quantity -= 0 if topping_type.name == "No topping" else 1
+            topping_type.save()
 
             cone_revenue = int(
                 PRICE_PER_CONE * (1-MANAGER_DRONE_REVENUE_SPLIT))
