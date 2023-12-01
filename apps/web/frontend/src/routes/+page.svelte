@@ -29,7 +29,7 @@
     }
 
     function order(){
-        window.location.href = 'customer/order'
+        window.location.href = 'customer/order-guest'
     }
 
 </script>

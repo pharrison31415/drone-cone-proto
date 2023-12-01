@@ -95,6 +95,7 @@
     p{
         text-align: center;
         font-size: xx-large;
+        color: red;
     }
 
 
