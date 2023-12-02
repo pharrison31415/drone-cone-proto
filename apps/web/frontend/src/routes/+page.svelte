@@ -27,15 +27,15 @@
     });
 
     function signIn (){
-        window.location.href = 'customer/Sign_In_Page'
+        window.location.href = 'customer/sign_in'
     }
 
     function signUp (){
-        window.location.href = 'customer/Sign_Up_Page_Customer'
+        window.location.href = 'customer/sign_up'
     }
 
     function order(){
-        window.location.href = 'customer/order'
+        window.location.href = 'customer/order-guest'
     }
 
     function checkCookie(){

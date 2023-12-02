@@ -12,8 +12,7 @@
   "coneTypes": [
     {
       "name": "Waffle",
-      "imageUrl": "#",
-      "price": 40
+      "imageUrl": "#"
     },
     ...
   ],
@@ -53,6 +52,17 @@
   ]
 }
 ```
+
+## GET `/api/messages/`
+
+**Response Data** consists of a messages array containing the information for each message. 
+
+- "id": id integer
+- "content": string
+- "email": string
+- "handled": bool
+- "created": date/time
+
 
 ## POST `/api/new-customer/`, `/api/new-owner`
 

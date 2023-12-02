@@ -216,6 +216,10 @@ async function updateInventory(){
   window.location.href = '/manager/manager_page'
 }
 
+function checkInputs(){
+
+}
+
 //update inventory items amount
 function updateInventoryItems(){
   updateInvItemURL = 'http://localhost:8000/api/update-inventory-item/'
@@ -320,6 +324,8 @@ function test(){
     font-size: xx-large;
     border-bottom: double 10px black;
     width: 100%;
+    margin: none;
+    padding:none;
   }
 
   p{
@@ -369,6 +375,7 @@ function test(){
       border-top: none;
       overflow: auto;
       border: 10px solid black;
+      padding-left: 10px;
   }
 
   .parent3{

@@ -4,7 +4,6 @@
 
     const url = 'http://localhost:8000/api';
 
-    let timeout;
     let types = [];
     let drones = [];
     let statuses = [];
@@ -342,7 +341,7 @@
     <p>Name: {first_name} {last_name}</p>
     <p>Drones: {drones.length}</p>
     <p>Total Revenue: ${totalRevenue}</p>
-    <p>Total Deliveries: ????</p>
+    <!-- <p>Total Deliveries: ????</p> -->
 
     <p>{showDialogClickError}</p>
     <button on:click={() => showDialogClick_addDone(true)} id="add_drone-button">
