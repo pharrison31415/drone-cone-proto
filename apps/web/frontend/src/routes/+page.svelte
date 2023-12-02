@@ -20,6 +20,12 @@
 </body>
 
 <script>
+	import { onMount } from "svelte";
+
+    onMount(()=>{
+        checkCookie();
+    });
+
     function signIn (){
         window.location.href = 'customer/Sign_In_Page'
     }
@@ -31,6 +37,16 @@
     function order(){
         window.location.href = 'customer/order'
     }
+
+    function checkCookie(){
+    let cookies = document.cookie.split('=')
+        for (let cookie of cookies){
+            if (cookie === 'customer-token'){
+                return window.location.href = '/customer/account'
+            }
+        }
+    }
+
 
 </script>
 

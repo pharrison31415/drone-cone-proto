@@ -6,6 +6,9 @@
   <!--Links and for side bar-->
   <div id="sideBar" transition:slide ={{delay:0, duration: 400, axis: 'x'}}>
       <button class = "links" on:click={home}>Home</button>
+      {#if showSignOut}
+      <button class = "links" on:click={signOut}> Sign Out</button>
+      {/if}
       <button class = "links" on:click={drone}> Drone Sign In</button>
       <button class = "links" on:click={drone2}> Drone Sign Up</button>
       <button class = "links" on:click={manager}>Manager</button>
@@ -20,13 +23,19 @@
 </div>
 
 <script>
+	import { onMount } from 'svelte';
+
 
   
   import { slide } from 'svelte/transition';
 
   let showSlide = false;
 
+  let showSignOut = false;
 
+  onMount(() => {
+    showSignOut = checkCookie();
+  })
 
   
   function slideNav(){
@@ -67,6 +76,29 @@
   function signUp(){
     window.location.href = '/customer/Sign_Up_Page_Customer'
   }
+
+  function checkCookie(){
+    let cookies = document.cookie.split(";")
+    console.log(cookies)
+    if (cookies[0] == ""){
+      return false
+    }
+    else{
+      return true
+    }
+  }
+
+  function signOut(){
+    let cookies = document.cookie.split(";")
+    console.log(document.cookie)
+    for (let cookie of cookies){
+      let cookieName = cookie.split("=")[0]
+      document.cookie = cookieName + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+    }
+    home();
+  }
+
+
 </script>
   
 <style>
