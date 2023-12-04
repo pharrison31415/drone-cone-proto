@@ -233,7 +233,7 @@
             return false
         }
 
-        else if (billing['creditCard'] == '' || billing['billing'].length == 8){
+        else if (billing['creditCard'] == ''){
             inputError = "You're creditCard inputs are incorrect"
             return false
         }
@@ -289,7 +289,7 @@
                 })
             })
             .then((response) => response.json())
-            .then((json => {check = json.message}))
+            .then((json => {check = json.message , console.log(json)}))
         }
     };
 

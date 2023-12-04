@@ -76,72 +76,125 @@
 
 </script>
 
-<h1>Drone Sign Up Page</h1>
-{#if !success}
-    <div>
-        <label for="firstName">
-            First Name:
-        </label>
-        <input 
-            bind:value={firstName}
-            type="text" 
-            id="firstName"
-            placeholder="First Name"
-        >
-        <br>
-        <label for="lastName">
-            Last Name:
-        </label>
-        <input 
-            bind:value={lastName}
-            type="text"
-            id="lastName"
-            placeholder="Last Name"
-        >
-        <br>
-        <label for="username">
-            Username: 
-        </label>
-        <input 
-            bind:value={username}
-            type="text"
-            id="username"
-            placeholder="Username"
-        >
-        <br>
-        <label for="password">
-            Password: 
-        </label>
-        <input 
-            bind:value={password}
-            type="password"
-            id="password"
-            placeholder="Password"
-        >
-        <br>
-        <label for="confirm-password">
-            Confirm Password: 
-        </label>
-        <input 
-            bind:value={confirmPassword}
-            type="password"
-            id="confirm-password"
-            placeholder="Confirm Password"
-        >
-    </div>
-    <button on:click={createAccount}>Create Account</button>
+<body>
+    <br>
+    <h1>Drone Sign Up</h1>
+    {#if !success}
+        <div>
+            <div class="form__group">
+                <label for="firstName" class="form__label"> First Name: </label>
+                 <input bind:value={firstName} type="text" id="firstName" placeholder="First Name" class="form__field">
+            </div>
+            <div class="form__group">
+                <label for="lastName" class="form__label"> Last Name: </label>
+                 <input bind:value={lastName} type="text" id="lastName" placeholder="Last Name" class="form__field">
+            </div>
+            <div class="form__group">
+                <label for="username" class="form__label"> Username: </label>
+                 <input bind:value={username} type="text" id="username" placeholder="Username" class="form__field">
+            </div>
+            <div class="form__group">
+                <label for="password" class="form__label"> Password: </label>
+                 <input bind:value={password} type="password" id="password" placeholder="Password" class="form__field">
+            </div>
+            <div class="form__group">
+                <label for="confirmPassword" class="form__label"> Confirm Password: </label>
+                 <input bind:value={confirmPassword} type="password" id="confirmPassword" placeholder="Confirm Password" class="form__field">
+            </div>
+            </div>
+                <button on:click={createAccount} class="loginButton">Create Account</button>
+            <div>
+            <p>
+                {status}
+            </p>
+        </div>
+    {:else}
+        <div>
+            <p>
+                {status}
+            </p>
+        </div>
+    {/if}
 
-    <div>
-        <p>
-            {status}
-        </p>
-    </div>
-{:else}
-    <div>
-        <p>
-            {status}
-        </p>
-    </div>
-{/if}
+</body>
+
+<style>
+    body {
+        background-color: rgb(195, 33, 254);
+        margin: 0%;
+        font-family: "Poppins", sans-serif;
+    }
+
+    h1{
+        text-align: center;
+        font-size: xx-large;
+    }
+
+    p{
+        text-align: center;
+        font-size: xx-large;
+        color: white;
+    }
+
+    .form__group{
+        width: 75%;
+        height: 60px;
+        margin-left: 15%;
+        margin-bottom: 10px;
+        margin-top: 5px;
+        text-align: center;
+        grid-template-rows: 100px 2;
+        display: grid;
+    }
+
+    .form__field{
+        font-size: large;
+        width: 500px;
+        margin-left: 22%;
+        border-radius: 10px;
+    }
+
+    .form__field:focus::-webkit-input-placeholder{
+        opacity: 0;
+    }
+
+    .form__label{
+        width: 16rem;
+        font-size: medium;
+        margin-left: 22%;
+        text-align: left;
+    }
+
+    .loginButton{
+        background-color: aquamarine;
+        height: 75px;
+        width: 200px;
+        border-radius: 10px;
+        text-align: center;
+        font-size: x-large;
+        font-family: Verdana, sans-serif;
+        font-weight: bold;
+        margin-left: 42%;
+        margin-top: 20px;
+        
+    }
+
+    .loginButton:hover{
+        background-color: rgb(249, 255, 83);
+        height: 75px;
+        width: 200px;
+        border-radius: 10px;
+        text-align: center;
+        font-size: x-large;
+        font-family: Verdana, sans-serif;
+        font-weight: bold;
+        margin-left: 42%;
+        margin-top: 20px;
+        
+    }
+</style>
+
+
+
 
 

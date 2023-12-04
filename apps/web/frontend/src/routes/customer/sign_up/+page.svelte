@@ -33,6 +33,8 @@
                 .finally( () => {
                     if (status == undefined){
                         status = 'Account created! Please sign in.'
+                        window.location.href = "/customer/sign_in"
+
                     }
                 })
         }
@@ -80,55 +82,26 @@
         <h1>Customer Sign Up</h1>
         {#if !success}
             <div>
-                <label for="firstName">
-                    First Name:
-                </label>
-                <input 
-                    bind:value={firstName}
-                    type="text" 
-                    id="firstName"
-                    placeholder="First Name"
-                >
-                <br>
-                <label for="lastName">
-                    Last Name:
-                </label>
-                <input 
-                    bind:value={lastName}
-                    type="text"
-                    id="lastName"
-                    placeholder="Last Name"
-                >
-                <br>
-                <label for="username">
-                    Username: 
-                </label>
-                <input 
-                    bind:value={username}
-                    type="text"
-                    id="username"
-                    placeholder="Username"
-                >
-                <br>
-                <label for="password">
-                    Password: 
-                </label>
-                <input 
-                    bind:value={password}
-                    type="password"
-                    id="password"
-                    placeholder="Password"
-                >
-                <br>
-                <label for="confirm-password">
-                    Confirm Password: 
-                </label>
-                <input 
-                    bind:value={confirmPassword}
-                    type="password"
-                    id="confirm-password"
-                    placeholder="Confirm Password"
-                >
+                <div class="form__group">
+                    <label for="firstName" class="form__label"> First Name: </label>
+                     <input bind:value={firstName} type="text" id="firstName" placeholder="First Name" class="form__field">
+                </div>
+                <div class="form__group">
+                    <label for="lastName" class="form__label"> Last Name: </label>
+                     <input bind:value={lastName} type="text" id="lastName" placeholder="Last Name" class="form__field">
+                </div>
+                <div class="form__group">
+                    <label for="username" class="form__label"> Username: </label>
+                     <input bind:value={username} type="text" id="username" placeholder="Username" class="form__field">
+                </div>
+                <div class="form__group">
+                    <label for="password" class="form__label"> Password: </label>
+                     <input bind:value={password} type="password" id="password" placeholder="Password" class="form__field">
+                </div>
+                <div class="form__group">
+                    <label for="confirmPassword" class="form__label"> Confirm Password: </label>
+                     <input bind:value={confirmPassword} type="password" id="confirmPassword" placeholder="Confirm Password" class="form__field">
+                </div>
             </div>
             <button id = "signUpButton" on:click={createAccount}>Create Account</button>
         
@@ -153,6 +126,8 @@
     body{
         background-color: rgb(180, 255, 255);
         margin: 0%;
+        font-family: "Poppins", sans-serif;
+
     }
 
     div{
@@ -160,7 +135,36 @@
         margin: 50px;
     }
     p{
-        font-family: verdana, sans-serif;
+        font-family: "Poppins", sans-serif;
+    }
+
+    .form__group{
+        width: 75%;
+        height: 60px;
+        margin-left: 12%;
+        margin-bottom: 10px;
+        margin-top: 5px;
+        text-align: center;
+        grid-template-rows: 100px 2;
+        display: grid;
+    }
+
+    .form__field{
+        font-size: large;
+        width: 500px;
+        margin-left: 22%;
+        border-radius: 10px;
+    }
+
+    .form__field:focus::-webkit-input-placeholder{
+        opacity: 0;
+    }
+
+    .form__label{
+        width: 16rem;
+        font-size: medium;
+        margin-left: 22%;
+        text-align: left;
     }
 
     #signUpButton{
@@ -170,7 +174,6 @@
         border-radius: 10px;
         text-align: center;
         font-size: x-large;
-        font-family: Verdana, sans-serif;
         font-weight: bold;
     }
 

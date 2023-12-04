@@ -9,8 +9,12 @@
       {#if showSignOut}
       <button class = "links" on:click={signOut}> Sign Out</button>
       {/if}
+      {#if droneSignIn()}
       <button class = "links" on:click={drone}> Drone Sign In</button>
       <button class = "links" on:click={drone2}> Drone Sign Up</button>
+      {:else}
+      <button class = "links" on:click={drone3}> Drone </button>
+      {/if}
       <button class = "links" on:click={manager}>Manager</button>
       <button class = "links" on:click = {slideNav}> Close </button>
   </div>
@@ -69,12 +73,8 @@
     window.location.href = '/drone/sign_up'
   }
 
-  function signIn(){
-    window.location.href = '/customer/Sign_In_Page'
-  }
-
-  function signUp(){
-    window.location.href = '/customer/Sign_Up_Page_Customer'
+  function drone3(){
+    window.location.href = '/drone/user'
   }
 
   function checkCookie(){
@@ -96,6 +96,16 @@
       document.cookie = cookieName + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
     }
     home();
+  }
+
+  function droneSignIn(){
+    let cookies = document.cookie.split("=")
+    for (let cookie of cookies){
+      if (cookie == 'owner-token'){
+        return false
+      }
+    }
+    return true
   }
 
 

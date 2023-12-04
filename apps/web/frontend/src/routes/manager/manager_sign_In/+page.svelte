@@ -78,6 +78,7 @@
             return true
     }
 
+
 </script>
 
 <style>
@@ -95,7 +96,7 @@
     p{
         text-align: center;
         font-size: xx-large;
-        color: red;
+        color: white;
     }
 
 
@@ -130,6 +131,20 @@
 
     .loginButton{
         background-color: aquamarine;
+        height: 75px;
+        width: 200px;
+        border-radius: 10px;
+        text-align: center;
+        font-size: x-large;
+        font-family: Verdana, sans-serif;
+        font-weight: bold;
+        margin-left: 42%;
+        margin-top: 20px;
+        
+    }
+
+    .loginButton:hover{
+        background-color: rgb(249, 255, 83);
         height: 75px;
         width: 200px;
         border-radius: 10px;

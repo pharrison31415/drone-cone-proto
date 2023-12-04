@@ -15,7 +15,7 @@
       <div class="doll">
           <h2>{flavor["name"]}</h2>
           <p>Quantity: {flavor["quantity"]}</p>
-          <p>Cost: {flavor["unitCost"]}</p>
+          <p>Cost: {USDollar.format(flavor["unitCost"] / 100)}</p>
       </div> 
       {/each}
     </div>
@@ -25,7 +25,7 @@
       <div class="doll">
           <h2>{cone["name"]}</h2>
           <p>Quantity: {cone["quantity"]}</p>
-          <p>Cost: {cone["unitCost"]}</p>
+          <p>Cost: {USDollar.format(cone["unitCost"] / 100)}</p>
       </div>
       {/each}
     </div>
@@ -35,7 +35,7 @@
       <div class="doll">
           <h2>{topping["name"]}</h2>
           <p>Quantity: {topping["quantity"]}</p>
-          <p>Cost: {topping["unitCost"]}</p>
+          <p>Cost: {USDollar.format(topping["unitCost"] / 100)}</p>
       </div> 
       {/each}
     </div>
@@ -114,8 +114,9 @@
       <canvas id="myChart"></canvas> 
     </div>
     <div class="chartInfo">
-      <p>Revenue: ${revenue} </p>
-      <p>Costs: ${cost}</p>
+      <p>Revenue: {USDollar.format(revenue)} </p>
+      <p>Costs: {USDollar.format(cost)}</p>
+      <p>Net: {USDollar.format(revenue - cost)}</p>
     </div>
   </div>
 </div>
@@ -137,9 +138,9 @@ import { onMount } from "svelte";
 
 //Trigger function once called
 onMount(()=>{
-  getRevenueandCost();
-  getInventory();
-  revenueChart();
+  getRevenueandCost()
+    .then(revenueChart());
+  getInventory();  
 });
 
 //Variables
@@ -149,10 +150,10 @@ let iceCreamTypes = [];
 let coneTypes = [];
 let toppings = [];
 
-let revenue = 150;
-let cost = -40;
+let revenue = 0;
+let cost = 0;
 
-let itemList = ["", "coneType","iceCreamType", "toppingType"]
+let itemList = ["", "Cones","Ice Cream", "Topping"]
 let itemType;
 let itemName;
 let amount;
@@ -160,10 +161,30 @@ let amount;
 let itemType2;
 let unitCost;
 
-let labels = ['Monday', 'Tuesday', 'Wenesday', 'Thursday', 'Friday',"Saturday"];
-let dataG = [0,100,50,60,100,150];
-let dataC = [-10,-50,-20,-70,-20,-40];
-let dataN = [-10,40,70,60,140,250];
+let mondayR = 0;
+let tuesdayR = 0;
+let wenesdayR = 0;
+let thursdayR = 0;
+let fridayR = 0;
+let saturdayR = 0;
+let sundayR =0;
+
+
+let mondayC = 0;
+let tuesdayC = 0;
+let wenesdayC = 0;
+let thursdayC = 0;
+let fridayC = 0;
+let saturdayC = 0;
+let sundayC = 0;
+
+let labels = ['Suday', 'Monday', 'Tuesday', 'Wenesday', 'Thursday', 'Friday',"Saturday"];
+let dataG = [ sundayR, mondayR, tuesdayR , wenesdayR , thursdayR , fridayR , saturdayR ];
+let dataC = [ sundayC, mondayC, tuesdayC , wenesdayC , thursdayC , fridayC , saturdayC ];
+let dataN = [ sundayR - sundayC , mondayR - mondayC , tuesdayR - tuesdayC , wenesdayR - wenesdayC , thursdayR - thursdayC , fridayR - fridayC , saturdayR - saturdayC];
+
+
+let getToday = new Date().getDay();
 
 // ******** FUNCTIONS FOR INVENTORY *************************************************************
 // GET request for Inventory
@@ -206,7 +227,7 @@ async function updateInventory(){
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify({
       name:itemName,
-      itemType: itemType,
+      itemType: inputCheckforPurchase(),
       additionalUnits: amount,
     })
   })
@@ -246,8 +267,12 @@ async function getRevenueandCost(){
       credentials: "include"
     })
   const infoJson = await response.json()
-  //inventory = infoJson['revenue']
-  console.log(infoJson)
+  
+  for (let rev of infoJson['revenues']){
+    revenue += rev['amount']
+  }
+  revenue = revenue / 100;
+  
 
 
   const response2 = await fetch(
@@ -256,16 +281,21 @@ async function getRevenueandCost(){
       credentials: "include"
     })
   const infoJson2 = await response2.json()
-  //inventory = infoJson['cost']
-  console.log(infoJson2)
+  for (let cos of infoJson2['costs']){
+    cost += cos['amount']
+  }
+  cost = cost / 100;
 
+
+  placementOfRevenues();
+  
 }
 
 // function for creating graph for manager
-function revenueChart() {
+async function revenueChart() {
   const chart = document.getElementById('myChart');
  
-  new Chart(chart, {
+  await new Chart(chart, {
     type: 'line',
     data: {
       // Labels Data types
@@ -296,19 +326,46 @@ function revenueChart() {
     options: {
       scales: {
         y: {
-          min: -250,
-          max: 250
+          min: -20,
+          max: 20
         }
       }
     }
   });
 }
 
-//****************************************** Inventory Status ******************************************
+function placementOfRevenues(){
+
+  switch (getToday){
+    case 0: 
+      sundayR += revenue;
+      sundayR = sundayR;
+      console.log(sundayR)
+  }
+
+}
+//****************************************** Misc Functions ******************************************
 function test(){
   console.log(inventory)
   console.log(iceCreamTypes)
 }
+
+function inputCheckforPurchase(){
+  if (itemName == 'Cone'){ return 'coneType'}
+  else if (itemName == 'Ice Cream'){ return 'iceCreamType'}
+  else if (itemName == 'Topping'){ return 'toppingType'}
+  else return 'Error'
+}
+
+// Format the price above to USD using the locale, style, and currency.
+let USDollar = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    });
+
+
+
+
 </script>
 
 <!--Temp Style **** RELOCATE to CSS FILE WHEN DONE ****-->

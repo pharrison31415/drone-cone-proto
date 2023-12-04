@@ -53,8 +53,33 @@
 
     <div class = "parent2" id ="customer_info">
         <div class = "child2">
-             <h1> Delivery Address</h1>             
 
+            <h1> Delivery Address</h1>
+
+            <form on:submit={nothing}>
+
+            <div class="form__group field">
+                <label for="Line One" class="form__label"> Street Line 1:</label>
+                <input type="input" class="form__field" placeholder="Street Line 1" bind:value={address["lineOne"]}/>
+            </div>
+            <div class="form__group field">
+                <label for="Line One" class="form__label"> Line 2:</label>
+                <input type="input" class="form__field" placeholder="Line 2 (optional)" bind:value={address["lineTwo"]}/>
+            </div>
+            <div class="form__group field">
+                <label for="Line One" class="form__label"> City:</label>
+                <input type="input" class="form__field" placeholder="City" bind:value={address["city"]}/>
+            </div>
+            <select bind:value={address["state"]} class="select2">
+                {#each states as state }
+                <option value={state}> {state}</option> 
+                {/each}
+            </select><br>
+            <div class="form__group field">
+                <label for="Line One" class="form__label"> Zip Code:</label>
+                <input type="number" class="form__field" placeholder="Zip Code" bind:value={address["zipCode"]} on:input={handleInput}/>
+            </div>
+            </form>
         </div>
     </div>
 
@@ -65,39 +90,48 @@
             <form on:submit={nothing}>
                 <h2> Credit Card Information:</h2>
                 <div class="form__group field">
-                    <label for="Line One" class="form__label"> Credit Card Number</label>
-                    <input type="input" class="form__field" placeholder="Credit Number" bind:value={billing["creditCard"]}/>
+                    <label for="cc number" class="form__label"> Credit Card Number</label>
+                    <input type="input" class="form__field" placeholder="Credit Number" bind:value={billing["creditCard"]} on:input={handleInput4}/>
                 </div>
                 <div class="form__group field">
-                    <label for="Line One" class="form__label"> CVV </label>
-                    <input type="input" max="999" min="999" class="form__field__cvv" placeholder="cvv" bind:value={billing["ccv"]}/>
+                    <label for="cvv" class="form__label"> CVV:</label>
+                    <input type='input' class="form__field__cvv" placeholder="cvv" bind:value={billing["cvv"]}  on:input={handleInput3}/>
                 </div>
                 <div class="form__group field">
-                    <label for="Line One" class="form__label"> Expire Date</label>
-                    <input type="input" class="form__field__cvv" placeholder="MM/YY" bind:value={billing["expireDate"]}/>
+                    <label for="expireDate" class="form__label"> Expire Date</label>
+                    <input type="Month" class="form__field__ex" placeholder="MM/YY" bind:value={billing["expireDate"]}/>
                 </div>
                 <br>
                 <h2> Billing Address:</h2>
                 <div class="form__group field">
-                    <label for="Line One" class="form__label"> Street Line 1:</label>
+                    <label for="lineOne" class="form__label"> Street Line 1:</label>
                     <input type="input" class="form__field" placeholder="Street Line 1" bind:value={billing["lineOne"]}/>
                 </div>
                 <div class="form__group field">
-                    <label for="Line One" class="form__label"> Line 2:</label>
+                    <label for="lineTwo" class="form__label"> Line 2:</label>
                     <input type="input" class="form__field" placeholder="Street Address: Line 1" bind:value={billing["lineTwo"]}/>
                 </div>
                 <div class="form__group field">
-                    <label for="Line One" class="form__label"> City:</label>
+                    <label for="city" class="form__label"> City:</label>
                     <input type="input" class="form__field" placeholder="City" bind:value={billing["city"]}/>
                 </div>
+                <select bind:value={billing["state"]} class="select2">
+                    {#each states as state }
+                    <option value={state}> {state}</option> 
+                    {/each}
+                </select><br>
                 <div class="form__group field">
                     <label for="zipCode" class="form__label"> Zip Code:</label>
-                    <input type='number' class="form__field" placeholder="Zip Code" bind:value={billing["zipCode"]}/>
+                    <input type='input' class="form__field" placeholder="Zip Code" bind:value={billing["zipCode"]}  on:input={handleInput2}/>
                 </div>
             </form>
             </div>     
     </div>
     <div class="parent2_orderButton_div">
+        <br>
+        <p class='total'>Your Total is {USDollar.format(price)}<p>
+        <h3>{check}</h3>
+        <h3>{inputError}</h3>
         <button on:click={submitOrder} class="orderButton"> Submit Order </button>
     </div>
 </body>
@@ -121,10 +155,15 @@
     let icecreamFlavor = ["Select a Ice Cream Flavor"];
     let coneType = ["Select a Cone"];
     let toppings = ["Select a Topping"];
-    let addresses = ["Select a address"];
 
     //Variables for new-order/ POST function to check inputs
-    let cust_address = [];
+    let address = {
+        lineOne: "", 
+        lineTwo: "", 
+        city:"", 
+        state:"", 
+        zipCode:""
+    };
 
     let price = 0;
     let cost = 0;
@@ -135,13 +174,11 @@
     let selectedIcecream;
     let selectedConeType;
     let selectedToppings;
-    let selectedAddress;
 
     // API Variables
     let coneUrl = "http://localhost:8000/api/cone-types/";
     let iceCreamUrl = "http://localhost:8000/api/ice-cream-types/";
     let topUrl = "http://localhost:8000/api/topping-types/";
-    let addressUrl = "http://localhost:8000/api/my-addresses/";
 
     // MISC Variables
     let states = ["Idaho","Utah"];
@@ -159,7 +196,8 @@
     let id = 0;
     let error = " ";
     let inputError = " ";
-
+    let check = " ";
+    let success = false;
 
 
     //Once a cone is made by user, create cone object and add to order
@@ -169,7 +207,9 @@
         id++;
         order.addtoOrder(cone);
         cart = order.getCart();
-        }
+        console.log(cart.length);
+        price = cart.length * 2.50;
+     }
     }
    
     //Check Inputs for Cones
@@ -183,18 +223,30 @@
     }
 
     function checkAddressInputs(){
-        if (address["lineOne"] == ''|| address["city"]== '' || address["state"] == ''|| address['zipCode'] == ''){
-            error = "You're address is missing required inputs"
+        if (address["lineOne"] === ''|| address["city"]=== '' || address["state"] ===''|| address['zipCode'] === ''){
+            inputError = "You're address is missing required inputs"
             return false
         }
 
-        if (billing["lineOne"] == ''|| billing["city"]== '' || billing["state"] == ''|| billing['zipCode'] == ''){
-            error = "You're billing address is missing required inputs"
+        else if (billing["lineOne"] == ''|| billing["city"]== '' || billing["state"] == ''|| billing['zipCode'] == ''){
+            inputError = "You're billing address is missing required inputs"
             return false
         }
 
+        else if (billing['creditCard'] == ''){
+            inputError = "You're creditCard inputs are incorrect"
+            return false
+        }
 
-        return true
+        else if (billing['cvv'] == ''){
+            inputError = "You're cvv inputs are incorrect"
+            return false
+        }
+
+        else{
+            inputError = ' '
+            return true
+        }
     }
     
 // ****************************************** Cart/Order Usage  ******************************************	
@@ -215,43 +267,31 @@
     function removeCone(id){
         order.removeCone(id)
         cart = order.getCart();
+        price = cart.length * 2.50;
     };
 	
       //POST order into database
     async function submitOrder(){
         let orderURL = "http://localhost:8000/api/new-order/"
-    
-        fetch(orderURL,{
-            method: 'POST',
-            credentials: 'include',
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({
-                cones: order.getCart(), // array of cones
-                id: 1,
-                price: price,
-                cost: cost,
-                created: created,
-                address: 'addressID1',
-                status: status
+
+        if(checkAddressInputs()){
+            fetch(orderURL,{
+                method: 'POST',
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({
+                    cones: order.getCart(), // array of cones
+                    id: 1,
+                    price: price,
+                    cost: cost,
+                    created: created,
+                    guestAddress: address,
+                    status: status
+                })
             })
-        })
-        .then((response) => response.json())
-        .then((json) => console.log(json))
+            .then((response) => response.json())
+            .then((json => {check = json.message , console.log(json)}))
+        }
     };
-
-    // Get Customer address 
-    onMount(async() => {
-        const response = await fetch (addressUrl,{
-            method:"GET",
-            credentials: "include"
-        })
-        const infoJson = await response.json()
-
-        cust_address = infoJson;
-
-        console.log(cust_address['addresses'])
-
-    });
 
 //****************************************** Inventory Status ******************************************
     onMount(async() => {
@@ -290,6 +330,41 @@
     function nothing(){
         console.log('')
     }
+
+    // Format the price above to USD using the locale, style, and currency.
+    let USDollar = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    });
+
+    function handleInput(event) {
+    // Ensure only digits are entered
+        const sanitizedValue = event.target.value.replace(/\D/g, '');
+    // Limit the input to 5 digits
+        address['zipCode'] = sanitizedValue.slice(0, 5);
+  }
+
+  function handleInput2(event) {
+    // Ensure only digits are entered
+        const sanitizedValue = event.target.value.replace(/\D/g, '');
+    // Limit the input to 5 digits
+        billing['zipCode'] = sanitizedValue.slice(0, 5);
+  }
+
+  function handleInput3(event) {
+    // Ensure only digits are entered
+        const sanitizedValue = event.target.value.replace(/\D/g, '');
+    // Limit the input to 3 digits
+        billing['cvv'] = sanitizedValue.slice(0,3);
+  }
+
+  function handleInput4(event) {
+    // Ensure only digits are entered
+        const sanitizedValue = event.target.value.replace(/\D/g, '');
+    // Limit the input to 16 digits
+        billing['creditCard'] = sanitizedValue.slice(0,16);
+  }
+
 
 </script>
 
@@ -461,6 +536,13 @@
         border-radius: 10px;
     }
 
+    .form__field__ex{
+        font-size: large;
+        width: 150px;
+        margin-left: 22%;
+        border-radius: 10px;
+    }
+
     .form__field:focus::-webkit-input-placeholder{
         opacity: 0;
     }
@@ -478,7 +560,7 @@
         font-size: x-large;
         border-radius: 40px;
         background-color: red;
-        margin-left: 42%;
+        margin-left: 43%;
         font-weight: bold;
 
     }
@@ -489,7 +571,7 @@
         font-size: x-large;
         border-radius: 40px;
         background-color: yellow;
-        margin-left: 42%;
+        margin-left: 43%;
         font-weight: bold;
     }
 
@@ -517,5 +599,11 @@
         border-radius: 40px;
         background-color: yellow;
         font-weight: bold;
+    }
+
+    .total{
+        font-size: xx-large;
+        color: red;
+        text-align: center;
     }
 </style>
