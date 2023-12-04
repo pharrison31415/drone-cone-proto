@@ -10,7 +10,7 @@
 <div id="inventory" class="center" >
   <div class="parent">
     <div class="child">
-      <h1>Ice Cream Flavors</h1>
+      <h1 class="colorTitle">Ice Cream Flavors</h1>
       {#each iceCreamTypes as flavor }
       <div class="doll">
           <h2>{flavor["name"]}</h2>
@@ -20,7 +20,7 @@
       {/each}
     </div>
     <div class="child">
-      <h1>Cones</h1>
+      <h1 class="colorTitle">Cones</h1>
       {#each coneTypes as cone }
       <div class="doll">
           <h2>{cone["name"]}</h2>
@@ -30,7 +30,7 @@
       {/each}
     </div>
     <div class="child">
-      <h1>Toppings</h1>
+      <h1 class="colorTitle">Toppings</h1>
       {#each toppings as topping }
       <div class="doll">
           <h2>{topping["name"]}</h2>
@@ -44,29 +44,30 @@
 
 <div class="parent3" >
   <div class="child3">
-    <h1>Resupply</h1>
+    <h1 class="colorTitle">Resupply</h1>
+    <label for="Line One" class="form__label"> Select a Item Type:</label>
     <select bind:value={itemType} class="select1">
       {#each itemList as item }
       <option value={item}> {item}</option> 
       {/each}
     </select>
 
-
-    {#if itemType == "coneType"}
+    <label for="Line One" class="form__label"> Select a Item:</label>
+    {#if itemType == "Cones"}
     <select bind:value={itemName} class="select1">
       {#each coneTypes as cone }
       <option value={cone['name']}> {cone['name']}</option> 
       {/each}
     </select>
 
-    {:else if itemType == "iceCreamType"}
+    {:else if itemType == "Ice Cream"}
     <select bind:value={itemName} class="select1">
       {#each iceCreamTypes as flavor }
       <option value={flavor['name']}> {flavor['name']}</option> 
       {/each}
     </select>
 
-    {:else if itemType == "toppingType"}
+    {:else if itemType == "Toppings"}
     <select bind:value={itemName} class="select1">
       {#each toppings as topping }
       <option value={topping['name']}> {topping['name']}</option> 
@@ -79,25 +80,28 @@
     {/if}
 
     <div class="form__group field">
-      <label for="amount" class="form__label"> Amount:</label>
-      <input type="number" class="form__field" placeholder="Amount" bind:value={amount}/>
+      <input type="number" class="form__field" placeholder=" Amount" bind:value={amount}/>
     </div>
 
     <button on:click={updateInventory} class = "orderButton">Purchase</button>
     <p> <p>
   </div>
   <div class="child3">
-    <h1>Update Prices</h1>
-    <div class="form__group field">
-      <label for="Line One" class="form__label"> Item Type:</label>
-      <input type="input" class="form__field" placeholder="Item Type" bind:value={itemType2}/>
-    </div>
+    <h1 class="colorTitle">Update Prices</h1>
 
-    <div class="form__group field">
-      <label for="Line One" class="form__label"> Unit Cost:</label>
-      <input type="input" class="form__field" placeholder="Unit Cost" bind:value={unitCost}/>
+    <div>
+      <label for="Line One" class="form__label"> Select a Item Type:</label>
+      <select bind:value={itemType2} class="select1__2">
+        {#each itemList as item }
+        <option value={item}> {item}</option> 
+        {/each}
+      </select>
     </div>
-    <button on:click={updateInventory} class="orderButton">Update Item</button>
+    <br>
+    <div class="form__group field">
+      <input type="number" class="form__field" placeholder=" Unit Cost" bind:value={unitCost}/>
+    </div>
+    <button on:click={updateInventoryItems} class="orderButton">Update Item</button>
 
   </div>
   
@@ -141,6 +145,7 @@ onMount(()=>{
   getRevenueandCost()
     .then(revenueChart());
   getInventory();  
+  getContacts();
 });
 
 //Variables
@@ -221,7 +226,7 @@ async function getInventory(){
 async function updateInventory(){
   let updateInvURL = "http://localhost:8000/api/purchase-inventory/";
 
-  fetch(updateInvURL, {
+  await fetch(updateInvURL, {
     method: 'POST',
     credentials: 'include',
     headers: {"Content-Type": "application/json"},
@@ -242,17 +247,36 @@ function checkInputs(){
 }
 
 //update inventory items amount
-function updateInventoryItems(){
-  updateInvItemURL = 'http://localhost:8000/api/update-inventory-item/'
+async function updateInventoryItems(){
+  let updateInvItemURL = 'http://localhost:8000/api/update-inventory-item/';
 
+  await fetch(updateInvItemURL,{
+    method: "PATCH",
+    credentials: "include",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      itemType: itemType2,
+      unitCost: unitCost
+    })
+  })
+  .then(resp => resp.json())
+  .then(json => console.log(json))
 
-}
+  }
 
 
 // ******** FUNCTIONS FOR CONTACTS *************************************************************
 //GET request for list of contacts
-function getContacts(){
+async function getContacts(){
+  let contactURl = 'http://localhost:8000/api/messages'
 
+  const response = await fetch(
+    contactURl,{
+      method: "GET",
+      credentials: "include",
+    })
+  const infoJson = await response.json()
+  console.log(infoJson)
 }
 
 // ******** FUNCTIONS FOR REVENUE *************************************************************
@@ -351,9 +375,9 @@ function test(){
 }
 
 function inputCheckforPurchase(){
-  if (itemName == 'Cone'){ return 'coneType'}
-  else if (itemName == 'Ice Cream'){ return 'iceCreamType'}
-  else if (itemName == 'Topping'){ return 'toppingType'}
+  if (itemType == 'Cones'){ return 'coneType'}
+  else if (itemType == 'Ice Cream'){ return 'iceCreamType'}
+  else if (itemType == 'Topping'){ return 'toppingType'}
   else return 'Error'
 }
 
@@ -379,10 +403,7 @@ let USDollar = new Intl.NumberFormat('en-US', {
   h1{
     text-align: center;
     font-size: xx-large;
-    border-bottom: double 10px black;
     width: 100%;
-    margin: none;
-    padding:none;
   }
 
   p{
@@ -390,10 +411,6 @@ let USDollar = new Intl.NumberFormat('en-US', {
         font-size: medium;
     }
     
-  h2 {
-      font-family: 'Trebuchet MS', sans-serif;
-  }
-
   .chart{
     width: 100%;
     height: 97%;    
@@ -416,7 +433,6 @@ let USDollar = new Intl.NumberFormat('en-US', {
   .centerText {
       margin: auto;
       width: 50%;
-      padding: 10px;
       text-align: center;
   }
 
@@ -432,19 +448,15 @@ let USDollar = new Intl.NumberFormat('en-US', {
       border-top: none;
       overflow: auto;
       border: 10px solid black;
-      padding-left: 10px;
   }
 
   .parent3{
       grid-template-columns: 1fr 1fr;
-      width: 100%;
       display: grid;
       background:rgb(255, 255, 255);
       width:90%;
       height:400px;
       margin: auto;
-      border: 3px solid rgb(0, 0, 0);
-      font-family: 'Trebuchet MS', sans-serif;
   }
 
   .child3{
@@ -463,6 +475,7 @@ let USDollar = new Intl.NumberFormat('en-US', {
 
   .doll{
     border-bottom: dotted 10px black;
+    padding-left: 10px;
   }
 
   #inventory {
@@ -520,8 +533,9 @@ let USDollar = new Intl.NumberFormat('en-US', {
     .form__label{
         width: 16rem;
         font-size: medium;
-        margin-left: 22%;
+        margin-left: 1%;
         text-align: left;
+        position: absolute;
     }
 
     .orderButton{
@@ -544,9 +558,16 @@ let USDollar = new Intl.NumberFormat('en-US', {
         margin-left: 30%;
         font-weight: bold;
     }
+    
     .max{
       width: 100%;
-      border-bottom: 50px black double;
+      background-color: white;
+      margin-top: 100px;
+      margin-bottom: 50px;
+      border-top: double 5px black;
+      border-bottom: double black 4px;
+      box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+
     }
 
     .select1{
@@ -557,6 +578,26 @@ let USDollar = new Intl.NumberFormat('en-US', {
       font-size: medium;
       border-radius: 10px;
   }
+
+    .select1__2{
+      margin-left: 27%;
+      height: 50px;
+      width: 250px;
+      text-align: center;
+      font-size: medium;
+      border-radius: 10px;
+  }
+
+    .colorTitle{
+    text-align: center;
+    font-size: xx-large;
+    width: 100%;
+    margin: none;
+    padding:none;
+    border-bottom: double black 6px;
+    background-color: rgb(255, 255, 255);
+
+    }
     
 
 </style>

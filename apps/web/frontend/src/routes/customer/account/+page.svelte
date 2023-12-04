@@ -180,8 +180,10 @@
     <h1>Welcome{#if username != ""}, {username}{/if}</h1>
 
     {#if !doneLoading}
-        <h2>Loading...</h2>
-        <p>Please wait</p>
+        <div class="loading">
+            <h2>Loading...</h2>
+            <p>Please wait</p>
+        </div>
     {/if}
 
     <h2>{error}</h2>
@@ -248,7 +250,7 @@
 
         {#if orders.length == 0}
             <h4 style="margin: 5px;">You have no orders, please place one</h4>
-            <button on:click={placeOrder}>Place Order</button>
+            <button on:click={placeOrder} class='orderButton'>Place Order</button>
         {:else}
             {#each orders as order}
                 <div id="orders">
@@ -306,28 +308,26 @@
     button{
         background-color: rgb(59, 238, 137);
         height: 75px;
-        width: 200px;
+        width: 205px;
         border-radius: 10px;
         text-align: center;
         font-size: x-large;
         font-family: Verdana, sans-serif;
         font-weight: bold;
         margin-top: 20px;
-        padding-left: 20px;
         margin-left: 10px;
     }
 
     button:hover{
         background-color: rgb(249, 255, 83);
         height: 75px;
-        width: 200px;
+        width: 205px;
         border-radius: 10px;
         text-align: center;
         font-size: x-large;
         font-family: Verdana, sans-serif;
         font-weight: bold;
         margin-top: 20px;
-        padding-left: 20px;
         
     }
 
@@ -388,9 +388,10 @@
         height: 100px;
         font-size: x-large;
         border-radius: 40px;
-        background-color: red;
+        background-color: rgb(0, 64, 255);
         margin-left: 43%;
         font-weight: bold;
+        color: white;
 
     }
 
@@ -402,6 +403,7 @@
         background-color: yellow;
         margin-left: 43%;
         font-weight: bold;
+        color: black;
     }
 
     li > p {
@@ -445,6 +447,15 @@
 
     #addAddress_dialog > form > div {
         margin-top: 5px;
+    }
+
+    .loading{
+        color:black;
+        text-align: center;
+        font-size: xx-large;
+        border-radius: 0%;
+        background-color: transparent;
+        border: none;
     }
 
 </style>

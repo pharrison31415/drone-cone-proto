@@ -123,7 +123,7 @@
 
   .links:hover{
     background-color: aquamarine;
-    box-shadow: 0 12px 16px 0 rgba(255, 178, 178, 0.24), 0 17px 50px 0 rgba(255, 255, 255, 0.19);
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
   }
 
   #sideBarIcon{
@@ -146,6 +146,7 @@
     background-color: #FFA9DD;
     width: 100%;
     height: 121px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px; 
   }
   
   #sideBar{
@@ -155,6 +156,8 @@
     margin: 0;
     height: 1000px;
     position: absolute;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+
   }  
   </style>
   

@@ -421,10 +421,23 @@
         overflow:auto;
         height: 550px; 
         background-color: aquamarine;
+
+    }
+
+    #cart:hover {
+        overflow:auto;
+        height: 550px; 
+        background-color: aquamarine;
+        box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
     }
 
     #order {
         text-align: center;
+    }
+
+    #order:hover{
+        text-align: center;
+        box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
 
     }
 
@@ -463,6 +476,13 @@
         display: grid;
     }
 
+    .parent:hover{
+        grid-template-columns: 1fr 1fr;
+        width: 100%;
+        height: 550px;
+        display: grid;
+    }
+
     .child {
         display: inline-block;
         border: dotted 4px;
@@ -475,6 +495,17 @@
         height: 500px;
         display: grid;
         border-top: dotted 4px;
+
+    }
+
+    .parent2:hover{
+        grid-template-columns: 1fr;
+        width: 100%;
+        height: 500px;
+        display: grid;
+        border-top: dotted 4px;
+        box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+
     }
 
     .parent2__paymentInfo{
@@ -495,11 +526,29 @@
         width: 100%;
         height: 30%;
         display: grid;
+
+    }
+
+    .parent3:hover{
+        border: 3px solid rgb(0, 0, 0);
+        grid-template-columns: 1fr 1fr;
+        width: 100%;
+        height: 30%;
+        display: grid;
+        box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+
     }
 
     .child3{
         border: 1px solid rgb(0, 0, 0);
-        background-color: white;
+        background-color: rgb(0, 255, 242);
+    }
+
+    .child3:hover{
+        border: 1px solid rgb(0, 0, 0);
+        background-color: rgba(159, 255, 80, 0.607);
+        box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+
     }
 
     .delete_button{
