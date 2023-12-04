@@ -35,7 +35,8 @@ urlpatterns = [
     path('my-drones/', views.get_my_drones),
     path('update-drone/', views.update_drone),
 
-    path('new-order/', views.new_order),
+    path('new-customer-order/', views.customer_order),
+    path('new-guest-order/', views.guest_order),
     path('order-delivered/', views.order_delivered),
     path('past-orders/', views.get_past_orders),
 
@@ -47,5 +48,5 @@ urlpatterns = [
     path('messages/', views.get_messages),
 
     path('new-message/', views.new_message),
-    
+
 ]

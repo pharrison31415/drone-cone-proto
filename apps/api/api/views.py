@@ -304,9 +304,13 @@ def get_past_orders(request, user):
     })
 
 
+def new_customer_order(request, user_found, user):
+    pass
+
+
 @csrf_exempt
 @optional_customer_token
-def new_order(request, user_found, user):
+def new_guest_order(request, user_found, user):
     if request.method != "POST":
         return JsonResponse({
             'success': False,
