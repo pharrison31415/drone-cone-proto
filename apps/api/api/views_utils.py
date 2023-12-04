@@ -2,7 +2,7 @@ from functools import partial
 from django.http import JsonResponse as DjJsonResponse
 from django.contrib.auth.hashers import make_password, check_password
 from django.utils.crypto import get_random_string
-from api.models import DroneStatus, DroneType, Customer, Manager, Owner, CustomerToken, ManagerToken, OwnerToken, OrderToken
+from api.models import DroneStatus, DroneType, Customer, Manager, Owner, CustomerToken, ManagerToken, OwnerToken
 import json
 
 
@@ -66,19 +66,6 @@ verify_manager_token = partial(verify_token, user_type=MANAGER_USER)
 verify_owner_token = partial(verify_token, user_type=OWNER_USER)
 
 optional_customer_token = partial(optional_token, user_type=CUSTOMER_USER)
-
-
-def verify_order_token(view):
-    def wrapper_verify(*args, **kwargs):
-        order_token = args[0].COOKIES.get("order-token", False)
-        retrieved_token, found = safe_querey(
-            OrderToken, token=order_token)
-        if not found:
-            return JsonResponse({'success': False, 'message': 'bad token'})
-
-        return view(*args, order=retrieved_token.order, **kwargs)
-
-    return wrapper_verify
 
 
 def user_login(request, user_type):

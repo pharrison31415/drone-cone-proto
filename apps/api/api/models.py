@@ -186,12 +186,6 @@ class Order(md.Model):
         }
 
 
-class OrderToken(md.Model):
-    token = md.CharField(primary_key=True, max_length=128)
-    order = md.ForeignKey(Order, on_delete=md.PROTECT)
-    created = md.DateTimeField(auto_now_add=True)
-
-
 class Delivery(md.Model):
     drone = md.ForeignKey(Drone, on_delete=md.PROTECT)
     order = md.ForeignKey(Order, on_delete=md.PROTECT)
