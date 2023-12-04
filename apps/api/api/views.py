@@ -567,17 +567,22 @@ def new_guest_order(request):
 
 
 @csrf_exempt
-@verify_order_token
-def order_delivered(request, order):
+@verify_customer_token
+def order_delivered(request, user):
     if request.method != "POST":
         return JsonResponse({
             'success': False,
             'message': 'POST method required'
         })
 
-    deliveries = Delivery.objects.filter(order=order)
+    body = json.loads(request.body)
+
+    order = get_object_or_404(Order, id=body["orderId"], customer=user)
+    deliveries = Delivery.objects.get(order=order)
+
     idle_status = DroneStatus.objects.get(text="idle")
     delivered_status = OrderStatus.objects.get(text="delivered")
+
     for delivery in deliveries:
         delivery.drone.status = idle_status
         delivery.drone.save()
