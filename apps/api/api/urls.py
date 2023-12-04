@@ -45,8 +45,7 @@ urlpatterns = [
     path('manager-costs/', views.get_manager_costs),
     path('purchase-inventory/', views.purchase_inventory),
     path('update-inventory/', views.update_inventory),
-    path('messages/', views.get_messages),
 
     path('new-message/', views.new_message),
-
+    path('messages/', views.get_messages),
 ]

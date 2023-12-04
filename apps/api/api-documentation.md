@@ -306,3 +306,9 @@ Note that if a drone's status is set to `"delivering"`, the status is unable to 
 **Request Body** must contain a `content` string (max length 1024 characters), and an `email` string (max length 128 characters).
 
 **Response Data** will contain a `success` boolean. If the request body is bad, there will be an error because I don't want to fix that yet.
+
+## GET `/api/messages`
+
+**Cookie Required** `manager-token`
+
+**Response Data** will contain a `success` boolean and either a `messages` array, each element of which contians an `id`, `content` string, `email` string, `handled` boolean, and a `created` date.
