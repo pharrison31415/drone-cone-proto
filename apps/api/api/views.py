@@ -578,7 +578,7 @@ def order_delivered(request, user):
     body = json.loads(request.body)
 
     order = get_object_or_404(Order, id=body["orderId"], customer=user)
-    deliveries = Delivery.objects.get(order=order)
+    deliveries = Delivery.objects.filter(order=order)
 
     idle_status = DroneStatus.objects.get(text="idle")
     delivered_status = OrderStatus.objects.get(text="delivered")
