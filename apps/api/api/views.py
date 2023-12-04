@@ -2,11 +2,11 @@ from functools import partial
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.crypto import get_random_string
-from .views_utils import JsonResponse, safe_querey, verify_token, CUSTOMER_USER, MANAGER_USER, OWNER_USER, verify_customer_token, verify_manager_token, verify_owner_token, optional_customer_token, verify_order_token, user_login, new_user
+from .views_utils import JsonResponse, safe_querey, verify_token, CUSTOMER_USER, MANAGER_USER, OWNER_USER, verify_customer_token, verify_manager_token, verify_owner_token, user_login, new_user
 from datetime import datetime, timezone
 import json
 
-from api.models import DroneStatus, Drone, DroneType, Customer, Manager, Owner, OrderStatus, CustomerToken, ManagerToken, OwnerToken, Address, Cone, ConeType, IceCreamType, ToppingType, Order, Delivery, Message, ManagerRevenue, ManagerCost, OrderToken
+from api.models import DroneStatus, Drone, DroneType, Customer, Manager, Owner, OrderStatus, CustomerToken, ManagerToken, OwnerToken, Address, Cone, ConeType, IceCreamType, ToppingType, Order, Delivery, Message, ManagerRevenue, ManagerCost
 
 
 def hello_world(request):
@@ -305,8 +305,8 @@ def get_past_orders(request, user):
 
 
 @csrf_exempt
-@optional_customer_token
-def new_order(request, user_found, user):
+@verify_customer_token
+def new_customer_order(request, user):
     if request.method != "POST":
         return JsonResponse({
             'success': False,
@@ -337,26 +337,14 @@ def new_order(request, user_found, user):
         drones_using.append(next_drone)
         cones_remaining -= next_drone.drone_type.capacity
 
-    # handle addressing: customer user or guest
-    address = None
-    if user_found:
-        address, address_found = safe_querey(
-            Address, id=body["addressId"], customer=user, deleted=False)
-        if not address_found:
-            return JsonResponse({
-                'success': False,
-                'message': 'no address found'
-            })
-    else:
-        address = Address(
-            line_one=body["guestAddress"]["lineOne"],
-            line_two=body["guestAddress"]["lineTwo"],
-            city=body["guestAddress"]["city"],
-            state=body["guestAddress"]["state"],
-            zip_code=body["guestAddress"]["zipCode"],
-            customer=None
-        )
-        address.save()
+    # handle addressing: customer user
+    address, address_found = safe_querey(
+        Address, id=body["addressId"], customer=user, deleted=False)
+    if not address_found:
+        return JsonResponse({
+            'success': False,
+            'message': 'no address found'
+        })
 
     # check that we have stock
     for cone in body["cones"]:
@@ -379,8 +367,9 @@ def new_order(request, user_found, user):
             get_object_or_404(ToppingType, name=cone["toppingType"]).unit_cost,
         ])
 
+    # create order
     new_order = Order(
-        customer=(user if user_found else None),
+        customer=user,
         address=address,
         price=price,
         cost=cost,
@@ -439,33 +428,161 @@ def new_order(request, user_found, user):
         message=f"order id: {new_order.id}"
     ).save()
 
-    response = JsonResponse({
+    return JsonResponse({
         "success": True,
         "orderId": new_order.id,
         "created": new_order.created
     })
-    token = get_random_string(length=128)
-    OrderToken(
-        token=token,
-        order=new_order
-    ).save()
-    response.headers["Set-Cookie"] = f"order-token={token}; Path=/"
-
-    return response
 
 
 @csrf_exempt
-@verify_order_token
-def order_delivered(request, order):
+def new_guest_order(request):
     if request.method != "POST":
         return JsonResponse({
             'success': False,
             'message': 'POST method required'
         })
 
+    body = json.loads(request.body)
+
+    # Get the drones to use, throw error if not enough
+    idle_status = DroneStatus.objects.get(text="idle")
+    drones_available = list(Drone.objects.order_by(
+        "last_use").filter(status=idle_status))
+    drones_using = []
+    cones_remaining = len(body["cones"])
+    if cones_remaining < 1:
+        return JsonResponse({
+            "success": False,
+            "message": "order at least one cone"
+        })
+
+    while cones_remaining > 0:
+        if not drones_available:
+            return JsonResponse({
+                "success": False,
+                "message": "not enough available drones"
+            })
+        next_drone = drones_available.pop(0)
+        drones_using.append(next_drone)
+        cones_remaining -= next_drone.drone_type.capacity
+
+    # handle addressing: guest
+    address = Address(
+        line_one=body["guestAddress"]["lineOne"],
+        line_two=body["guestAddress"]["lineTwo"],
+        city=body["guestAddress"]["city"],
+        state=body["guestAddress"]["state"],
+        zip_code=body["guestAddress"]["zipCode"],
+        customer=None
+    )
+    address.save()
+
+    # check that we have stock
+    for cone in body["cones"]:
+        if get_object_or_404(ConeType, name=cone["coneType"]).quantity <= 0 or \
+                get_object_or_404(IceCreamType, name=cone["iceCreamType"]).quantity <= 0 or \
+                get_object_or_404(ToppingType, name=cone["toppingType"]).quantity <= 0:
+            return JsonResponse({"success": False, "message": "not enough stock to make order"})
+
+    # find price
+    PRICE_PER_CONE = 250
+    price = len(body["cones"]) * PRICE_PER_CONE
+
+    # find cost
+    cost = 0
+    for cone in body["cones"]:
+        cost += sum([
+            get_object_or_404(ConeType, name=cone["coneType"]).unit_cost,
+            get_object_or_404(
+                IceCreamType, name=cone["iceCreamType"]).unit_cost,
+            get_object_or_404(ToppingType, name=cone["toppingType"]).unit_cost,
+        ])
+
+    new_order = Order(
+        customer=None,
+        address=address,
+        price=price,
+        cost=cost,
+        status=OrderStatus.objects.get(text="delivering")
+    )
+    new_order.save()
+
+    # handle manager revenue
+    MANAGER_DRONE_REVENUE_SPLIT = 0.5
+    revenue_remaining = price - cost
+
+    # create droneorders, cones
+    cone_index = 0
+    delivering_status = DroneStatus.objects.get(text="delivering")
+    for drone in drones_using:
+        drone.status = delivering_status
+        drone.last_use = datetime.now(timezone.utc)
+        new_delivery = Delivery(
+            drone=drone,
+            order=new_order,
+        )
+        new_delivery.save()
+        for i in range(cone_index, cone_index + drone.drone_type.capacity):
+            if i >= len(body["cones"]):
+                break
+            cone_type = get_object_or_404(
+                ConeType, name=body["cones"][i]["coneType"])
+            ice_cream_type = get_object_or_404(
+                IceCreamType, name=body["cones"][i]["iceCreamType"])
+            topping_type = get_object_or_404(
+                ToppingType, name=body["cones"][i]["toppingType"])
+            Cone(
+                delivery=new_delivery,
+                cone_type=cone_type,
+                ice_cream_type=ice_cream_type,
+                topping_type=topping_type,
+            ).save()
+
+            cone_type.quantity -= 1
+            cone_type.save()
+            ice_cream_type.quantity -= 1
+            ice_cream_type.save()
+            topping_type.quantity -= 0 if topping_type.name == "No topping" else 1
+            topping_type.save()
+
+            cone_revenue = int(
+                PRICE_PER_CONE * (1-MANAGER_DRONE_REVENUE_SPLIT))
+            revenue_remaining -= cone_revenue
+            drone.revenue += cone_revenue
+
+        drone.save()
+        cone_index += drone.drone_type.capacity
+
+    ManagerRevenue(
+        amount=revenue_remaining,
+        message=f"order id: {new_order.id}"
+    ).save()
+
+    return JsonResponse({
+        "success": True,
+        "orderId": new_order.id,
+        "created": new_order.created
+    })
+
+
+@csrf_exempt
+@verify_customer_token
+def order_delivered(request, user):
+    if request.method != "POST":
+        return JsonResponse({
+            'success': False,
+            'message': 'POST method required'
+        })
+
+    body = json.loads(request.body)
+
+    order = get_object_or_404(Order, id=body["orderId"], customer=user)
     deliveries = Delivery.objects.filter(order=order)
+
     idle_status = DroneStatus.objects.get(text="idle")
     delivered_status = OrderStatus.objects.get(text="delivered")
+
     for delivery in deliveries:
         delivery.drone.status = idle_status
         delivery.drone.save()
