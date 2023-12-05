@@ -108,8 +108,8 @@
             });
     }
 
-    async function markAsDelivered(order) {
-        fetch(url + '/order-delivered/', {method: 'POST', credentials: 'include'})
+    async function markAsDelivered(orderId) {
+        fetch(url + '/order-delivered/', {method: 'POST', credentials: 'include', body: JSON.stringify({orderId: orderId})})
             .then((response) => response.json())
             .then((json) => {
                 console.log(json);
@@ -260,14 +260,14 @@
                             <h3>Order #{order.id}</h3>
                             <p>Order placed: {new Date(order.created).toLocaleString()}</p>
                             <p># of cones: {order.cones.length}</p>
-                            <p>Total Cost: ${order.price}</p>
+                            <p>Total Cost: ${order.price/100}</p>
                             <p>Status: {order.status.text}</p>
                             {#if order.status.text == "delivered"}
                                 <ul>
                                     <li>Delivered: {new Date(order.delivered_at).toLocaleString()}</li>
                                 </ul>
                             {:else}
-                                <button on:click={markAsDelivered(order)}>Marked as delivered</button>
+                                <button on:click={markAsDelivered(order.id)}>Marked as delivered</button>
                             {/if}
                             <ol>
                                 <!-- repeat for every cone in the order -->
