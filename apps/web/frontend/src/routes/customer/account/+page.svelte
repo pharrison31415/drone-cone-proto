@@ -23,6 +23,11 @@
 
     let doneLoading = false;
 
+    let USDollar = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    });
+
     onMount(() => {
         get_privateData();
         get_myAddresses();
@@ -260,7 +265,7 @@
                             <h3>Order #{order.id}</h3>
                             <p>Order placed: {new Date(order.created).toLocaleString()}</p>
                             <p># of cones: {order.cones.length}</p>
-                            <p>Total Cost: ${order.price/100}</p>
+                            <p>Total Cost: {USDollar.format(order.price / 100)}</p>
                             <p>Status: {order.status.text}</p>
                             {#if order.status.text == "delivered"}
                                 <ul>
