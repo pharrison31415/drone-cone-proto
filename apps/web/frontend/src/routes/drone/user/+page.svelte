@@ -400,9 +400,9 @@
                     <div class='parent_drone'>
                         <div class='child_drone'>
                             <h3>Drone details:</h3>
+                            <p>Name: {drone.name}</p>
                             <p>Size: {drone.droneType.text}</p> 
                             <p>Capacity: {drone.droneType.capacity} cone{#if drone.droneType.capacity > 1}s{/if}</p>
-                            <p>Name: {drone.name}</p>
                         </div>
                         <div class='child_drone'>
                             <h3>Revenue details:</h3>

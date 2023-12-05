@@ -91,6 +91,7 @@
     h1{
         text-align: center;
         font-size: xx-large;
+        color: white;
     }
 
     p{

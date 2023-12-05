@@ -57,7 +57,7 @@
             <h1> Delivery Address</h1>
 
             <form on:submit={nothing}>
-
+            <!--
             <div class="form__group field">
                 <label for="Line One" class="form__label"> Street Line 1:</label>
                 <input type="input" class="form__field" placeholder="Street Line 1" bind:value={address["lineOne"]}/>
@@ -79,6 +79,7 @@
                 <label for="Line One" class="form__label"> Zip Code:</label>
                 <input type="number" class="form__field" placeholder="Zip Code" bind:value={address["zipCode"]} on:input={handleInput}/>
             </div>
+        -->
             </form>
         </div>
     </div>
@@ -157,14 +158,6 @@
     let toppings = ["Select a Topping"];
 
     //Variables for new-order/ POST function to check inputs
-    let address = {
-        lineOne: "", 
-        lineTwo: "", 
-        city:"", 
-        state:"", 
-        zipCode:""
-    };
-
     let price = 0;
     let cost = 0;
     let created = new Date().getTime();
@@ -223,6 +216,8 @@
     }
 
     function checkAddressInputs(){
+
+        /*
         if (address["lineOne"] === ''|| address["city"]=== '' || address["state"] ===''|| address['zipCode'] === ''){
             inputError = "You're address is missing required inputs"
             return false
@@ -247,6 +242,8 @@
             inputError = ' '
             return true
         }
+        */
+       return true
     }
     
 // ****************************************** Cart/Order Usage  ******************************************	
@@ -272,11 +269,12 @@
 	
       //POST order into database
     async function submitOrder(){
-        let orderURL = "http://localhost:8000/api/new-order/"
+        let orderURL = "http://localhost:8000/api/new-customer-order/"
 
         if(checkAddressInputs()){
             fetch(orderURL,{
                 method: 'POST',
+                credentials: 'include',
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({
                     cones: order.getCart(), // array of cones
@@ -284,7 +282,7 @@
                     price: price,
                     cost: cost,
                     created: created,
-                    guestAddress: address,
+                    addressId: 1,
                     status: status
                 })
             })

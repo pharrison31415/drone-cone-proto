@@ -116,7 +116,7 @@
     background-color: aqua;
     border: none;
     width: 100%;
-    height: 5%;
+    height: 7%;
     font-size: large;
     font-family: system-ui;
   }
@@ -151,7 +151,7 @@
   
   #sideBar{
     background-color: rgb(235, 107, 255);
-    width: 15%;
+    width: 20%;
     padding: 0%;
     margin: 0;
     height: 1000px;
