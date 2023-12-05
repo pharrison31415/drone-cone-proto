@@ -595,7 +595,8 @@
 
     .input-slider{
         width: 80px;
-        margin-left: 130px;
+        /* margin-left: 130px; */
+        align-self: center;
         range: black;
     }
 
