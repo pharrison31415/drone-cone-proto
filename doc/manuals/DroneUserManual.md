@@ -2,6 +2,8 @@
 
 ## Introduction
 
+This is the user manual for a Drone User on the Drone Cones website. If you have any questions, please follow the instructions below. These instructions will guide you through creating a new account, signing in, adding drones to your account, and managing drones on your account.
+
 ## Table of Contents
 
 * [Creating an account](#creating-an-account)
@@ -15,24 +17,24 @@
 
 When signing up, you will start on the home screen.
 
-1. Click on the menu in the top left of your screen (picture of the menu)
+1. Click on the menu in the top left of your screen
+![Menu Button](../img/Menu.png)
 2. Click on the "Drone Sign Up" button
-    (picture of menu with the drone sign up button circled)
 3. Fill in your information
-    (picture of the sign up screen with information filled in)
+
 4. Click on the "Create Account" button
-    (picture of the create account button)
+![Drone Sign Up](../img/Drone%20Sign%20Up.png)
 
 *Note: passwords must be at least 8 charaters long and if you do not fill in all of your information, you will recieve an error at the botton of your screen*
 
 ## Signing in
 
-
-1. Click on the menu in the top left of your screen (picture of the menu)
+1. Click on the menu in the top left of your screen
+![Menu](../img/Menu.png)
 2. Click on the "Drone Sign In" button
-2. Fill in your username and password
-3. Click the "Login" button
-    (Picture of the sign in screen with information filled in and a circle around the "Login" button)
+3. Fill in your username and password
+4. Click the "Login" button
+![Drone Sign In](../img/Drone%20Sign%20In.png)
 
 If you follow the steps correctly, you should be on your account page. This page will display your name, drones, as well as the total revenue you have made and the amount of deliveries your drones have made. You will also be provided with options to add a drone or edit your current drones.
 
@@ -74,5 +76,3 @@ Once again you will start from your account page for this.
 2. Edit the drone data fields as desired. You can change the name and/or size of the drone.
 3. Click on "Submit Edits" to save the changes
 4. To discard the changes click on "reset".
-
-
