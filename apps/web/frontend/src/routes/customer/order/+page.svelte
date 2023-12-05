@@ -278,7 +278,7 @@
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({
                     cones: order.getCart(), // array of cones
-                    id: 1,
+                    id: 2,
                     price: price,
                     cost: cost,
                     created: created,
@@ -287,7 +287,15 @@
                 })
             })
             .then((response) => response.json())
-            .then((json => {check = json.message , console.log(json)}))
+            .then((json => {
+                let success = json.success;
+                if (!success) {
+                    check = json.message;
+                } else {
+                    window.location.href = '/customer/account'
+                }
+            }));
+    
         }
     };
 
