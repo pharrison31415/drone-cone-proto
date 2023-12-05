@@ -67,7 +67,7 @@
       {/each}
     </select>
 
-    {:else if itemType == "Toppings"}
+    {:else if itemType == "Topping"}
     <select bind:value={itemName} class="select1">
       {#each toppings as topping }
       <option value={topping['name']}> {topping['name']}</option> 
