@@ -287,16 +287,16 @@
     <dialog id="add_drone-dialog">
         <h3>Add Drone</h3>
         <form>
-            <label for="drone_name">Drone Name:</label>
+            <label for="drone_name"><strong>Drone Name:</strong></label>
             <input bind:value={droneName} type="text" id="drone_name" name="drone_name" placeholder="Drone Name" required>
 
             <fieldset>
-                <legend>Size of Drone:</legend>
+                <legend><h3>Size of Drone:</h3></legend>
                 <!-- for each type in types -->
                 {#each types as item}
                     <div>
                         <input type="radio" id={item.text} value={item.text} name="drone_type" required/>
-                        <lable for={item.text}>{item.text}: Capacity of {item.capacity}</lable>
+                        <lable for={item.text}><strong>{item.text}</strong>: Capacity of <strong>{item.capacity}</strong> cone{#if item.capacity > 1}s{/if}</lable>
                     </div>
                 {/each}
             </fieldset>
@@ -310,16 +310,16 @@
     <dialog id="edit_drone-dialog">
         <h3>Edit Drone</h3>
         <form id="editDrone-form">
-            <label for="drone_name">Drone Name:</label>
+            <label for="drone_name"><strong>Drone Name:</strong></label>
             <input type="text" value="" id="drone_name_edit" name="drone_name" placeholder="Drone Name">
 
             <fieldset>
-                <legend>Size of Drone:</legend>
+                <legend><h3>Size of Drone:</h3></legend>
                 <!-- for each type in types -->
                 {#each types as item}
                     <div>
                         <input type="radio" id={item.text} value={item.text} name="drone_type" required/>
-                        <lable for={item.text}>{item.text}: Capacity of {item.capacity}</lable>
+                        <lable for={item.text}><strong>{item.text}</strong>: Capacity of <strong>{item.capacity}</strong> cone{#if item.capacity > 1}s{/if}</lable>
                     </div>
                 {/each}
             </fieldset>
@@ -353,15 +353,14 @@
 
     {#if first_name != "" && last_name != ""}
         <div class="drone_info">
-            <div></div>
-            <div>
-            <h2> Drone Operator Information:</h2>
-            <p><strong>Name:</strong> {first_name} {last_name}</p>
-            <p><strong>Drones:</strong>  {drones.length}</p>
-            <p><strong>Total Revenue:</strong> {USDollar.format(totalRevenue / 100)}</p>
+            <div style="text-align: left;">
+                <h2> Drone Operator Information:</h2>
+                <p><strong>Name:</strong> {first_name} {last_name}</p>
+                <p><strong>Drones:</strong>  {drones.length}</p>
+                <p><strong>Total Revenue:</strong> {USDollar.format(totalRevenue / 100)}</p>
+                <!-- <p>Total Deliveries: ????</p> -->
             </div>
-            <div></div>
-            <!-- <p>Total Deliveries: ????</p> -->
+            <!-- <div></div> -->
             <p>{showDialogClickError}</p>
             <button on:click={() => showDialogClick_addDone(true)} id="add_drone-button" class="new_button">
                 <span>
@@ -400,17 +399,17 @@
                     <div class='parent_drone'>
                         <div class='child_drone'>
                             <h3>Drone details:</h3>
-                            <p>Name: {drone.name}</p>
-                            <p>Size: {drone.droneType.text}</p> 
-                            <p>Capacity: {drone.droneType.capacity} cone{#if drone.droneType.capacity > 1}s{/if}</p>
+                            <p><strong>Name:</strong> {drone.name}</p>
+                            <p><strong>Size:<strong></strong> {drone.droneType.text}</p> 
+                            <p><strong>Capacity:</strong> {drone.droneType.capacity} cone{#if drone.droneType.capacity > 1}s{/if}</p>
                         </div>
                         <div class='child_drone'>
                             <h3>Revenue details:</h3>
-                            <p>{USDollar.format(drone.revenue / 100)}</p> 
+                            <p><strong>Revenue:</strong> {USDollar.format(drone.revenue / 100)}</p> 
                         </div>
                         <div class='child_drone' id='drone_name_edit'>
                             <h3>Drone Status:</h3>
-                            Status: {drone.status.text}
+                            <strong>Status:</strong> {drone.status.text}
                             <form style="display: flex; flex-direction: column">
                                 {#if drone.status.text == 'delivering'}
                                     <input type="range" id="isActive" class="input-slider" name="isActive" min="0" max="1" value="1" on:change={() => changeDroneStatus(drone)} disabled/>
@@ -505,6 +504,10 @@
 
     #add_drone-button {
         display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-content: center;
+        justify-content: center;
         align-items: center;
         padding: 5px 15px;
     }
@@ -564,12 +567,13 @@
         box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
         border-radius: 10px;
         padding-bottom: 10px;
+        text-align: -webkit-center;
     }
 
     .new_button{
         background-color: rgb(238, 59, 206);
         height: 75px;
-        width: 275px;
+        width: fit-content;
         border-radius: 10px;
         text-align: center;
         font-size: x-large;
@@ -577,13 +581,12 @@
         font-weight: bold;
         margin-top: 20px;
         padding-left: 20px;
-        margin-left: 55px;
     }
 
     .new_button:hover{
         background-color: rgb(249, 255, 83);
         height: 75px;
-        width: 275px;        
+        width: fit-content;        
         border-radius: 10px;
         text-align: center;
         font-size: x-large;
