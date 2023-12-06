@@ -16,6 +16,7 @@
       <button class = "links" on:click={drone3}> Drone </button>
       {/if}
       <button class = "links" on:click={manager}>Manager</button>
+      <button class = "links" on:click={contact}>Contact Manager</button>
       <button class = "links" on:click = {slideNav}> Close </button>
   </div>
 
@@ -50,6 +51,10 @@
     window.location.href = '/'
   }
 
+  function contact() {
+    window.location.href = '/contact'
+  }
+
   function manager(){
     let cookies = document.cookie.split('=')
     for (let cookie of cookies){
@@ -58,7 +63,7 @@
       }
     }
 
-    return window.location.href = '/manager/manager_sign_In'
+    return window.location.href = '/manager/sign_in'
   }
 
   function customers(){

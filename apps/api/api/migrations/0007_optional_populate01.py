@@ -36,8 +36,8 @@ OWNERS = [
             },
             {
                 "name": "Drone02",
-                "status": "idle",
-                "drone_type": "heavy"
+                "status": "owner",
+                "drone_type": "light"
             },
         ]
     },
