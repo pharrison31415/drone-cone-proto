@@ -55,8 +55,21 @@
         <div class = "child2">
 
             <h1> Delivery Address</h1>
+            <br>
+            <br>
 
             <form on:submit={nothing}>
+                <div class="form__group field">
+                <label for="address" class="form__label"> Select an address</label>
+                <select bind:value={selectedID} class="select1__3">
+                    {#each addresses as address }
+                    <option value={address['id']}> {address['lineOne']} , {address['city']} {address['state']} {address['zipCode']}</option> 
+                    {/each}
+                </select>
+                </div>
+            
+
+
             <!--
             <div class="form__group field">
                 <label for="Line One" class="form__label"> Street Line 1:</label>
@@ -172,6 +185,7 @@
     let coneUrl = "http://localhost:8000/api/cone-types/";
     let iceCreamUrl = "http://localhost:8000/api/ice-cream-types/";
     let topUrl = "http://localhost:8000/api/topping-types/";
+    let addressUrl = "http://localhost:8000/api/my-addresses/";
 
     // MISC Variables
     let states = ["Idaho","Utah"];
@@ -191,6 +205,8 @@
     let inputError = " ";
     let check = " ";
     let success = false;
+    let addresses= [];
+    let selectedID;
 
 
     //Once a cone is made by user, create cone object and add to order
@@ -200,8 +216,8 @@
         id++;
         order.addtoOrder(cone);
         cart = order.getCart();
-        console.log(cart.length);
         price = cart.length * 2.50;
+        console.log(selectedID)
      }
     }
    
@@ -278,11 +294,11 @@
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({
                     cones: order.getCart(), // array of cones
-                    id: 2,
+                    id: 4,
                     price: price,
                     cost: cost,
                     created: created,
-                    addressId: 1,
+                    addressId: selectedID,
                     status: status
                 })
             })
@@ -329,6 +345,18 @@
             toppings = toppings
         }
 
+    });
+
+    onMount(async() => {
+        const response = await fetch(addressUrl, {credentials: 'include'})
+        const infoJson = await response.json()
+
+        for(let item of infoJson['addresses']){
+            addresses.push(item);
+            addresses = addresses;
+        }
+
+        console.log(addresses)
     });
 
 //*************************MISC FUNCTION*************************/
@@ -463,6 +491,16 @@
         width: 250px;
         text-align: center;
         font-size: medium;
+        border-radius: 10px;
+    }
+
+    .select1__3{
+        margin-left: 200px;
+        margin-top: 10px;
+        height: 50px;
+        width: 550px;
+        text-align: center;
+        font-size: x-large;
         border-radius: 10px;
     }
 
