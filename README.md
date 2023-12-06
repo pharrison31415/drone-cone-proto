@@ -28,5 +28,5 @@ To start the frontend server, under `apps/web/frontend/`, run `$ npm run dev`
 
 # Dependencies
 
-The backend is a (Django)[https://www.djangoproject.com/] application, supported by version 4.2.
-The frontend is a (Svelte)[https://svelte.dev/] application, supported by version 4.2.
+The backend is a [Django](https://www.djangoproject.com/) application, supported by version 4.2.
+The frontend is a [Svelte](https://svelte.dev/) application, supported by version 4.2.
