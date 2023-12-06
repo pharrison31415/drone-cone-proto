@@ -4,8 +4,8 @@
 
 1. Open three incognito windows to the DroneCones home page.
 2. For the first window, sign in as a customer with username `customer01` and password `password`.
-3. For the second window, sign in as a drone owner with username `owner01` and password `password`.
-4. For the third window, sign in as a manager with username `manager01` and password `password`.
+3. For the second window, sign in as a drone owner with username `owner01` and password `password` (located in the sidebar).
+4. For the third window, sign in as a manager with username `manager01` and password `password`(located in the sidebar).
 
 ## Manager Data Before Order
 
