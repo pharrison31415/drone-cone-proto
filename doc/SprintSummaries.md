@@ -74,7 +74,7 @@ The way that we divided the work up was back end and front end portions of the s
 
 We divided the work by having a front end team and a back-end team. Each team would divide work as they saw fit. I am on front-end team and we each chose some pages to work on and would do those pages. We were just focusing on getting the html and css done so we can have just the basics done so later we can get the javascript done so the dynamic elements can be easily added. This was to get the basics done and make it easy to focus on just javascript on its own. Back-end we got the migration, api token verification, and models done.
 
-## Milestone 2: Development - Sprint 3
+# Milestone 2: Development - Sprint 3
 
 This week, our team was supposed to finish large portions of the project, as this is the middle of three development sprints.
 
