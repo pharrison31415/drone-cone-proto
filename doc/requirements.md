@@ -173,8 +173,6 @@ As a manager, I want to be able to:
 
 - See inventory, so I can see if I need order more supplies when it get low
 - Update inventory, so that the inventory is correct with what I have
-- See pending orders, so I can see how my business is doing
-- See completed orders, so I can see what is the hot thing currently
 - See finances, so I can see how much money I'm making or losing
 
 ### Use Case Diagram
