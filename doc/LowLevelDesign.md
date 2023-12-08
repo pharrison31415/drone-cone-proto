@@ -70,6 +70,17 @@ Here, we outline what data is needed in the default migrations and what our data
   2. Medium with capacity 4
   3. Heavy with capacity 8
 
+- Fill DroneStatus with three statuses:
+
+1. idle - ready to deliver
+2. delivering - busy delivering an order
+3. owner - owner private use, DroneCones cannot use
+
+- Fill OrderStatus with two statuses:
+
+1. delivering
+2. delivered
+
 - Fill ConeType with two cone types (with their respective details):
 
   1. Cake
@@ -80,11 +91,15 @@ Here, we outline what data is needed in the default migrations and what our data
   1. Vanilla
   2. Chocolate
   3. Strawberry
+  4. Cookies + Creme
+  5. Mint + Chip
 
 - Fill ToppingType with three topping types (with their respective details):
-  1. Sprinkles
-  2. Cherry
-  3. Chocolate sauce
+  1. No topping
+  2. Chocolate Sprinkles
+  3. Whipped Cream
+  4. Chocolate sauce
+  5. Cherry
 
 ### Pseudo-schema
 
