@@ -60,18 +60,19 @@ The main reason why we went with a web application is based on the team's experi
 
 This page would be the first page that would be shown when visiting our website
 
-This website would include:
+This front page/sidebar would include:
 
-- Login - Logins for Drone Operators/Manager/Customers, once logged in they can access the appropriate pages.
-- Sign up - Sign up new user / Sign up for drone operators
+- Login - Logins for Customers and a order button for the guest.
+- other logins(manager and drone) can be located at the sidebar
+- Once logged in they can access their appropriate pages.
+- Sign up - Sign up new user / Sign up for drone operators(side bar)
 - Order - goes to the order page for customer or guest to order food
-- Company goods - display company news for the customer
-- Contact - leads to the contact page
 
 ### Sign Up / Login pages
 
 These page would only be for login/signing up too accounts only
 
+- Each type of account would have their different login and signin
 - Login - Logins for Drone Operators/Manager/Customers, once logged in they can access the appropriate pages.
 - Sign up - Sign up new user / Sign up for drone operators
 
@@ -82,8 +83,7 @@ This page would be the page the customer can access if they sign in to their pro
 This page would include:
 
 - Previous Orders - list of the customer previous orders
-- Customer information - the customer address, name, etc..
-- Contact - goes to the contact page
+- Customer information - the customer address, name, etc.
 
 ### Order Page
 
@@ -104,7 +104,6 @@ This page would include:
 - Revenue - company current revenue
 - Inventory - company current inventory
 - Expense - company current "daily" expenses
-- Customer - customers trying to contact the
 
 ### Drone operator page
 
@@ -113,11 +112,6 @@ This page would be for the only for the drone operator
 - Drone inventory - the drone operator can access this page
 - Add drones - the drone operator would be able to add new drones
 
-### Contact Page
-
-This page would be the only way to contact between us and the customers other than the order pages
-
-- Customer info - would ask for customers information to contact customer
 
 ## UML Diagram
 
