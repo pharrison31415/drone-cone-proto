@@ -15,41 +15,9 @@ We also outline what we want the basic structure of the app to look like using w
 
 ## Django Server
 
-The Django server will use POST and GET requests as access points for the data base.
+The Django server will use POST, GET, PATCH, and DELETE requests as access points for the data base.
 
-POST Requests:
-
-- new user
-  - server receives new user information to add to database
-- new drone lender
-  - server receives new drone lender info to add to database
-- order info
-  - server receives:
-    - amount of ice cream ordered (and flavor)
-    - amount of cones ordered (and type)
-    - amount of toppings ordered (and type)
-    - cost of the order
-    - drone used
-- update inventory
-
-GET Requests:
-
-- total number of deliveries
-- available drones
-  - server receives size of order and checks database for available drones of correct size
-  - server sends available drones with their size
-- available inventory
-  - server sends:
-  - options of cones available
-  - options of ice cream available
-  - options of toppings available
-- correct password for login
-  - server checks the login info against database
-  - server sends on OK to continue or a NOT OK
-- manager reports
-  - server sends over past order data
-  - server sends revenue data
-  - server sends drone info
+Outlines of each of the endpoints can be found in the [API Documentation](../apps/api/api-documentation.md)
 
 ### pseudo code
 
