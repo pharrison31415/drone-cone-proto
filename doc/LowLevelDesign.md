@@ -8,10 +8,10 @@ We also outline what we want the basic structure of the app to look like using w
 
 ## Table of Contents
 
-* [Django Server](#django-server)
-* [Database](#database)
-* [Front End Views](#front-end-views)
-* [Front End Logic](#front-end-logic)
+- [Django Server](#django-server)
+- [Database](#database)
+- [Front End Views](#front-end-views)
+- [Front End Logic](#front-end-logic)
 
 ## Django Server
 
@@ -19,36 +19,37 @@ The Django server will use POST and GET requests as access points for the data b
 
 POST Requests:
 
-* new user
-  * server receives new user information to add to database
-* new drone lender
-  * server receives new drone lender info to add to database
-* order info
-  * server receives:
-    * amount of ice cream ordered (and flavor)
-    * amount of cones ordered (and type)
-    * amount of toppings ordered (and type)
-    * cost of the order
-    * drone used
-* update inventory
+- new user
+  - server receives new user information to add to database
+- new drone lender
+  - server receives new drone lender info to add to database
+- order info
+  - server receives:
+    - amount of ice cream ordered (and flavor)
+    - amount of cones ordered (and type)
+    - amount of toppings ordered (and type)
+    - cost of the order
+    - drone used
+- update inventory
 
 GET Requests:
 
-* available drones
-  * server receives size of order and checks database for available drones of correct size
-  * server sends available drones with their size
-* available inventory
-  * server sends:
-  * options of cones available
-  * options of ice cream available
-  * options of toppings available
-* correct password for login
-  * server checks the login info against database
-  * server sends on OK to continue or a NOT OK
-* manager reports
-  * server sends over past order data
-  * server sends revenue data
-  * server sends drone info
+- total number of deliveries
+- available drones
+  - server receives size of order and checks database for available drones of correct size
+  - server sends available drones with their size
+- available inventory
+  - server sends:
+  - options of cones available
+  - options of ice cream available
+  - options of toppings available
+- correct password for login
+  - server checks the login info against database
+  - server sends on OK to continue or a NOT OK
+- manager reports
+  - server sends over past order data
+  - server sends revenue data
+  - server sends drone info
 
 ### pseudo code
 
@@ -76,6 +77,7 @@ def handle_data(data)
 ### API Security
 
 When making any API requests for private information there is a token associated with who has access that must be given in order for a response to be returned to the client. These tokens are the following:
+
 - Customer Token
 - Manager Token
 - Owner Token
@@ -94,24 +96,24 @@ Here, we outline what data is needed in the default migrations and what our data
 
 ### Migrations
 
-* Fill DroneType with three drone types:
+- Fill DroneType with three drone types:
 
   1. Light with capacity 1
   2. Medium with capacity 4
   3. Heavy with capacity 8
 
-* Fill ConeType with two cone types (with their respective details):
+- Fill ConeType with two cone types (with their respective details):
 
   1. Cake
   2. Waffle
 
-* Fill IceCreamType with three ice cream types (with their respective details):
+- Fill IceCreamType with three ice cream types (with their respective details):
 
   1. Vanilla
   2. Chocolate
   3. Strawberry
 
-* Fill ToppingType with three topping types (with their respective details):
+- Fill ToppingType with three topping types (with their respective details):
   1. Sprinkles
   2. Cherry
   3. Chocolate sauce
@@ -127,12 +129,12 @@ This includes the different objects that will be used to keep information organi
 
 Here are mockups of what the application will look like.
 
-* [Log-in page](https://wireframe.cc/F08gdT)
-* [Order page](https://wireframe.cc/fHa6vd)
-* [Cart page](https://wireframe.cc/yUR5pU)
-* [Account page](https://wireframe.cc/aqI5bl)
-* [Oder tracking page](https://wireframe.cc/rMDQMf)
-* [Contact/Report Page](https://wireframe.cc/IdDwLg)
+- [Log-in page](https://wireframe.cc/F08gdT)
+- [Order page](https://wireframe.cc/fHa6vd)
+- [Cart page](https://wireframe.cc/yUR5pU)
+- [Account page](https://wireframe.cc/aqI5bl)
+- [Oder tracking page](https://wireframe.cc/rMDQMf)
+- [Contact/Report Page](https://wireframe.cc/IdDwLg)
 
 ## Front End Logic
 
@@ -140,9 +142,9 @@ Here are mockups of what the application will look like.
 
 The order page would contain:
 
-* dropdown list of the ice cream cone flavors
-* dropdown list of the ice cream flavors
-* a list of ice cream toppings
+- dropdown list of the ice cream cone flavors
+- dropdown list of the ice cream flavors
+- a list of ice cream toppings
 
 ```JavaScript
 order = // List of Cones Object to return to the server
@@ -156,13 +158,13 @@ toppings = //String list of toppings for the cone
 iceTops = //list of ice cream toppings
 
 // Select what ice cream flavor/cone you want as a select input <select> </select> from svelte
-dropDownMenu(options) 
+dropDownMenu(options)
 
-// Display list of toppings once the selected topping is chosen use group input from svelte to 
+// Display list of toppings once the selected topping is chosen use group input from svelte to
 listOfToppings(iceTops)
 
 
-//Once the options have been chosen there are going to be four buttons 
+//Once the options have been chosen there are going to be four buttons
 
 
 // a button stating the user is finished with the cone and this button will add the cone object to the order list, then update price in order
@@ -174,7 +176,7 @@ button("cart", order)
 // This button would lead to a page, to view account page
 button("account")
 
-// This button would lead to a page, to view the contact page 
+// This button would lead to a page, to view the contact page
 button("contact")
 
 ```
@@ -183,8 +185,8 @@ button("contact")
 
 This page would include:
 
-* a view list of the cone object in the order
-* a checkout button to finish order
+- a view list of the cone object in the order
+- a checkout button to finish order
 
 ```JavaScript
 order = //Pass the order list from previous page
@@ -210,14 +212,14 @@ button("Order", order)
 
 This page would include:
 
-* graph/numerical of the quantity of inventory items
-* current revenue and expense
-* List of contact objects and displays list
+- graph/numerical of the quantity of inventory items
+- current revenue and expense
+- List of contact objects and displays list
 
 This will request data from database/library:
 
-* For the revenue and expense for the day
-* Import chart.js call for graphing data
+- For the revenue and expense for the day
+- Import chart.js call for graphing data
 
 ```JavaScript
 /*
@@ -252,8 +254,8 @@ listOfContact(contacts)
 
 This page would include:
 
-* The list of the operator drones
-* add new drones with specs
+- The list of the operator drones
+- add new drones with specs
 
 ```JavaScript
 drones = // get the data from the database for drones list
@@ -276,12 +278,13 @@ button("addDrones")
 ### Track Order page Pseudo-Code Design
 
 This page would include:
-* The details of an order such as:
-  * time placed
-  * cone ordered
-  * time left to devilery/ time delivered
-  * order number
-  * cost
+
+- The details of an order such as:
+  - time placed
+  - cone ordered
+  - time left to devilery/ time delivered
+  - order number
+  - cost
 
 ```JavaScript
 order = // get the data from the database from order list
@@ -293,7 +296,8 @@ orderDisplay(order)
 ### Contact Page Pseudo-Code Design
 
 This page would include:
-* a text entry for name, email, and message with a submit button
+
+- a text entry for name, email, and message with a submit button
 
 ```JavaScript
 // This will send a message to the managers
@@ -303,9 +307,10 @@ sendMessage()
 ### Log in Page Pseudo-Code Design
 
 This page would let the user log in
-* it would need to be able to check if
-  * the username exists
-  * password exists
+
+- it would need to be able to check if
+  - the username exists
+  - password exists
 
 ```JavaScript
 // This will get the username and password that was entered and check to see if they match eachother and if they do let them log in going to the account page first
@@ -315,10 +320,11 @@ login(username, password)
 ### Account Page Pseudo-Code Design
 
 This page would include:
-* The account name
-* recent orders
-  * order details
-* address
+
+- The account name
+- recent orders
+  - order details
+- address
 
 ```JavaScript
 recentOrders = // get the recent orders from the database
@@ -334,9 +340,10 @@ for each order in RecentOrders {
 ### Sign-Up Page Pseudo-Code Design
 
 This page would have to post to the database:
-* username
-* password
-* role
+
+- username
+- password
+- role
 
 ```JavaScript
 // This will add the user to the database with the correct role
@@ -346,6 +353,7 @@ addUser(username, password, role)
 ### Front Page Pseudo-Code Design
 
 This page will ask to log in or sign up
+
 ```JavaScript
 // This will lead the user to the log in page
 button('login', login)
