@@ -13,7 +13,7 @@ Not only will we be helping our hungry customers, we will be giving jobs to the 
 - [Business Requirements](#business-requirements)
 - [User Requirements](#user-requirements)
 
----------------------------------------------------------
+---
 
 ## Functional Requirements
 
@@ -49,7 +49,7 @@ The system shall display a home screen with five different options: Sign up(cust
 - The system shall display the company logo and an option to place an order
   - The system shall allow the customer to choose from at least 3 different ice cream cones
   - The system shall allow the customer to choose from at least 3 different ice cream flavors
-  - The system shall allow the customer to choose to add toppings from a list of at least 3 different toppings
+  - The system shall allow the customer to choose to add one topping from a list of at least 3 different toppings
   - The system shall allow the customer to add the completed ice cream cone to cart
   - The system shall display the options to add another cone to the order or to checkout
 
@@ -74,7 +74,7 @@ The system shall display a home screen with five different options: Sign up(cust
   - Comment/Question
 - When "submit" button is pressed the system shall save the form to the database
 
----------------------------------------------------------
+---
 
 ## Nonfunctional Requirements
 
@@ -83,9 +83,11 @@ The system will have a stable server, with decent security. The users should be 
 ### Performance
 
 - Database
+
   - Quickly obtain stored information
 
 - Server
+
   - Shall handle light traffic
   - Optimized to run on lower end laptop
 
@@ -95,6 +97,7 @@ The system will have a stable server, with decent security. The users should be 
 ### Security
 
 - Database
+
   - Shall be password protected
   - Handle user passwords **only** through hashing (one-way encryption)
 
@@ -105,6 +108,7 @@ The system will have a stable server, with decent security. The users should be 
 ### Usability
 
 - Server
+
   - Deployable locally so client can test prototype
 
 - App
@@ -112,7 +116,7 @@ The system will have a stable server, with decent security. The users should be 
   - Shall be accessible on both mobile and desktop devices
   - Have a clear User Experience and User Interface
 
----------------------------------------------------------
+---
 
 ## Business Requirements
 
